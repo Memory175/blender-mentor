@@ -1,0 +1,27 @@
+{
+  "base": {"value": 6.26, "anchor": "bottom_contact"},
+  "driver": "impact_speed_mps",
+  "exponent_p": 0.8,
+  "tolerance_ratio": 0.10,
+  "channel": {
+    "type": "object_scale",
+    "object": "Ball",
+    "index": 2,
+    "identity": 1.0
+  },
+  "cutoff": {"v_min": 1.0, "amplitude_min": 0.03},
+  "events": [
+    {
+      "id": "e1",
+      "time": 22,
+      "value": 6.26,
+      "segments": {"pre": [20, 21], "peak": [22, 23], "settle": [24, 28]}
+    },
+    {
+      "id": "e2",
+      "time": 58,
+      "value": 4.43,
+      "segments": {"pre": [56, 57], "peak": [58, 59], "settle": [60, 64]}
+    }
+  ]
+}

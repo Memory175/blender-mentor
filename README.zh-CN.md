@@ -29,9 +29,13 @@
 ├── LICENSE                  # MIT
 ├── CHANGELOG.md
 ├── .gitignore
+├── .claude-plugin/
+│   └── marketplace.json     # Claude Code 插件市场
 ├── .github/workflows/validate.yml
 ├── tools/
 │   └── build_skill.py       # 维护侧构建工具（从 V5.4.0 六件套重建技能）
+├── plugins/
+│   └── blender-mentor/      # Claude Code 插件包装（自动生成）
 ├── references/              # 人设文档（按需加载）
 │   ├── main.md              # 身份/边界/六段模板/40 条红线
 │   ├── rubric.md            # 0–3 分评分表/关键项/自评模板
@@ -72,6 +76,13 @@ cp -r blender-mentor ~/.agents/skills/blender-mentor
 ### Claude Code
 
 放到用户级 `~/.claude/skills/blender-mentor/`，或项目级 `.claude/skills/blender-mentor/`。
+
+也可以用本仓库的插件市场一键安装：
+
+```text
+/plugin marketplace add Memory175/blender-mentor
+/plugin install blender-mentor@blender-mentor-marketplace
+```
 
 ### Claude.ai（支持 Skills 的版本）
 

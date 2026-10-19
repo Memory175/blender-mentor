@@ -1,0 +1,21 @@
+{
+  "name": "blender-mentor",
+  "displayName": "Blender Mentor",
+  "description": "Blender full-stack mentor skill: teaching, 0-3 rubric grading, asset/animation acceptance (ESD/BIO).",
+  "version": "5.4.1",
+  "author": {
+    "name": "Memory175"
+  },
+  "homepage": "https://github.com/Memory175/blender-mentor",
+  "repository": "https://github.com/Memory175/blender-mentor",
+  "license": "MIT",
+  "keywords": [
+    "blender",
+    "ai-skill",
+    "agent-skills",
+    "claude-skill",
+    "animation",
+    "rigging",
+    "biomechanics"
+  ]
+}

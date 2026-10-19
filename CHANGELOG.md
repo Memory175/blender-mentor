@@ -8,6 +8,8 @@
 - 双语 README：English（`README.md`，默认）+ 简体中文（`README.zh-CN.md`），顶部互加语言跳转；
 - Release 说明改为中英双语；
 - 发布附件更新为含双语 README 的 `v5.4.1` 技能包；
+- Claude Code 插件支持：`.claude-plugin/marketplace.json` + `plugins/blender-mentor/`，
+  可用 `/plugin marketplace add` + `/plugin install` 一键安装；
 - 仓库源码快照（tag `v5.4.1`）包含全部文档/工具更新。
 
 ### Fixed

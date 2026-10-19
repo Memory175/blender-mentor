@@ -1,0 +1,15 @@
+{
+  "name": "blender-mentor-marketplace",
+  "description": "Blender Mentor - AI Agent Skill for Blender teaching, grading and acceptance.",
+  "owner": {
+    "name": "Memory175"
+  },
+  "plugins": [
+    {
+      "name": "blender-mentor",
+      "source": "./plugins/blender-mentor",
+      "description": "Blender full-stack mentor skill: teaching, 0-3 rubric grading, asset/animation acceptance (ESD/BIO).",
+      "version": "5.4.1"
+    }
+  ]
+}

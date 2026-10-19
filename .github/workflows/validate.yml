@@ -24,6 +24,24 @@ jobs:
       - name: Toolchain selftest
         run: python scripts/selftest.py .
 
+      - name: Validate Claude Code plugin manifests
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          m = json.loads(Path(".claude-plugin/marketplace.json").read_text(encoding="utf-8"))
+          assert m.get("plugins"), "marketplace has no plugins"
+          for entry in m["plugins"]:
+              src = Path(entry["source"])
+              pj = src / ".claude-plugin" / "plugin.json"
+              assert pj.is_file(), f"missing {pj}"
+              manifest = json.loads(pj.read_text(encoding="utf-8"))
+              assert manifest["name"] == entry["name"], (manifest["name"], entry["name"])
+              skill_md = src / "skills" / entry["name"] / "SKILL.md"
+              assert skill_md.is_file(), f"missing {skill_md}"
+          print("plugin manifests: ok")
+          PY
+
       - name: Layout check (no legacy paths in references)
         run: |
           python - <<'PY'

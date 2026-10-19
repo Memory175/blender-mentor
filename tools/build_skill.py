@@ -226,9 +226,13 @@ Core behavior:
 ├── LICENSE                  # MIT
 ├── CHANGELOG.md
 ├── .gitignore
+├── .claude-plugin/
+│   └── marketplace.json     # Claude Code plugin marketplace
 ├── .github/workflows/validate.yml
 ├── tools/
 │   └── build_skill.py       # maintainer build tool (rebuild from the V5.4.0 six-file suite)
+├── plugins/
+│   └── blender-mentor/      # Claude Code plugin wrapper (generated)
 ├── references/              # persona documents, loaded on demand
 │   ├── main.md              # identity / boundaries / six-part template / 40 red lines
 │   ├── rubric.md            # 0–3 scoring rubric / critical items / self-review template
@@ -269,6 +273,13 @@ cp -r blender-mentor ~/.agents/skills/blender-mentor
 ### Claude Code
 
 Place it in `~/.claude/skills/blender-mentor/` (user level) or `.claude/skills/blender-mentor/` (project level).
+
+Or install it as a plugin from this repository's marketplace:
+
+```text
+/plugin marketplace add OWNER/REPO
+/plugin install blender-mentor@blender-mentor-marketplace
+```
 
 ### Claude.ai (Skills-enabled plans)
 
@@ -345,9 +356,13 @@ README_ZH_MD = """# blender-mentor
 ├── LICENSE                  # MIT
 ├── CHANGELOG.md
 ├── .gitignore
+├── .claude-plugin/
+│   └── marketplace.json     # Claude Code 插件市场
 ├── .github/workflows/validate.yml
 ├── tools/
 │   └── build_skill.py       # 维护侧构建工具（从 V5.4.0 六件套重建技能）
+├── plugins/
+│   └── blender-mentor/      # Claude Code 插件包装（自动生成）
 ├── references/              # 人设文档（按需加载）
 │   ├── main.md              # 身份/边界/六段模板/40 条红线
 │   ├── rubric.md            # 0–3 分评分表/关键项/自评模板
@@ -388,6 +403,13 @@ cp -r blender-mentor ~/.agents/skills/blender-mentor
 ### Claude Code
 
 放到用户级 `~/.claude/skills/blender-mentor/`，或项目级 `.claude/skills/blender-mentor/`。
+
+也可以用本仓库的插件市场一键安装：
+
+```text
+/plugin marketplace add OWNER/REPO
+/plugin install blender-mentor@blender-mentor-marketplace
+```
 
 ### Claude.ai（支持 Skills 的版本）
 
@@ -442,6 +464,8 @@ CHANGELOG_MD = """# Changelog
 - 双语 README：English（`README.md`，默认）+ 简体中文（`README.zh-CN.md`），顶部互加语言跳转；
 - Release 说明改为中英双语；
 - 发布附件更新为含双语 README 的 `v5.4.1` 技能包；
+- Claude Code 插件支持：`.claude-plugin/marketplace.json` + `plugins/blender-mentor/`，
+  可用 `/plugin marketplace add` + `/plugin install` 一键安装；
 - 仓库源码快照（tag `v5.4.1`）包含全部文档/工具更新。
 
 ### Fixed
@@ -518,6 +542,24 @@ jobs:
 
       - name: Toolchain selftest
         run: python scripts/selftest.py .
+
+      - name: Validate Claude Code plugin manifests
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          m = json.loads(Path(".claude-plugin/marketplace.json").read_text(encoding="utf-8"))
+          assert m.get("plugins"), "marketplace has no plugins"
+          for entry in m["plugins"]:
+              src = Path(entry["source"])
+              pj = src / ".claude-plugin" / "plugin.json"
+              assert pj.is_file(), f"missing {pj}"
+              manifest = json.loads(pj.read_text(encoding="utf-8"))
+              assert manifest["name"] == entry["name"], (manifest["name"], entry["name"])
+              skill_md = src / "skills" / entry["name"] / "SKILL.md"
+              assert skill_md.is_file(), f"missing {skill_md}"
+          print("plugin manifests: ok")
+          PY
 
       - name: Layout check (no legacy paths in references)
         run: |
@@ -1016,6 +1058,75 @@ def patch_load_plan(plan):
     return plan
 
 
+def write_claude_plugin(skill_dir, repo_slug):
+    """生成 Claude Code 插件包装：marketplace + plugin + skills/<name>/ 副本。"""
+    owner = repo_slug.split("/")[0]
+    repo_url = "https://github.com/%s" % repo_slug
+    plugin_root = os.path.join(skill_dir, "plugins", "blender-mentor")
+    skill_copy = os.path.join(plugin_root, "skills", "blender-mentor")
+    os.makedirs(skill_copy, exist_ok=True)
+
+    # 根目录 Skill 是唯一正本；插件里放一份副本，保证 Claude Code 的 skills/ 约定成立
+    shutil.copy2(os.path.join(skill_dir, "SKILL.md"), os.path.join(skill_copy, "SKILL.md"))
+    for d in ("references", "scripts", "assets"):
+        shutil.copytree(os.path.join(skill_dir, d), os.path.join(skill_copy, d), dirs_exist_ok=True)
+
+    desc = ("Blender full-stack mentor skill: teaching, 0-3 rubric grading, "
+            "asset/animation acceptance (ESD/BIO).")
+    plugin = {
+        "name": "blender-mentor",
+        "displayName": "Blender Mentor",
+        "description": desc,
+        "version": "5.4.1",
+        "author": {"name": owner},
+        "homepage": repo_url,
+        "repository": repo_url,
+        "license": "MIT",
+        "keywords": ["blender", "ai-skill", "agent-skills", "claude-skill",
+                     "animation", "rigging", "biomechanics"],
+    }
+    write_text(os.path.join(plugin_root, ".claude-plugin", "plugin.json"),
+               json.dumps(plugin, ensure_ascii=False, indent=2) + "\n")
+
+    plugin_readme = (
+        "# Blender Mentor - Claude Code plugin\n\n"
+        "This plugin packages the `blender-mentor` Agent Skill.\n\n"
+        "## Install\n\n"
+        "```text\n"
+        "/plugin marketplace add {slug}\n"
+        "/plugin install blender-mentor@blender-mentor-marketplace\n"
+        "```\n\n"
+        "The skill lives at `skills/blender-mentor/SKILL.md`; its `references/`, "
+        "`scripts/` and `assets/` are bundled next to it.\n\n"
+        "## Links\n\n"
+        "- Repository: {url}\n"
+        "- Release notes: {url}/releases\n"
+        "- License: MIT\n"
+    ).replace("{slug}", repo_slug).replace("{url}", repo_url)
+    write_text(os.path.join(plugin_root, "README.md"), plugin_readme)
+    write_text(os.path.join(plugin_root, "LICENSE"), LICENSE_TEXT)
+
+    marketplace = {
+        "name": "blender-mentor-marketplace",
+        "description": "Blender Mentor - AI Agent Skill for Blender teaching, grading and acceptance.",
+        "owner": {"name": owner},
+        "plugins": [{
+            "name": "blender-mentor",
+            "source": "./plugins/blender-mentor",
+            "description": desc,
+            "version": "5.4.1",
+        }],
+    }
+    write_text(os.path.join(skill_dir, ".claude-plugin", "marketplace.json"),
+               json.dumps(marketplace, ensure_ascii=False, indent=2) + "\n")
+    return [
+        ".claude-plugin/marketplace.json",
+        "plugins/blender-mentor/.claude-plugin/plugin.json",
+        "plugins/blender-mentor/README.md",
+        "plugins/blender-mentor/skills/blender-mentor/SKILL.md",
+    ]
+
+
 def run_built_selfchecks(out_dir):
     """直接 exec 生成的脚本做纯 Python 自检，返回 (ok, details)。"""
     import importlib.util
@@ -1067,9 +1178,9 @@ def build(source, out_root, force=False, repo_slug="OWNER/REPO"):
     if os.path.exists(skill_dir):
         if not force:
             raise RuntimeError("%s already exists; pass --force to overwrite" % skill_dir)
-        # 保留 .git，避免重建时毁掉仓库历史；其余内容重新生成
+        # 保留 .git（仓库历史）与 docs（README/社交预览图资源），其余重新生成
         for entry in os.listdir(skill_dir):
-            if entry == ".git":
+            if entry in (".git", "docs"):
                 continue
             p = os.path.join(skill_dir, entry)
             if os.path.isdir(p):
@@ -1169,6 +1280,9 @@ def build(source, out_root, force=False, repo_slug="OWNER/REPO"):
     if self_source:
         write_text(os.path.join(skill_dir, "tools", "build_skill.py"), self_source)
 
+    # 7.05) Claude Code 插件包装（marketplace + plugin + skills/ 副本）
+    plugin_files = write_claude_plugin(skill_dir, repo_slug)
+
     # 7.1) 旧布局引用检查：references/ 里不允许残留旧路径（历史变更记录豁免）
     stale = find_stale_refs(skill_dir)
     if stale:
@@ -1200,6 +1314,7 @@ def build(source, out_root, force=False, repo_slug="OWNER/REPO"):
         "scripts": py_files,
         "assets": sorted(os.listdir(assets)),
         "repo_files": sorted(repo_files),
+        "claude_plugin": plugin_files,
         "tools": ["tools/build_skill.py"] if self_source else [],
         "extracted_from_toolbox": sorted(extracted),
         "json_example_extracted": example_written,

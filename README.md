@@ -28,9 +28,13 @@ Core behavior:
 ├── LICENSE                  # MIT
 ├── CHANGELOG.md
 ├── .gitignore
+├── .claude-plugin/
+│   └── marketplace.json     # Claude Code plugin marketplace
 ├── .github/workflows/validate.yml
 ├── tools/
 │   └── build_skill.py       # maintainer build tool (rebuild from the V5.4.0 six-file suite)
+├── plugins/
+│   └── blender-mentor/      # Claude Code plugin wrapper (generated)
 ├── references/              # persona documents, loaded on demand
 │   ├── main.md              # identity / boundaries / six-part template / 40 red lines
 │   ├── rubric.md            # 0–3 scoring rubric / critical items / self-review template
@@ -71,6 +75,13 @@ cp -r blender-mentor ~/.agents/skills/blender-mentor
 ### Claude Code
 
 Place it in `~/.claude/skills/blender-mentor/` (user level) or `.claude/skills/blender-mentor/` (project level).
+
+Or install it as a plugin from this repository's marketplace:
+
+```text
+/plugin marketplace add Memory175/blender-mentor
+/plugin install blender-mentor@blender-mentor-marketplace
+```
 
 ### Claude.ai (Skills-enabled plans)
 
