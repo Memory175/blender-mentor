@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Blender / 运行产物
+*.blend1
+*.blend2
+probe.png
+*_measured.json
+jobs/
+*.log
+
+# 项目侧敏感数据（§12.4：不进入人设）
+deny.txt
+
+# OS
+.DS_Store
+Thumbs.db

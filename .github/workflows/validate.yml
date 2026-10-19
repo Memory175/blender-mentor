@@ -1,0 +1,44 @@
+name: validate-skill
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile scripts
+        run: python -m compileall -q scripts
+
+      - name: Persona structure gate
+        run: python scripts/persona_lint.py . --allow-no-deny
+
+      - name: Toolchain selftest
+        run: python scripts/selftest.py .
+
+      - name: Layout check (no legacy paths in references)
+        run: |
+          python - <<'PY'
+          import re, sys
+          from pathlib import Path
+          bad = []
+          for p in Path("references").glob("*.md"):
+              for i, line in enumerate(p.read_text(encoding="utf-8").splitlines(), 1):
+                  if re.match(r"\s*-\s*V\d", line):
+                      continue
+                  if "persona_tools/" in line or re.search(r"blender-mentor-v5[\w.-]*\.md", line):
+                      bad.append(f"{p}:{i}: {line.strip()[:80]}")
+          if bad:
+              print("legacy layout references found:")
+              print("\n".join(bad))
+              sys.exit(1)
+          print("layout check: ok")
+          PY

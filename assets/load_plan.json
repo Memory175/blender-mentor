@@ -1,0 +1,134 @@
+{
+  "version": "1.1.0",
+  "suite_version": "V5.4.0",
+  "always": [
+    {
+      "file": "references/main.md",
+      "reason": "身份/边界/教学协议/交付闭环/模块注册表"
+    },
+    {
+      "file": "references/rubric.md",
+      "reason": "评分表/关键项/自评模板"
+    }
+  ],
+  "on_demand": [
+    {
+      "file": "references/toolbox_text.md",
+      "reason": "脚本/检查器/130 条误区/修复对话",
+      "triggers": [
+        "脚本",
+        "bpy",
+        "检查",
+        "验收",
+        "报错",
+        "崩溃",
+        "误区",
+        "工具",
+        "asset_gate",
+        "envelope",
+        "biomech"
+      ]
+    },
+    {
+      "file": "references/curriculum.md",
+      "reason": "课程/作业/前测后测/教案",
+      "triggers": [
+        "教学",
+        "课程",
+        "作业",
+        "练习",
+        "前测",
+        "后测",
+        "上课",
+        "备课",
+        "Capstone",
+        "周"
+      ]
+    }
+  ],
+  "modules": [
+    {
+      "id": "ESD-001",
+      "file": "references/module-esd.md",
+      "reason": "能量驱动的次级动画（形变/抖动/粒子/镜头）",
+      "triggers": [
+        "次级动画",
+        "形变",
+        "包络",
+        "弹跳",
+        "挤压",
+        "拉伸",
+        "镜头震动",
+        "粒子",
+        "ESD",
+        "能量"
+      ]
+    },
+    {
+      "id": "BIO-001",
+      "file": "references/module-biomechanics.md",
+      "reason": "生物力学与运动解剖（人体/类人动画）",
+      "triggers": [
+        "人体",
+        "类人",
+        "角色动画",
+        "走路",
+        "行走",
+        "跑步",
+        "跑动",
+        "跑跳",
+        "起跳",
+        "落地",
+        "受击",
+        "肌肉",
+        "生物力学",
+        "动力链",
+        "BIO",
+        "动作设计",
+        "动作分析"
+      ]
+    }
+  ],
+  "tools": [
+    {
+      "file": "scripts/persona_lint.py",
+      "when": "人设/套件交付前自检"
+    },
+    {
+      "file": "scripts/selftest.py",
+      "when": "工具链自检"
+    },
+    {
+      "file": "scripts/expand_esd_spec.py",
+      "when": "ESD 模板展开为可执行 spec"
+    },
+    {
+      "file": "scripts/load_router.py",
+      "when": "生成本次加载清单"
+    },
+    {
+      "file": "scripts/sample_esd_from_blend.py",
+      "when": "从 .blend 采样生成 ESD measured spec"
+    },
+    {
+      "file": "scripts/curve_audit.py",
+      "when": "曲线审计（插值/手柄统计）"
+    },
+    {
+      "file": "scripts/render_probe.py",
+      "when": "渲染探针（输出 //probe.png）"
+    }
+  ],
+  "policy": [
+    "先常驻主文档 + rubric；其余按任务触发词加载",
+    "模块只在触发词命中时加载；同时最多加载 2 个模块",
+    "超预算裁剪顺序：curriculum → toolbox → 非当前任务模块",
+    "主文档与 rubric 永不裁剪",
+    "开场把本次加载清单与预算告知用户"
+  ],
+  "token_estimate": {
+    "method": "rough",
+    "formula": "bytes/3",
+    "note": "粗估，仅用于预算裁剪；中英混排实际会有偏差"
+  }
+}
