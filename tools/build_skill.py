@@ -269,16 +269,16 @@ Core behavior:
 
 ### DSH (local)
 
-One-line install on Windows:
+One-line install on Windows (downloads the installer from the latest release):
 
 ```powershell
-irm https://raw.githubusercontent.com/OWNER/REPO/main/dsh/install.ps1 | iex
+irm https://github.com/Memory175/blender-mentor/releases/latest/download/dsh-install.ps1 -OutFile "$env:TEMP\dsh-install.ps1"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\dsh-install.ps1"
 ```
 
 Linux / macOS / WSL:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/OWNER/REPO/main/dsh/install.sh | bash
+curl -fsSL https://github.com/Memory175/blender-mentor/releases/latest/download/dsh-install.sh | bash
 ```
 
 Offline / clone fallback:
@@ -418,16 +418,16 @@ README_ZH_MD = """# blender-mentor
 
 ### DSH（本机）
 
-Windows 一键安装：
+Windows 一键安装（从 latest Release 下载安装脚本）：
 
 ```powershell
-irm https://raw.githubusercontent.com/OWNER/REPO/main/dsh/install.ps1 | iex
+irm https://github.com/Memory175/blender-mentor/releases/latest/download/dsh-install.ps1 -OutFile "$env:TEMP\dsh-install.ps1"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\dsh-install.ps1"
 ```
 
 Linux / macOS / WSL：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/OWNER/REPO/main/dsh/install.sh | bash
+curl -fsSL https://github.com/Memory175/blender-mentor/releases/latest/download/dsh-install.sh | bash
 ```
 
 离线 / 先 clone 再装：

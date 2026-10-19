@@ -3,12 +3,13 @@
 This folder contains installers that copy the `blender-mentor` Agent Skill into
 DeepSeek Harness's user skill directory (`~/.agents/skills/blender-mentor`).
 
+> `raw.githubusercontent.com` may be blocked on some networks, so the one-line
+> commands below use the latest Release asset instead.
+
 ## Windows (PowerShell)
 
-From the internet:
-
 ```powershell
-irm https://raw.githubusercontent.com/Memory175/blender-mentor/main/dsh/install.ps1 | iex
+irm https://github.com/Memory175/blender-mentor/releases/latest/download/dsh-install.ps1 -OutFile "$env:TEMP\dsh-install.ps1"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\dsh-install.ps1"
 ```
 
 From a clone:
@@ -17,16 +18,21 @@ From a clone:
 powershell -NoProfile -ExecutionPolicy Bypass -File .\dsh\install.ps1
 ```
 
-Optional: `-Dest <path>` to install elsewhere, `-Force` to skip using the
-existing local source check.
+Options: `-Dest <path>` to install elsewhere.
 
 ## Linux / macOS / WSL
+
+```bash
+curl -fsSL https://github.com/Memory175/blender-mentor/releases/latest/download/dsh-install.sh | bash
+```
+
+Or from a clone:
 
 ```bash
 bash dsh/install.sh
 ```
 
-Or with a custom destination:
+Custom destination:
 
 ```bash
 SKILL_DEST="$HOME/.agents/skills/blender-mentor" bash dsh/install.sh
