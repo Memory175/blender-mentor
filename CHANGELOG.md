@@ -1,5 +1,23 @@
 # Changelog
 
+## V5.4.2 — 2026-10-19
+
+> 技能包发布版本；人设套件版本仍为 **V5.4.0**（六件套版本锚点不变）。
+
+### Added
+- DSH 插件清单：根 `package.json`（`dsh.bundle.patch`）、`cordis.patch.yml`、
+  `lib/index.js`、`skills/blender-mentor/`，满足 dsh.so 插件市场检查；
+- DSH 一键安装：`dsh/install.ps1` / `dsh/install.sh`（自动 clone、备份旧版、安装后自检）；
+- Claude Code 插件市场：`.claude-plugin/marketplace.json` + `plugins/blender-mentor/`，
+  可用 `/plugin marketplace add` + `/plugin install` 一键安装；
+- README banner 与社交预览图：`docs/banner.png`、`docs/social-preview.png`；
+- GitHub topics：`dsh-plugin`、`agent-skills`、`claude-skill` 等。
+
+### Changed
+- Release 附件改为与 `main` 对齐的双包：完整仓库包 `blender-mentor-v5.4.2.zip` +
+  技能包 `blender-mentor-skill-v5.4.2.zip`；
+- `package.json` / 插件清单版本升至 `5.4.2`。
+
 ## V5.4.1 — 2026-10-19
 
 > 技能包发布版本；人设套件版本仍为 **V5.4.0**（六件套版本锚点不变）。

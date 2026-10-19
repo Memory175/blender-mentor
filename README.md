@@ -152,7 +152,7 @@ Why is Blender throwing this error? Start with an L2 hint
 
 ## Versioning & updates
 
-- Suite version: **V5.4.0**; skill package release: **v5.4.1** (see `CHANGELOG.md`);
+- Suite version: **V5.4.0**; skill package release: **v5.4.2** (see `CHANGELOG.md`);
 - After editing anything in `references/`, re-run `persona_lint.py`;
 - Rebuild the skill directory: `python tools/build_skill.py --source <V5.4.0 six-file suite> --out <repo parent> --force` (keeps `.git`).
 

@@ -350,7 +350,7 @@ Why is Blender throwing this error? Start with an L2 hint
 
 ## Versioning & updates
 
-- Suite version: **V5.4.0**; skill package release: **v5.4.1** (see `CHANGELOG.md`);
+- Suite version: **V5.4.0**; skill package release: **v5.4.2** (see `CHANGELOG.md`);
 - After editing anything in `references/`, re-run `persona_lint.py`;
 - Rebuild the skill directory: `python tools/build_skill.py --source <V5.4.0 six-file suite> --out <repo parent> --force` (keeps `.git`).
 
@@ -514,7 +514,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 
 ## 版本与更新
 
-- 人设套件版本：**V5.4.0**；技能包发布版本：**v5.4.1**（详见 `CHANGELOG.md`）；
+- 人设套件版本：**V5.4.0**；技能包发布版本：**v5.4.2**（详见 `CHANGELOG.md`）；
 - 修改 `references/` 后必须重跑 `persona_lint.py`；
 - 重新生成技能目录：`python tools/build_skill.py --source <V5.4.0 六件套目录> --out <仓库父目录> --force`（会保留 `.git`）。
 
@@ -524,6 +524,24 @@ MIT，见 [LICENSE](LICENSE)。课程文档中的第三方参考书目仅作引�
 """
 
 CHANGELOG_MD = """# Changelog
+
+## V5.4.2 — 2026-10-19
+
+> 技能包发布版本；人设套件版本仍为 **V5.4.0**（六件套版本锚点不变）。
+
+### Added
+- DSH 插件清单：根 `package.json`（`dsh.bundle.patch`）、`cordis.patch.yml`、
+  `lib/index.js`、`skills/blender-mentor/`，满足 dsh.so 插件市场检查；
+- DSH 一键安装：`dsh/install.ps1` / `dsh/install.sh`（自动 clone、备份旧版、安装后自检）；
+- Claude Code 插件市场：`.claude-plugin/marketplace.json` + `plugins/blender-mentor/`，
+  可用 `/plugin marketplace add` + `/plugin install` 一键安装；
+- README banner 与社交预览图：`docs/banner.png`、`docs/social-preview.png`；
+- GitHub topics：`dsh-plugin`、`agent-skills`、`claude-skill` 等。
+
+### Changed
+- Release 附件改为与 `main` 对齐的双包：完整仓库包 `blender-mentor-v5.4.2.zip` +
+  技能包 `blender-mentor-skill-v5.4.2.zip`；
+- `package.json` / 插件清单版本升至 `5.4.2`。
 
 ## V5.4.1 — 2026-10-19
 
@@ -1171,7 +1189,7 @@ def write_claude_plugin(skill_dir, repo_slug):
         "name": "blender-mentor",
         "displayName": "Blender Mentor",
         "description": desc,
-        "version": "5.4.1",
+        "version": "5.4.2",
         "author": {"name": owner},
         "homepage": repo_url,
         "repository": repo_url,
@@ -1208,7 +1226,7 @@ def write_claude_plugin(skill_dir, repo_slug):
             "name": "blender-mentor",
             "source": "./plugins/blender-mentor",
             "description": desc,
-            "version": "5.4.1",
+            "version": "5.4.2",
         }],
     }
     write_text(os.path.join(skill_dir, ".claude-plugin", "marketplace.json"),
@@ -1226,7 +1244,7 @@ def write_dsh_plugin(skill_dir, repo_slug):
     owner = repo_slug.split("/")[0]
     repo_url = "https://github.com/%s" % repo_slug
     pkg_name = "blender-mentor"
-    version = "5.4.1"
+    version = "5.4.2"
     desc = ("Blender full-stack mentor AI Skill: teaching, 0-3 rubric grading, "
             "asset/animation acceptance (ESD/BIO).")
 
