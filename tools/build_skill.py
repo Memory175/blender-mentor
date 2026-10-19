@@ -228,6 +228,11 @@ Core behavior:
 ├── LICENSE                  # MIT
 ├── CHANGELOG.md
 ├── .gitignore
+├── package.json             # DSH plugin manifest (dsh.bundle.patch)
+├── cordis.patch.yml         # DSH Cordis patch (skill-filesystem provider)
+├── lib/index.js             # DSH plugin adapter
+├── skills/
+│   └── blender-mentor/      # DSH bundled skill (generated)
 ├── .claude-plugin/
 │   └── marketplace.json     # Claude Code plugin marketplace
 ├── .github/workflows/validate.yml
@@ -288,6 +293,17 @@ irm https://github.com/OWNER/REPO/releases/latest/download/dsh-install.ps1 -OutF
 ```
 
 From a clone: `powershell -File dsh/install.ps1` / `bash dsh/install.sh`.
+
+### DSH (plugin market)
+
+This repository is also a DSH skill plugin: `package.json` declares
+`dsh.bundle.patch → cordis.patch.yml`, which mounts the bundled
+`skills/blender-mentor/` as a filesystem skill provider. After the dsh.so
+listing is approved, install it with:
+
+```bash
+dsh plugin --profile web add github:OWNER/REPO
+```
 
 ### Claude Code
 
@@ -377,6 +393,11 @@ README_ZH_MD = """# blender-mentor
 ├── LICENSE                  # MIT
 ├── CHANGELOG.md
 ├── .gitignore
+├── package.json             # DSH 插件清单（dsh.bundle.patch）
+├── cordis.patch.yml         # DSH Cordis 补丁（skill-filesystem provider）
+├── lib/index.js             # DSH 插件适配器
+├── skills/
+│   └── blender-mentor/      # DSH 内置技能（自动生成）
 ├── .claude-plugin/
 │   └── marketplace.json     # Claude Code 插件市场
 ├── .github/workflows/validate.yml
@@ -437,6 +458,16 @@ irm https://github.com/OWNER/REPO/releases/latest/download/dsh-install.ps1 -OutF
 ```
 
 先 clone 再装：`powershell -File dsh/install.ps1` / `bash dsh/install.sh`。
+
+### DSH（插件市场）
+
+本仓库同时是一个 DSH 技能插件：`package.json` 声明
+`dsh.bundle.patch → cordis.patch.yml`，把内置的 `skills/blender-mentor/`
+挂载为 filesystem skill provider。dsh.so 收录通过后可用：
+
+```bash
+dsh plugin --profile web add github:OWNER/REPO
+```
 
 ### Claude Code
 
@@ -505,6 +536,8 @@ CHANGELOG_MD = """# Changelog
 - Claude Code 插件支持：`.claude-plugin/marketplace.json` + `plugins/blender-mentor/`，
   可用 `/plugin marketplace add` + `/plugin install` 一键安装；
 - DSH 一键安装：`dsh/install.ps1` / `dsh/install.sh`（自动 clone、备份旧版、安装后自检）；
+- DSH 插件清单：根 `package.json`（`dsh.bundle.patch`）、`cordis.patch.yml`、
+  `lib/index.js`、`skills/blender-mentor/`，满足 dsh.so 插件市场检查；
 - 仓库源码快照（tag `v5.4.1`）包含全部文档/工具更新。
 
 ### Fixed
@@ -605,6 +638,22 @@ jobs:
           test -f dsh/install.ps1
           bash -n dsh/install.sh
           echo "dsh installers: ok"
+
+      - name: Validate DSH plugin manifest
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          pkg = json.loads(Path("package.json").read_text(encoding="utf-8"))
+          assert pkg["license"] == "MIT", pkg.get("license")
+          assert pkg["dsh"]["bundle"]["patch"] == "./cordis.patch.yml", pkg.get("dsh")
+          for rel in ("cordis.patch.yml", "lib/index.js",
+                      "skills/blender-mentor/SKILL.md",
+                      "skills/blender-mentor/package.json"):
+              assert Path(rel).is_file(), f"missing {rel}"
+          print("dsh plugin manifest: ok")
+          PY
+          node --check lib/index.js
 
       - name: Layout check (no legacy paths in references)
         run: |
@@ -1172,6 +1221,98 @@ def write_claude_plugin(skill_dir, repo_slug):
     ]
 
 
+def write_dsh_plugin(skill_dir, repo_slug):
+    """生成 DSH 技能插件包：package.json(dsh 字段) + cordis.patch.yml + skills/。"""
+    owner = repo_slug.split("/")[0]
+    repo_url = "https://github.com/%s" % repo_slug
+    pkg_name = "blender-mentor"
+    version = "5.4.1"
+    desc = ("Blender full-stack mentor AI Skill: teaching, 0-3 rubric grading, "
+            "asset/animation acceptance (ESD/BIO).")
+
+    package = {
+        "name": pkg_name,
+        "version": version,
+        "description": desc,
+        "type": "module",
+        "main": "./lib/index.js",
+        "exports": {".": "./lib/index.js", "./package.json": "./package.json"},
+        "license": "MIT",
+        "keywords": ["dsh-plugin", "deepseek-harness", "agent-skill", "blender",
+                     "ai-skill", "animation", "rigging", "biomechanics"],
+        "repository": {"type": "git", "url": "git+%s.git" % repo_url},
+        "homepage": repo_url,
+        "bugs": {"url": repo_url + "/issues"},
+        "files": ["lib", "cordis.patch.yml", "skills", "README.md",
+                  "README.zh-CN.md", "LICENSE", "CHANGELOG.md"],
+        "dsh": {"bundle": {"patch": "./cordis.patch.yml"}},
+        "engines": {"node": "^22.19.0 || >=24.0.0"},
+    }
+    write_text(os.path.join(skill_dir, "package.json"),
+               json.dumps(package, ensure_ascii=False, indent=2) + "\n")
+
+    patch = (
+        "# Opt-in Blender Mentor filesystem Skill provider for DeepSeek Harness.\n"
+        "# Resolves the packaged Skill root from the installed package identity.\n"
+        "- insert:\n"
+        "    - id: blender-mentor-skill-filesystem\n"
+        "      name: '@deepseek-ai/dsh-skill-filesystem'\n"
+        "      config:\n"
+        "        providerName: blender-mentor-plugin\n"
+        "        includeDefaultRoots: false\n"
+        "        bundledSkillDir: !!js process.getBuiltinModule('node:path').join("
+        "process.getBuiltinModule('node:path').dirname("
+        "process.getBuiltinModule('node:module').createRequire(baseUrl)"
+        ".resolve('blender-mentor/package.json')), 'skills')\n"
+    )
+    write_text(os.path.join(skill_dir, "cordis.patch.yml"), patch)
+
+    adapter = (
+        "import { createRequire } from 'node:module';\n"
+        "import { dirname, join } from 'node:path';\n\n"
+        "export const name = 'blender-mentor';\n"
+        "export const PACKAGE_NAME = 'blender-mentor';\n\n"
+        "export function resolveBlenderMentorSkillRoot(profileBaseUrl) {\n"
+        "  if (!profileBaseUrl) {\n"
+        "    throw new Error('blender-mentor: missing DSH profile baseUrl for package resolution');\n"
+        "  }\n"
+        "  const manifestPath = createRequire(profileBaseUrl).resolve(`${PACKAGE_NAME}/package.json`);\n"
+        "  return join(dirname(manifestPath), 'skills');\n"
+        "}\n"
+    )
+    write_text(os.path.join(skill_dir, "lib", "index.js"), adapter)
+
+    skill_copy = os.path.join(skill_dir, "skills", "blender-mentor")
+    os.makedirs(skill_copy, exist_ok=True)
+    shutil.copy2(os.path.join(skill_dir, "SKILL.md"), os.path.join(skill_copy, "SKILL.md"))
+    for d in ("references", "scripts", "assets"):
+        shutil.copytree(os.path.join(skill_dir, d), os.path.join(skill_copy, d), dirs_exist_ok=True)
+
+    write_text(os.path.join(skill_copy, "package.json"), json.dumps({
+        "name": "blender-mentor-skill",
+        "version": version,
+        "private": True,
+        "type": "module",
+        "description": desc,
+        "license": "MIT",
+    }, ensure_ascii=False, indent=2) + "\n")
+    write_text(os.path.join(skill_copy, "skill-release.json"), json.dumps({
+        "schemaVersion": 1,
+        "skillId": "blender-mentor",
+        "channel": "stable",
+        "version": version,
+        "source": {"repository": repo_url},
+    }, ensure_ascii=False, indent=2) + "\n")
+    return [
+        "package.json",
+        "cordis.patch.yml",
+        "lib/index.js",
+        "skills/blender-mentor/SKILL.md",
+        "skills/blender-mentor/package.json",
+        "skills/blender-mentor/skill-release.json",
+    ]
+
+
 def run_built_selfchecks(out_dir):
     """直接 exec 生成的脚本做纯 Python 自检，返回 (ok, details)。"""
     import importlib.util
@@ -1328,6 +1469,9 @@ def build(source, out_root, force=False, repo_slug="OWNER/REPO"):
     # 7.05) Claude Code 插件包装（marketplace + plugin + skills/ 副本）
     plugin_files = write_claude_plugin(skill_dir, repo_slug)
 
+    # 7.06) DSH 技能插件包（package.json dsh 字段 + cordis patch + skills/ 副本）
+    dsh_plugin_files = write_dsh_plugin(skill_dir, repo_slug)
+
     # 7.1) 旧布局引用检查：references/ 里不允许残留旧路径（历史变更记录豁免）
     stale = find_stale_refs(skill_dir)
     if stale:
@@ -1360,6 +1504,7 @@ def build(source, out_root, force=False, repo_slug="OWNER/REPO"):
         "assets": sorted(os.listdir(assets)),
         "repo_files": sorted(repo_files),
         "claude_plugin": plugin_files,
+        "dsh_plugin": dsh_plugin_files,
         "tools": ["tools/build_skill.py"] if self_source else [],
         "extracted_from_toolbox": sorted(extracted),
         "json_example_extracted": example_written,

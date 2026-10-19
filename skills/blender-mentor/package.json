@@ -1,0 +1,8 @@
+{
+  "name": "blender-mentor-skill",
+  "version": "5.4.1",
+  "private": true,
+  "type": "module",
+  "description": "Blender full-stack mentor AI Skill: teaching, 0-3 rubric grading, asset/animation acceptance (ESD/BIO).",
+  "license": "MIT"
+}

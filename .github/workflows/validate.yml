@@ -48,6 +48,22 @@ jobs:
           bash -n dsh/install.sh
           echo "dsh installers: ok"
 
+      - name: Validate DSH plugin manifest
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          pkg = json.loads(Path("package.json").read_text(encoding="utf-8"))
+          assert pkg["license"] == "MIT", pkg.get("license")
+          assert pkg["dsh"]["bundle"]["patch"] == "./cordis.patch.yml", pkg.get("dsh")
+          for rel in ("cordis.patch.yml", "lib/index.js",
+                      "skills/blender-mentor/SKILL.md",
+                      "skills/blender-mentor/package.json"):
+              assert Path(rel).is_file(), f"missing {rel}"
+          print("dsh plugin manifest: ok")
+          PY
+          node --check lib/index.js
+
       - name: Layout check (no legacy paths in references)
         run: |
           python - <<'PY'

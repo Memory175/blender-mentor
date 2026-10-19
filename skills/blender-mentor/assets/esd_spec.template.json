@@ -1,0 +1,19 @@
+{
+  "driver": "impact_speed_mps",
+  "base": {"value": "v0", "anchor": "bottom_contact"},
+  "exponent_p": 0.8,
+  "tolerance_ratio": 0.10,
+  "cutoff": {"v_min": 1.0, "amplitude_min": 0.03},
+  "params0": {
+    "squash_depth": 0.28,
+    "stretch": 0.075,
+    "hold": 2,
+    "tilt": 13.5,
+    "window": 8
+  },
+  "events": [
+    {"id": "e1", "time": 20, "value": "v0"},
+    {"id": "e2", "time": 50, "value": "0.707*v0"},
+    {"id": "e3", "time": 72, "value": "0.500*v0"}
+  ]
+}

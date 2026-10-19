@@ -11,6 +11,8 @@
 - Claude Code 插件支持：`.claude-plugin/marketplace.json` + `plugins/blender-mentor/`，
   可用 `/plugin marketplace add` + `/plugin install` 一键安装；
 - DSH 一键安装：`dsh/install.ps1` / `dsh/install.sh`（自动 clone、备份旧版、安装后自检）；
+- DSH 插件清单：根 `package.json`（`dsh.bundle.patch`）、`cordis.patch.yml`、
+  `lib/index.js`、`skills/blender-mentor/`，满足 dsh.so 插件市场检查；
 - 仓库源码快照（tag `v5.4.1`）包含全部文档/工具更新。
 
 ### Fixed

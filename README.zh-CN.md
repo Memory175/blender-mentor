@@ -31,6 +31,11 @@
 ├── LICENSE                  # MIT
 ├── CHANGELOG.md
 ├── .gitignore
+├── package.json             # DSH 插件清单（dsh.bundle.patch）
+├── cordis.patch.yml         # DSH Cordis 补丁（skill-filesystem provider）
+├── lib/index.js             # DSH 插件适配器
+├── skills/
+│   └── blender-mentor/      # DSH 内置技能（自动生成）
 ├── .claude-plugin/
 │   └── marketplace.json     # Claude Code 插件市场
 ├── .github/workflows/validate.yml
@@ -91,6 +96,16 @@ irm https://github.com/Memory175/blender-mentor/releases/latest/download/dsh-ins
 ```
 
 先 clone 再装：`powershell -File dsh/install.ps1` / `bash dsh/install.sh`。
+
+### DSH（插件市场）
+
+本仓库同时是一个 DSH 技能插件：`package.json` 声明
+`dsh.bundle.patch → cordis.patch.yml`，把内置的 `skills/blender-mentor/`
+挂载为 filesystem skill provider。dsh.so 收录通过后可用：
+
+```bash
+dsh plugin --profile web add github:Memory175/blender-mentor
+```
 
 ### Claude Code
 

@@ -30,6 +30,11 @@ Core behavior:
 ├── LICENSE                  # MIT
 ├── CHANGELOG.md
 ├── .gitignore
+├── package.json             # DSH plugin manifest (dsh.bundle.patch)
+├── cordis.patch.yml         # DSH Cordis patch (skill-filesystem provider)
+├── lib/index.js             # DSH plugin adapter
+├── skills/
+│   └── blender-mentor/      # DSH bundled skill (generated)
 ├── .claude-plugin/
 │   └── marketplace.json     # Claude Code plugin marketplace
 ├── .github/workflows/validate.yml
@@ -90,6 +95,17 @@ irm https://github.com/Memory175/blender-mentor/releases/latest/download/dsh-ins
 ```
 
 From a clone: `powershell -File dsh/install.ps1` / `bash dsh/install.sh`.
+
+### DSH (plugin market)
+
+This repository is also a DSH skill plugin: `package.json` declares
+`dsh.bundle.patch → cordis.patch.yml`, which mounts the bundled
+`skills/blender-mentor/` as a filesystem skill provider. After the dsh.so
+listing is approved, install it with:
+
+```bash
+dsh plugin --profile web add github:Memory175/blender-mentor
+```
 
 ### Claude Code
 
