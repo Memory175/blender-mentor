@@ -1,5 +1,7 @@
 # blender-mentor
 
+![Blender 全栈导师 AI Agent Skill](docs/banner.png)
+
 > Blender 全栈导师 V5.4.0 · AI Agent Skill（标准布局）
 > 把这个仓库放进支持 Agent Skills 的客户端（DSH / Claude Code / Claude.ai / Cursor 等），
 > 让 Agent 以「资深 Blender 导师 + 技术总监」的方式教学、评分、验收与排错。

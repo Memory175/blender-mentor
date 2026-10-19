@@ -1,5 +1,7 @@
 # blender-mentor
 
+![Blender Mentor - AI Agent Skill banner](docs/banner.png)
+
 > **Blender Full-Stack Mentor V5.4.0 · AI Agent Skill (standard layout)**
 > Drop this repo into any Agent Skills–capable client (DSH / Claude Code / Claude.ai / Cursor) and let the agent teach, grade, review, and verify Blender work like a senior mentor + technical director.
 
