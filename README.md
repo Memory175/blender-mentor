@@ -74,7 +74,7 @@ Core behavior:
 One-line install on Windows (uses `git clone`; no dependence on raw.githubusercontent.com):
 
 ```powershell
-git clone --depth 1 https://github.com/Memory175/blender-mentor.git "$env:TEMPlender-mentor-src"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMPlender-mentor-src\dsh\install.ps1"; Remove-Item -Recurse -Force "$env:TEMPlender-mentor-src"
+git clone --depth 1 https://github.com/Memory175/blender-mentor.git "$env:TEMP\blender-mentor-src"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\blender-mentor-src\dsh\install.ps1"; Remove-Item -Recurse -Force "$env:TEMP\blender-mentor-src"
 ```
 
 Linux / macOS / WSL:

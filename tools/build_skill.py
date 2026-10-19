@@ -272,7 +272,7 @@ Core behavior:
 One-line install on Windows (uses `git clone`; no dependence on raw.githubusercontent.com):
 
 ```powershell
-git clone --depth 1 https://github.com/OWNER/REPO.git "$env:TEMP\blender-mentor-src"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\blender-mentor-src\dsh\install.ps1"; Remove-Item -Recurse -Force "$env:TEMP\blender-mentor-src"
+git clone --depth 1 https://github.com/OWNER/REPO.git "$env:TEMP\\blender-mentor-src"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\\blender-mentor-src\\dsh\\install.ps1"; Remove-Item -Recurse -Force "$env:TEMP\\blender-mentor-src"
 ```
 
 Linux / macOS / WSL:
@@ -284,7 +284,7 @@ tmp="$(mktemp -d)"; git clone --depth 1 https://github.com/OWNER/REPO.git "$tmp/
 Alternative: download the installer from the latest Release (if release assets are reachable):
 
 ```powershell
-irm https://github.com/OWNER/REPO/releases/latest/download/dsh-install.ps1 -OutFile "$env:TEMP\dsh-install.ps1"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\dsh-install.ps1"
+irm https://github.com/OWNER/REPO/releases/latest/download/dsh-install.ps1 -OutFile "$env:TEMP\\dsh-install.ps1"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\\dsh-install.ps1"
 ```
 
 From a clone: `powershell -File dsh/install.ps1` / `bash dsh/install.sh`.
@@ -421,7 +421,7 @@ README_ZH_MD = """# blender-mentor
 Windows 一键安装（用 `git clone`，不依赖 raw.githubusercontent.com）：
 
 ```powershell
-git clone --depth 1 https://github.com/OWNER/REPO.git "$env:TEMP\blender-mentor-src"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\blender-mentor-src\dsh\install.ps1"; Remove-Item -Recurse -Force "$env:TEMP\blender-mentor-src"
+git clone --depth 1 https://github.com/OWNER/REPO.git "$env:TEMP\\blender-mentor-src"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\\blender-mentor-src\\dsh\\install.ps1"; Remove-Item -Recurse -Force "$env:TEMP\\blender-mentor-src"
 ```
 
 Linux / macOS / WSL：
@@ -433,7 +433,7 @@ tmp="$(mktemp -d)"; git clone --depth 1 https://github.com/OWNER/REPO.git "$tmp/
 备选：从 latest Release 下载安装脚本（如果 release 附件网络可达）：
 
 ```powershell
-irm https://github.com/OWNER/REPO/releases/latest/download/dsh-install.ps1 -OutFile "$env:TEMP\dsh-install.ps1"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\dsh-install.ps1"
+irm https://github.com/OWNER/REPO/releases/latest/download/dsh-install.ps1 -OutFile "$env:TEMP\\dsh-install.ps1"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\\dsh-install.ps1"
 ```
 
 先 clone 再装：`powershell -File dsh/install.ps1` / `bash dsh/install.sh`。
