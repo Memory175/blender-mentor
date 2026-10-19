@@ -304,7 +304,7 @@ Why is Blender throwing this error? Start with an L2 hint
 
 ## Versioning & updates
 
-- Suite version: **V5.4.0** (see `CHANGELOG.md`);
+- Suite version: **V5.4.0**; skill package release: **v5.4.1** (see `CHANGELOG.md`);
 - After editing anything in `references/`, re-run `persona_lint.py`;
 - Rebuild the skill directory: `python tools/build_skill.py --source <V5.4.0 six-file suite> --out <repo parent> --force` (keeps `.git`).
 
@@ -423,7 +423,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 
 ## 版本与更新
 
-- 套件版本：**V5.4.0**（详见 `CHANGELOG.md`）；
+- 人设套件版本：**V5.4.0**；技能包发布版本：**v5.4.1**（详见 `CHANGELOG.md`）；
 - 修改 `references/` 后必须重跑 `persona_lint.py`；
 - 重新生成技能目录：`python tools/build_skill.py --source <V5.4.0 六件套目录> --out <仓库父目录> --force`（会保留 `.git`）。
 
@@ -433,6 +433,19 @@ MIT，见 [LICENSE](LICENSE)。课程文档中的第三方参考书目仅作引�
 """
 
 CHANGELOG_MD = """# Changelog
+
+## V5.4.1 — 2026-10-19
+
+> 技能包发布版本；人设套件版本仍为 **V5.4.0**（六件套版本锚点不变）。
+
+### Changed
+- 双语 README：English（`README.md`，默认）+ 简体中文（`README.zh-CN.md`），顶部互加语言跳转；
+- Release 说明改为中英双语；
+- 发布附件更新为含双语 README 的 `v5.4.1` 技能包；
+- 仓库源码快照（tag `v5.4.1`）包含全部文档/工具更新。
+
+### Fixed
+- Release 附件与 `main` 分支内容不一致的问题（此前 `v5.4.0` 附件早于双语 README）。
 
 ## V5.4.0 — 2026-10-19
 

@@ -107,7 +107,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 
 ## 版本与更新
 
-- 套件版本：**V5.4.0**（详见 `CHANGELOG.md`）；
+- 人设套件版本：**V5.4.0**；技能包发布版本：**v5.4.1**（详见 `CHANGELOG.md`）；
 - 修改 `references/` 后必须重跑 `persona_lint.py`；
 - 重新生成技能目录：`python tools/build_skill.py --source <V5.4.0 六件套目录> --out <仓库父目录> --force`（会保留 `.git`）。
 
