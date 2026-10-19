@@ -1,50 +1,54 @@
 # blender-mentor
 
-> Blender 全栈导师 V5.4.0 · AI Agent Skill（标准布局）
-> 把这个仓库放进支持 Agent Skills 的客户端（DSH / Claude Code / Claude.ai / Cursor 等），
-> 让 Agent 以「资深 Blender 导师 + 技术总监」的方式教学、评分、验收与排错。
+> **Blender Full-Stack Mentor V5.4.0 · AI Agent Skill (standard layout)**
+> Drop this repo into any Agent Skills–capable client (DSH / Claude Code / Claude.ai / Cursor) and let the agent teach, grade, review, and verify Blender work like a senior mentor + technical director.
 
-## 这是什么
+**English** | [简体中文](README.zh-CN.md)
 
-`SKILL.md` 是常驻操作手册（路由 + D1–D4 交付闭环 + 机器验收命令）；`references/` 是六份可按需加载的人设文档；`scripts/` 是可执行的验收工具；`assets/` 是模板与规则数据。
+[![validate-skill](https://github.com/Memory175/blender-mentor/actions/workflows/validate.yml/badge.svg)](https://github.com/Memory175/blender-mentor/actions)
 
-核心行为：
+## What it is
 
-- **先诊断再动手**：按 rubric 判断 L0–L3 candidate，再决定讲解 / 陪练 / 验收 / 救火 / 评审模式；
-- **交付闭环 D1→D4**：交付 → 对产物采样自评 → P0/P1/P2 修改清单 → 明确选项询问；
-- **机器验收**：资产门、曲线审计、渲染探针、ESD 包络断言、生物力学检查；
-- **不伪造、不越权、不替用户签核**；验收数据必须来自产物。
+`SKILL.md` is the resident operating manual (routing + D1–D4 delivery loop + machine-acceptance commands); `references/` holds six on-demand persona documents; `scripts/` ships executable acceptance tools; `assets/` holds templates and rule data.
 
-## 仓库结构
+Core behavior:
+
+- **Diagnose before acting** — place the learner at an L0–L3 candidate level via the rubric, then choose explain / coach / accept / firefight / review mode.
+- **Delivery loop D1→D4** — deliver → self-evaluate by sampling the artifact → P0/P1/P2 fix list → an explicit, option-based question.
+- **Machine acceptance** — asset gate, curve audit, render probe, ESD envelope checks, biomechanics checks.
+- **No fabrication, no unauthorized actions, no sign-off substitution** — acceptance evidence must be sampled from the artifact.
+
+## Repository layout
 
 ```text
 .
-├── SKILL.md                 # Agent Skill 入口（必须）
-├── README.md
+├── SKILL.md                 # Agent Skill entry point (required)
+├── README.md                # English (this file)
+├── README.zh-CN.md          # 简体中文
 ├── LICENSE                  # MIT
 ├── CHANGELOG.md
 ├── .gitignore
 ├── .github/workflows/validate.yml
 ├── tools/
-│   └── build_skill.py       # 维护侧构建工具（从 V5.4.0 六件套重建技能）
-├── references/              # 人设文档（按需加载）
-│   ├── main.md              # 身份/边界/六段模板/40 条红线
-│   ├── rubric.md            # 0–3 分评分表/关键项/自评模板
-│   ├── curriculum.md        # M0–M6 课程包
-│   ├── toolbox_text.md      # 130 条误区库（已剥离代码）
-│   ├── module-esd.md        # ESD-001 能量驱动次级动画
-│   └── module-biomechanics.md # BIO-001 生物力学
-├── scripts/                 # 10 个可执行脚本
-│   ├── asset_gate.py        # 资产门（Blender 无头）
-│   ├── curve_audit.py       # 曲线审计
-│   ├── render_probe.py      # 渲染探针（//probe.png）
-│   ├── envelope_check.py    # ESD 包络断言
-│   ├── expand_esd_spec.py   # ESD 模板展开
-│   ├── sample_esd_from_blend.py # 从 .blend 采样 measured spec
-│   ├── biomech_check.py     # BIO-001 生物力学验收
-│   ├── persona_lint.py      # 人设结构门 + 拒绝词扫描
-│   ├── load_router.py       # 按任务生成加载清单
-│   └── selftest.py          # 工具链自检（严格三态）
+│   └── build_skill.py       # maintainer build tool (rebuild from the V5.4.0 six-file suite)
+├── references/              # persona documents, loaded on demand
+│   ├── main.md              # identity / boundaries / six-part template / 40 red lines
+│   ├── rubric.md            # 0–3 scoring rubric / critical items / self-review template
+│   ├── curriculum.md        # M0–M6 course package
+│   ├── toolbox_text.md      # 130-misconception library (code stripped)
+│   ├── module-esd.md        # ESD-001 energy-scaled secondary animation
+│   └── module-biomechanics.md # BIO-001 biomechanics
+├── scripts/                 # 10 executable scripts
+│   ├── asset_gate.py        # asset gate (headless Blender)
+│   ├── curve_audit.py       # curve audit
+│   ├── render_probe.py      # render probe (//probe.png)
+│   ├── envelope_check.py    # ESD envelope assertions
+│   ├── expand_esd_spec.py   # expand ESD template to executable spec
+│   ├── sample_esd_from_blend.py # sample a measured spec from a .blend
+│   ├── biomech_check.py     # BIO-001 biomechanics acceptance
+│   ├── persona_lint.py      # persona structure gate + deny-word scan
+│   ├── load_router.py       # generate the load plan for a task
+│   └── selftest.py          # toolchain self-test (strict three-state)
 └── assets/
     ├── load_plan.json
     ├── esd_spec.template.json
@@ -53,9 +57,9 @@
     └── deny.example.txt
 ```
 
-## 安装
+## Installation
 
-### DSH（本机）
+### DSH (local)
 
 ```bash
 git clone https://github.com/Memory175/blender-mentor.git blender-mentor
@@ -66,46 +70,46 @@ cp -r blender-mentor ~/.agents/skills/blender-mentor
 
 ### Claude Code
 
-放到用户级 `~/.claude/skills/blender-mentor/`，或项目级 `.claude/skills/blender-mentor/`。
+Place it in `~/.claude/skills/blender-mentor/` (user level) or `.claude/skills/blender-mentor/` (project level).
 
-### Claude.ai（支持 Skills 的版本）
+### Claude.ai (Skills-enabled plans)
 
-把仓库打成 zip（或直接上传本仓库的 `SKILL.md` + 目录），上传到 Skills 库即可。
+Zip the repo (or upload `SKILL.md` together with its directories) and add it to your Skills library.
 
 ### Cursor
 
-直接用 Cursor 打开本仓库；对话中 `@SKILL.md`、`@references/main.md` 引用。想常驻可把 `SKILL.md` 放进 `.cursor/rules/`。
+Open this repo in Cursor and reference it in chat with `@SKILL.md` / `@references/main.md`. To keep it always on, put `SKILL.md` under `.cursor/rules/`.
 
-## 验证
+## Verify
 
 ```bash
-python -m compileall -q scripts
-python scripts/persona_lint.py . --allow-no-deny   # 结构门
-python scripts/selftest.py .                       # 工具链自检（14 pass + 1 skipped）
+python -m compileall -q scripts tools
+python scripts/persona_lint.py . --allow-no-deny   # structure gate
+python scripts/selftest.py .                       # toolchain self-test (14 pass + 1 skipped)
 ```
 
-Blender 侧（需要本机 Blender 4.2 LTS / 5.x）：
+Blender-side checks (requires Blender 4.2 LTS / 5.x):
 
 ```bash
 blender -b file.blend --python scripts/asset_gate.py -- --json gate.json
 blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --support 1-4
 ```
 
-## 使用示例
+## Usage examples
 
 ```text
-用 blender-mentor 带我过一遍 M1 建模与拓扑
-帮我审这个走路循环：按评分表打分，给 P0/P1/P2 修改清单
-弹跳动画的形变包络帮我做成可验收的 spec
-这个 Blender 报错什么原因？先给我 L2 提示
+Use blender-mentor to walk me through M1 modeling and topology
+Review this walk cycle: grade it with the rubric and give a P0/P1/P2 fix list
+Turn this bounce animation's deformation envelope into an acceptance-testable spec
+Why is Blender throwing this error? Start with an L2 hint
 ```
 
-## 版本与更新
+## Versioning & updates
 
-- 套件版本：**V5.4.0**（详见 `CHANGELOG.md`）；
-- 修改 `references/` 后必须重跑 `persona_lint.py`；
-- 重新生成技能目录：`python tools/build_skill.py --source <V5.4.0 六件套目录> --out <仓库父目录> --force`（会保留 `.git`）。
+- Suite version: **V5.4.0** (see `CHANGELOG.md`);
+- After editing anything in `references/`, re-run `persona_lint.py`;
+- Rebuild the skill directory: `python tools/build_skill.py --source <V5.4.0 six-file suite> --out <repo parent> --force` (keeps `.git`).
 
 ## License
 
-MIT，见 [LICENSE](LICENSE)。课程文档中的第三方参考书目仅作引用，版权归原作者。
+MIT — see [LICENSE](LICENSE). Third-party references in the course documents are cited only; copyright remains with their authors.

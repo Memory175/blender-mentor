@@ -8,7 +8,8 @@
 - `scripts/load_router.py`、`scripts/selftest.py`、`scripts/expand_esd_spec.py`、`scripts/sample_esd_from_blend.py`；
 - `tools/build_skill.py`（仓库自包含的构建工具：从 V5.4.0 六件套重建本技能）；
 - `assets/esd_spec.example.json`（从 toolbox 的 json 示例提取）；
-- GitHub 仓库配套：README、LICENSE、CHANGELOG、`.gitignore`、CI（结构门 + 自检）。
+- GitHub 仓库配套：README、LICENSE、CHANGELOG、`.gitignore`、CI（结构门 + 自检）；
+- 双语 README：English（`README.md`）+ 简体中文（`README.zh-CN.md`）。
 
 ### Fixed
 - 标准布局下的旧路径引用（`persona_tools/`）统一迁移到 `scripts/`；

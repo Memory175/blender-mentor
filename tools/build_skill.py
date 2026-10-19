@@ -196,11 +196,133 @@ E. 换方向（重新定义目标）
 """
 
 
-README_MD = """# blender-mentor
+README_EN_MD = """# blender-mentor
+
+> **Blender Full-Stack Mentor V5.4.0 · AI Agent Skill (standard layout)**
+> Drop this repo into any Agent Skills–capable client (DSH / Claude Code / Claude.ai / Cursor) and let the agent teach, grade, review, and verify Blender work like a senior mentor + technical director.
+
+**English** | [简体中文](README.zh-CN.md)
+
+[![validate-skill](https://github.com/OWNER/REPO/actions/workflows/validate.yml/badge.svg)](https://github.com/OWNER/REPO/actions)
+
+## What it is
+
+`SKILL.md` is the resident operating manual (routing + D1–D4 delivery loop + machine-acceptance commands); `references/` holds six on-demand persona documents; `scripts/` ships executable acceptance tools; `assets/` holds templates and rule data.
+
+Core behavior:
+
+- **Diagnose before acting** — place the learner at an L0–L3 candidate level via the rubric, then choose explain / coach / accept / firefight / review mode.
+- **Delivery loop D1→D4** — deliver → self-evaluate by sampling the artifact → P0/P1/P2 fix list → an explicit, option-based question.
+- **Machine acceptance** — asset gate, curve audit, render probe, ESD envelope checks, biomechanics checks.
+- **No fabrication, no unauthorized actions, no sign-off substitution** — acceptance evidence must be sampled from the artifact.
+
+## Repository layout
+
+```text
+.
+├── SKILL.md                 # Agent Skill entry point (required)
+├── README.md                # English (this file)
+├── README.zh-CN.md          # 简体中文
+├── LICENSE                  # MIT
+├── CHANGELOG.md
+├── .gitignore
+├── .github/workflows/validate.yml
+├── tools/
+│   └── build_skill.py       # maintainer build tool (rebuild from the V5.4.0 six-file suite)
+├── references/              # persona documents, loaded on demand
+│   ├── main.md              # identity / boundaries / six-part template / 40 red lines
+│   ├── rubric.md            # 0–3 scoring rubric / critical items / self-review template
+│   ├── curriculum.md        # M0–M6 course package
+│   ├── toolbox_text.md      # 130-misconception library (code stripped)
+│   ├── module-esd.md        # ESD-001 energy-scaled secondary animation
+│   └── module-biomechanics.md # BIO-001 biomechanics
+├── scripts/                 # 10 executable scripts
+│   ├── asset_gate.py        # asset gate (headless Blender)
+│   ├── curve_audit.py       # curve audit
+│   ├── render_probe.py      # render probe (//probe.png)
+│   ├── envelope_check.py    # ESD envelope assertions
+│   ├── expand_esd_spec.py   # expand ESD template to executable spec
+│   ├── sample_esd_from_blend.py # sample a measured spec from a .blend
+│   ├── biomech_check.py     # BIO-001 biomechanics acceptance
+│   ├── persona_lint.py      # persona structure gate + deny-word scan
+│   ├── load_router.py       # generate the load plan for a task
+│   └── selftest.py          # toolchain self-test (strict three-state)
+└── assets/
+    ├── load_plan.json
+    ├── esd_spec.template.json
+    ├── esd_spec.example.json
+    ├── esd_sample_config.template.json
+    └── deny.example.txt
+```
+
+## Installation
+
+### DSH (local)
+
+```bash
+git clone https://github.com/OWNER/REPO.git blender-mentor
+cp -r blender-mentor ~/.agents/skills/blender-mentor
+# Windows PowerShell:
+# Copy-Item -Recurse blender-mentor "$env:USERPROFILE\\.agents\\skills\\blender-mentor"
+```
+
+### Claude Code
+
+Place it in `~/.claude/skills/blender-mentor/` (user level) or `.claude/skills/blender-mentor/` (project level).
+
+### Claude.ai (Skills-enabled plans)
+
+Zip the repo (or upload `SKILL.md` together with its directories) and add it to your Skills library.
+
+### Cursor
+
+Open this repo in Cursor and reference it in chat with `@SKILL.md` / `@references/main.md`. To keep it always on, put `SKILL.md` under `.cursor/rules/`.
+
+## Verify
+
+```bash
+python -m compileall -q scripts tools
+python scripts/persona_lint.py . --allow-no-deny   # structure gate
+python scripts/selftest.py .                       # toolchain self-test (14 pass + 1 skipped)
+```
+
+Blender-side checks (requires Blender 4.2 LTS / 5.x):
+
+```bash
+blender -b file.blend --python scripts/asset_gate.py -- --json gate.json
+blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --support 1-4
+```
+
+## Usage examples
+
+```text
+Use blender-mentor to walk me through M1 modeling and topology
+Review this walk cycle: grade it with the rubric and give a P0/P1/P2 fix list
+Turn this bounce animation's deformation envelope into an acceptance-testable spec
+Why is Blender throwing this error? Start with an L2 hint
+```
+
+## Versioning & updates
+
+- Suite version: **V5.4.0** (see `CHANGELOG.md`);
+- After editing anything in `references/`, re-run `persona_lint.py`;
+- Rebuild the skill directory: `python tools/build_skill.py --source <V5.4.0 six-file suite> --out <repo parent> --force` (keeps `.git`).
+
+## License
+
+MIT — see [LICENSE](LICENSE). Third-party references in the course documents are cited only; copyright remains with their authors.
+"""
+
+
+README_ZH_MD = """# blender-mentor
 
 > Blender 全栈导师 V5.4.0 · AI Agent Skill（标准布局）
 > 把这个仓库放进支持 Agent Skills 的客户端（DSH / Claude Code / Claude.ai / Cursor 等），
 > 让 Agent 以「资深 Blender 导师 + 技术总监」的方式教学、评分、验收与排错。
+
+[English](README.md) | **简体中文**
+
+[![validate-skill](https://github.com/OWNER/REPO/actions/workflows/validate.yml/badge.svg)](https://github.com/OWNER/REPO/actions)
 
 ## 这是什么
 
@@ -218,7 +340,8 @@ README_MD = """# blender-mentor
 ```text
 .
 ├── SKILL.md                 # Agent Skill 入口（必须）
-├── README.md
+├── README.md                # English
+├── README.zh-CN.md          # 简体中文
 ├── LICENSE                  # MIT
 ├── CHANGELOG.md
 ├── .gitignore
@@ -319,7 +442,8 @@ CHANGELOG_MD = """# Changelog
 - `scripts/load_router.py`、`scripts/selftest.py`、`scripts/expand_esd_spec.py`、`scripts/sample_esd_from_blend.py`；
 - `tools/build_skill.py`（仓库自包含的构建工具：从 V5.4.0 六件套重建本技能）；
 - `assets/esd_spec.example.json`（从 toolbox 的 json 示例提取）；
-- GitHub 仓库配套：README、LICENSE、CHANGELOG、`.gitignore`、CI（结构门 + 自检）。
+- GitHub 仓库配套：README、LICENSE、CHANGELOG、`.gitignore`、CI（结构门 + 自检）；
+- 双语 README：English（`README.md`）+ 简体中文（`README.zh-CN.md`）。
 
 ### Fixed
 - 标准布局下的旧路径引用（`persona_tools/`）统一迁移到 `scripts/`；
@@ -1018,7 +1142,8 @@ def build(source, out_root, force=False, repo_slug="OWNER/REPO"):
 
     # 7.0) GitHub 仓库配套文件（重建时保留 .git，可直接继续提交）
     repo_files = {
-        "README.md": README_MD.replace("OWNER/REPO", repo_slug),
+        "README.md": README_EN_MD.replace("OWNER/REPO", repo_slug),
+        "README.zh-CN.md": README_ZH_MD.replace("OWNER/REPO", repo_slug),
         "LICENSE": LICENSE_TEXT,
         "CHANGELOG.md": CHANGELOG_MD,
         ".gitignore": GITIGNORE,
