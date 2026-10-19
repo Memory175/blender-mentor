@@ -16,7 +16,7 @@ jobs:
           python-version: "3.12"
 
       - name: Compile scripts
-        run: python -m compileall -q scripts
+        run: python -m compileall -q scripts tools
 
       - name: Persona structure gate
         run: python scripts/persona_lint.py . --allow-no-deny

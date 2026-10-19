@@ -25,6 +25,8 @@
 ├── CHANGELOG.md
 ├── .gitignore
 ├── .github/workflows/validate.yml
+├── tools/
+│   └── build_skill.py       # 维护侧构建工具（从 V5.4.0 六件套重建技能）
 ├── references/              # 人设文档（按需加载）
 │   ├── main.md              # 身份/边界/六段模板/40 条红线
 │   ├── rubric.md            # 0–3 分评分表/关键项/自评模板
@@ -102,7 +104,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 
 - 套件版本：**V5.4.0**（详见 `CHANGELOG.md`）；
 - 修改 `references/` 后必须重跑 `persona_lint.py`；
-- 重新生成技能目录：`python build_skill.py --source <V5.4.0 六件套目录> --out . --force`（保留 `.git`）。
+- 重新生成技能目录：`python tools/build_skill.py --source <V5.4.0 六件套目录> --out <仓库父目录> --force`（会保留 `.git`）。
 
 ## License
 

@@ -6,6 +6,7 @@
 - 标准 Agent Skill 布局：`SKILL.md` + `references/` + `scripts/` + `assets/`；
 - `scripts/curve_audit.py`、`scripts/render_probe.py`（从 toolbox §2.2/§2.6 提取）；
 - `scripts/load_router.py`、`scripts/selftest.py`、`scripts/expand_esd_spec.py`、`scripts/sample_esd_from_blend.py`；
+- `tools/build_skill.py`（仓库自包含的构建工具：从 V5.4.0 六件套重建本技能）；
 - `assets/esd_spec.example.json`（从 toolbox 的 json 示例提取）；
 - GitHub 仓库配套：README、LICENSE、CHANGELOG、`.gitignore`、CI（结构门 + 自检）。
 
