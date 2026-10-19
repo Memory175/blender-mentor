@@ -37,6 +37,10 @@ Core behavior:
 │   └── build_skill.py       # maintainer build tool (rebuild from the V5.4.0 six-file suite)
 ├── plugins/
 │   └── blender-mentor/      # Claude Code plugin wrapper (generated)
+├── dsh/
+│   ├── install.ps1          # DSH one-line installer (Windows)
+│   ├── install.sh           # DSH installer (Linux/macOS/WSL)
+│   └── README.md
 ├── references/              # persona documents, loaded on demand
 │   ├── main.md              # identity / boundaries / six-part template / 40 red lines
 │   ├── rubric.md            # 0–3 scoring rubric / critical items / self-review template
@@ -67,11 +71,24 @@ Core behavior:
 
 ### DSH (local)
 
+One-line install on Windows:
+
+```powershell
+irm https://raw.githubusercontent.com/Memory175/blender-mentor/main/dsh/install.ps1 | iex
+```
+
+Linux / macOS / WSL:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Memory175/blender-mentor/main/dsh/install.sh | bash
+```
+
+Offline / clone fallback:
+
 ```bash
 git clone https://github.com/Memory175/blender-mentor.git blender-mentor
-cp -r blender-mentor ~/.agents/skills/blender-mentor
-# Windows PowerShell:
-# Copy-Item -Recurse blender-mentor "$env:USERPROFILE\.agents\skills\blender-mentor"
+powershell -File blender-mentor/dsh/install.ps1   # Windows
+bash blender-mentor/dsh/install.sh                # Linux/macOS/WSL
 ```
 
 ### Claude Code

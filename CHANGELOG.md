@@ -10,6 +10,7 @@
 - 发布附件更新为含双语 README 的 `v5.4.1` 技能包；
 - Claude Code 插件支持：`.claude-plugin/marketplace.json` + `plugins/blender-mentor/`，
   可用 `/plugin marketplace add` + `/plugin install` 一键安装；
+- DSH 一键安装：`dsh/install.ps1` / `dsh/install.sh`（自动 clone、备份旧版、安装后自检）；
 - 仓库源码快照（tag `v5.4.1`）包含全部文档/工具更新。
 
 ### Fixed

@@ -235,6 +235,10 @@ Core behavior:
 │   └── build_skill.py       # maintainer build tool (rebuild from the V5.4.0 six-file suite)
 ├── plugins/
 │   └── blender-mentor/      # Claude Code plugin wrapper (generated)
+├── dsh/
+│   ├── install.ps1          # DSH one-line installer (Windows)
+│   ├── install.sh           # DSH installer (Linux/macOS/WSL)
+│   └── README.md
 ├── references/              # persona documents, loaded on demand
 │   ├── main.md              # identity / boundaries / six-part template / 40 red lines
 │   ├── rubric.md            # 0–3 scoring rubric / critical items / self-review template
@@ -265,11 +269,24 @@ Core behavior:
 
 ### DSH (local)
 
+One-line install on Windows:
+
+```powershell
+irm https://raw.githubusercontent.com/OWNER/REPO/main/dsh/install.ps1 | iex
+```
+
+Linux / macOS / WSL:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/OWNER/REPO/main/dsh/install.sh | bash
+```
+
+Offline / clone fallback:
+
 ```bash
 git clone https://github.com/OWNER/REPO.git blender-mentor
-cp -r blender-mentor ~/.agents/skills/blender-mentor
-# Windows PowerShell:
-# Copy-Item -Recurse blender-mentor "$env:USERPROFILE\\.agents\\skills\\blender-mentor"
+powershell -File blender-mentor/dsh/install.ps1   # Windows
+bash blender-mentor/dsh/install.sh                # Linux/macOS/WSL
 ```
 
 ### Claude Code
@@ -367,6 +384,10 @@ README_ZH_MD = """# blender-mentor
 │   └── build_skill.py       # 维护侧构建工具（从 V5.4.0 六件套重建技能）
 ├── plugins/
 │   └── blender-mentor/      # Claude Code 插件包装（自动生成）
+├── dsh/
+│   ├── install.ps1          # DSH 一键安装（Windows）
+│   ├── install.sh           # DSH 安装脚本（Linux/macOS/WSL）
+│   └── README.md
 ├── references/              # 人设文档（按需加载）
 │   ├── main.md              # 身份/边界/六段模板/40 条红线
 │   ├── rubric.md            # 0–3 分评分表/关键项/自评模板
@@ -397,11 +418,24 @@ README_ZH_MD = """# blender-mentor
 
 ### DSH（本机）
 
+Windows 一键安装：
+
+```powershell
+irm https://raw.githubusercontent.com/OWNER/REPO/main/dsh/install.ps1 | iex
+```
+
+Linux / macOS / WSL：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/OWNER/REPO/main/dsh/install.sh | bash
+```
+
+离线 / 先 clone 再装：
+
 ```bash
 git clone https://github.com/OWNER/REPO.git blender-mentor
-cp -r blender-mentor ~/.agents/skills/blender-mentor
-# Windows PowerShell:
-# Copy-Item -Recurse blender-mentor "$env:USERPROFILE\\.agents\\skills\\blender-mentor"
+powershell -File blender-mentor/dsh/install.ps1   # Windows
+bash blender-mentor/dsh/install.sh                # Linux/macOS/WSL
 ```
 
 ### Claude Code
@@ -470,6 +504,7 @@ CHANGELOG_MD = """# Changelog
 - 发布附件更新为含双语 README 的 `v5.4.1` 技能包；
 - Claude Code 插件支持：`.claude-plugin/marketplace.json` + `plugins/blender-mentor/`，
   可用 `/plugin marketplace add` + `/plugin install` 一键安装；
+- DSH 一键安装：`dsh/install.ps1` / `dsh/install.sh`（自动 clone、备份旧版、安装后自检）；
 - 仓库源码快照（tag `v5.4.1`）包含全部文档/工具更新。
 
 ### Fixed
@@ -564,6 +599,12 @@ jobs:
               assert skill_md.is_file(), f"missing {skill_md}"
           print("plugin manifests: ok")
           PY
+
+      - name: Check DSH installers
+        run: |
+          test -f dsh/install.ps1
+          bash -n dsh/install.sh
+          echo "dsh installers: ok"
 
       - name: Layout check (no legacy paths in references)
         run: |
@@ -1182,9 +1223,9 @@ def build(source, out_root, force=False, repo_slug="OWNER/REPO"):
     if os.path.exists(skill_dir):
         if not force:
             raise RuntimeError("%s already exists; pass --force to overwrite" % skill_dir)
-        # 保留 .git（仓库历史）与 docs（README/社交预览图资源），其余重新生成
+        # 保留 .git（仓库历史）、docs（图片资源）与 dsh（安装脚本），其余重新生成
         for entry in os.listdir(skill_dir):
-            if entry in (".git", "docs"):
+            if entry in (".git", "docs", "dsh"):
                 continue
             p = os.path.join(skill_dir, entry)
             if os.path.isdir(p):

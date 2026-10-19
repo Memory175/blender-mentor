@@ -38,6 +38,10 @@
 │   └── build_skill.py       # 维护侧构建工具（从 V5.4.0 六件套重建技能）
 ├── plugins/
 │   └── blender-mentor/      # Claude Code 插件包装（自动生成）
+├── dsh/
+│   ├── install.ps1          # DSH 一键安装（Windows）
+│   ├── install.sh           # DSH 安装脚本（Linux/macOS/WSL）
+│   └── README.md
 ├── references/              # 人设文档（按需加载）
 │   ├── main.md              # 身份/边界/六段模板/40 条红线
 │   ├── rubric.md            # 0–3 分评分表/关键项/自评模板
@@ -68,11 +72,24 @@
 
 ### DSH（本机）
 
+Windows 一键安装：
+
+```powershell
+irm https://raw.githubusercontent.com/Memory175/blender-mentor/main/dsh/install.ps1 | iex
+```
+
+Linux / macOS / WSL：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Memory175/blender-mentor/main/dsh/install.sh | bash
+```
+
+离线 / 先 clone 再装：
+
 ```bash
 git clone https://github.com/Memory175/blender-mentor.git blender-mentor
-cp -r blender-mentor ~/.agents/skills/blender-mentor
-# Windows PowerShell:
-# Copy-Item -Recurse blender-mentor "$env:USERPROFILE\.agents\skills\blender-mentor"
+powershell -File blender-mentor/dsh/install.ps1   # Windows
+bash blender-mentor/dsh/install.sh                # Linux/macOS/WSL
 ```
 
 ### Claude Code
