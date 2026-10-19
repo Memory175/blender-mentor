@@ -71,25 +71,25 @@ Core behavior:
 
 ### DSH (local)
 
-One-line install on Windows (downloads the installer from the latest release):
+One-line install on Windows (uses `git clone`; no dependence on raw.githubusercontent.com):
 
 ```powershell
-irm https://github.com/Memory175/blender-mentor/releases/latest/download/dsh-install.ps1 -OutFile "$env:TEMP\dsh-install.ps1"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\dsh-install.ps1"
+git clone --depth 1 https://github.com/Memory175/blender-mentor.git "$env:TEMPlender-mentor-src"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMPlender-mentor-src\dsh\install.ps1"; Remove-Item -Recurse -Force "$env:TEMPlender-mentor-src"
 ```
 
 Linux / macOS / WSL:
 
 ```bash
-curl -fsSL https://github.com/Memory175/blender-mentor/releases/latest/download/dsh-install.sh | bash
+tmp="$(mktemp -d)"; git clone --depth 1 https://github.com/Memory175/blender-mentor.git "$tmp/bm" && bash "$tmp/bm/dsh/install.sh"; rm -rf "$tmp"
 ```
 
-Offline / clone fallback:
+Alternative: download the installer from the latest Release (if release assets are reachable):
 
-```bash
-git clone https://github.com/Memory175/blender-mentor.git blender-mentor
-powershell -File blender-mentor/dsh/install.ps1   # Windows
-bash blender-mentor/dsh/install.sh                # Linux/macOS/WSL
+```powershell
+irm https://github.com/Memory175/blender-mentor/releases/latest/download/dsh-install.ps1 -OutFile "$env:TEMP\dsh-install.ps1"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\dsh-install.ps1"
 ```
+
+From a clone: `powershell -File dsh/install.ps1` / `bash dsh/install.sh`.
 
 ### Claude Code
 
