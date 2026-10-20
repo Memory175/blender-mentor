@@ -132,6 +132,16 @@ def main(argv=None):
                and r9["modules_allowed"] is True
                and any("module-engineering" in f["file"] for f in r9["files"]),
                {"weld": r8["modules_allowed"], "mug": r9["modules_allowed"]})
+        r10 = router["route"]("建模入门")
+        _check(checks, "router_core_task",
+               r10["status"] == "ok" and r10["core_allowed"] is True
+               and r10["modules_allowed"] is False
+               and not any(f.get("kind") == "module" for f in r10["files"]),
+               {"status": r10["status"], "modules": r10["modules_allowed"]})
+        r11 = router["route"]("Review this walk cycle")
+        _check(checks, "router_english_bio",
+               any("module-biomechanics" in f["file"] for f in r11["files"]),
+               [f["file"] for f in r11["files"]])
         eng_path = os.path.join(TOOLS, "engineering_check.py")
         try:
             compile(open(eng_path, encoding="utf-8").read(), eng_path, "exec")
@@ -171,7 +181,7 @@ def main(argv=None):
                 "none": pf["evaluate"](root, "今天天气怎么样")["decision"],
             }
             _check(checks, "module_preflight_gate",
-                   decisions["eng"] == "proceed" and decisions["weld"] == "ask" and decisions["none"] == "block",
+                   decisions["eng"] == "proceed" and decisions["weld"] == "block" and decisions["none"] == "block",
                    decisions)
             ac = _load("audit_claims", os.path.join(TOOLS, "audit_claims.py"))
             claim_dir = os.path.join(root, "tests", "module_governance", "claims")
@@ -187,10 +197,14 @@ def main(argv=None):
                        good["status"] == "pass" and bad["status"] == "fail" and bool(bad["uncited"])
                        and dangling["status"] == "fail" and bool(dangling["dangling"]),
                        {"good": good["status"], "uncited": len(bad["uncited"]), "dangling": len(dangling["dangling"])})
+                core_pf = json.load(open(os.path.join(claim_dir, "preflight_core.json"), encoding="utf-8"))
+                core = ac["audit"](open(os.path.join(claim_dir, "teaching.md"), encoding="utf-8").read(), core_pf)
+                _check(checks, "claim_audit_core_skip",
+                       core["status"] == "skipped", {"core": core["status"]})
         except Exception as exc:  # noqa: BLE001
             _check(checks, "module_governance_lint", False, str(exc))
             _check(checks, "module_preflight_gate", False, str(exc))
-        cfg_path = os.path.join(ROOT, "assets", "esd_sample_config.template.json")
+        cfg_path = os.path.join(root, "assets", "esd_sample_config.template.json")
         try:
             cfg = json.load(open(cfg_path, encoding="utf-8"))
             _check(checks, "esd_sample_config_schema",

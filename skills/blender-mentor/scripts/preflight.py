@@ -26,6 +26,7 @@ def evaluate(root, task, modules_dir=None, registry_path=None, max_modules=2):
     registry, reg_problems = mg.load_registry(root, registry_path) if not modules_dir else (None, [])
     modules, problems = mg.load_modules(root, modules_dir, registry)
     all_problems = list(reg_problems) + list(problems)
+    core_triggers = (registry or {}).get("core_triggers", [])
     selected = mg.select_modules(modules, task, max_modules=max_modules)
     matched, required, available = mg.coverage_for(selected, task)
     missing = sorted(k for k in required if k not in available)
@@ -48,9 +49,14 @@ def evaluate(root, task, modules_dir=None, registry_path=None, max_modules=2):
             relevant.append(c)
     decision = "proceed"
     questions = []
+    core_hits = []
     if not selected:
-        decision = "block"
-        questions.append("模块包没有命中任何相关模块。我不会编造数据；请选择：补充参考数据、允许显式假设、或缩小任务。")
+        core_hits = [kw for kw in core_triggers if mg.keyword_hit(kw, task)]
+        if core_hits:
+            decision = "proceed_core"
+        else:
+            decision = "block"
+            questions.append("模块包没有命中任何相关模块，且任务不在核心教学覆盖范围。我不会编造数据；请选择：补充参考数据、允许显式假设、或缩小任务。")
     elif relevant:
         decision = "ask"
         questions.append("检测到模块冲突。请选择：修改哪个模块 / 新增 override 模块 / 以哪个为准 / 放弃该项检查。")
@@ -72,6 +78,7 @@ def evaluate(root, task, modules_dir=None, registry_path=None, max_modules=2):
         "coverage_unmapped": unmapped,
         "conflicts": relevant,
         "questions": questions,
+        "core_triggers_hit": core_hits,
         "data": {k: available[k] for k in sorted(required) if k in available},
         "modules_considered": len(modules),
     }
@@ -95,10 +102,14 @@ def main():
         print("PREFLIGHT " + json.dumps({"decision": "error", "error": str(exc)}, ensure_ascii=False))
         return 1
     if args.json:
-        with open(args.json, "w", encoding="utf-8") as fh:
-            json.dump(result, fh, ensure_ascii=False, indent=2)
+        try:
+            with open(args.json, "w", encoding="utf-8") as fh:
+                json.dump(result, fh, ensure_ascii=False, indent=2)
+        except OSError as exc:
+            result["json_error"] = str(exc)
+            print("PREFLIGHT_JSON_ERROR " + str(exc), file=sys.stderr)
     print("PREFLIGHT " + json.dumps(result, ensure_ascii=False))
-    return 0 if result["decision"] == "proceed" else 2
+    return 0 if result["decision"] in ("proceed", "proceed_core") else 2
 
 
 if __name__ == "__main__":

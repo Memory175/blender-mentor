@@ -26,7 +26,7 @@
 
 ![示例会话：提问、评分、P0/P1/P2 修改清单、机器验收](docs/demo.svg)
 
-> **这不是 Blender 插件。** 技能给 AI 客户端装上导师的“工作手册”；打开 `.blend` 和跑验收脚本仍然需要你本机安装 Blender（见[环境要求](#环境要求)）。
+> **这不是 Blender 插件。** 技能给 AI 客户端装上导师的“工作手册”。当宿主有 shell/Blender 执行权限（或 MCP 桥接）时，它可以自动跑 `blender -b ... --python ...`；没有这些条件时，它只能生成命令，不能替你操作 Blender 界面。打开 `.blend` 和跑验收脚本仍然需要你本机安装 Blender（见[环境要求](#环境要求)）。
 
 ## 评分速览
 
@@ -85,21 +85,23 @@ bash dsh/install.sh
 | 需要 | 用途 |
 |---|---|
 | Blender 4.2 LTS / 5.x | `.blend` 验收脚本（`blender -b ... --python scripts/...`） |
-| Python 3 | `selftest.py`、`persona_lint.py`、`load_router.py` |
+| Python 3 | `selftest.py`、`persona_lint.py`、`load_router.py`、`preflight.py` |
+| 可选：shell 或 Blender MCP/RT 桥接 | 自动执行脚本；没有时需手动把命令粘到 Scripting 或终端 |
 
 ## 工作原理
 
 ```text
 SKILL.md       路由 + D1–D4 交付闭环 + 机器验收命令
-references/    6 份人设文档，按需加载
+references/    8 个参考文件（7 份人设文档 + 模块格式），按需加载
 scripts/       18 个可执行工具
 assets/        ESD 模板、加载清单、拒绝词示例
 ```
 
 1. `SKILL.md` 负责路由，并设定交付闭环。
-2. `load_router.py` 生成该任务的加载清单，只加载相关 references。
-3. 验收脚本通过无头 Blender 操作你本地的 `.blend`。
-4. 文件不出本机；验收工具不会上传任何内容。
+2. `preflight.py` 先分类：`proceed`（模块支撑）、`proceed_core`（教学/操作，无需模块）、`ask`、`block`（需要参考数据但无模块覆盖）。
+3. `load_router.py` 生成该任务的加载清单，只加载预审选中的模块；`proceed_core` 只加载核心文档，不加载模块。
+4. 验收脚本通过无头 Blender 操作你本地的 `.blend`。
+5. 文件不出本机；验收工具不会上传任何内容。
 
 <details>
 <summary><strong>高级安装方式</strong></summary>
@@ -138,7 +140,7 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 ├── .claude-plugin/marketplace.json
 ├── plugins/blender-mentor/      # Claude Code 插件包装（自动生成）
 ├── dsh/install.ps1 / install.sh # DSH 一键安装脚本
-├── references/                  # 6 份人设文档，按需加载
+├── references/                  # 8 个参考文件（7 份人设文档 + 模块格式）
 ├── scripts/                     # 18 个可执行工具
 ├── assets/                      # ESD 模板、加载清单、拒绝词示例
 ├── docs/                        # banner + 示例会话图
@@ -150,7 +152,7 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 ## 常见问题
 
 **这是 Blender 插件吗？**
-不是。它是 Agent Skill：给 AI 客户端加载的指令 + 脚本；Blender 需要另外安装。
+不是。它是 Agent Skill：给 AI 客户端加载的指令 + 脚本；Blender 需要另外安装。有 shell/MCP 时它可自动执行无头脚本，但没有桥接时不能操作 Blender GUI。
 
 **需要先装 Blender 吗？**
 只做教学、点评和规划不需要；要打开 `.blend`、跑渲染探针和机器验收时需要 Blender 4.2 LTS / 5.x。
@@ -165,14 +167,14 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 DSH、Claude Code、Claude.ai、Cursor，以及任何支持标准 Agent Skills 布局（`SKILL.md` + 资源目录）的客户端。
 
 **两个版本号是什么意思？**
-人设套件为 **V5.6.0**；打包后的技能发布版本为 **v5.6.0**。
+人设套件为 **V5.6.1**；打包后的技能发布版本为 **v5.6.1**。
 
 ## 开发与验证
 
 ```bash
 python -m compileall -q scripts tools
 python scripts/persona_lint.py . --allow-no-deny   # 结构门
-python scripts/selftest.py .                       # 21 pass + 1 skipped
+python scripts/selftest.py .                       # 24 pass + 1 skipped
 ```
 
 Blender 侧检查：
@@ -185,7 +187,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 重建技能目录：
 
 ```bash
-python tools/build_skill.py --source <V5.6.0 套件目录> --out <仓库父目录> --force
+python tools/build_skill.py --source <V5.6.1 套件目录> --out <仓库父目录> --force
 ```
 
 ## 许可

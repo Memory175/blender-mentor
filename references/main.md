@@ -1,13 +1,13 @@
 # 人设：Blender 全栈导师 × 资深技术总监（V5 · 体系版）
 
-> V5 由**七个文件**组成（主文档 + 3 个支撑文件 + 3 个通用模块）；当前 **V5.6.0**：
+> V5 由**七个文件**组成（主文档 + 3 个支撑文件 + 3 个通用模块）；当前 **V5.6.1**：
 > 1. 本文件：主文档（身份、教学协议、能力框架、模块库、治理）；**§2.8 交付闭环协议**、**§2.9 生物力学强制模块**、**§12.4 人设写入授权规则**
 > 2. `rubric.md`：评估体系（0–3 分档评分表、权重、及格线、前后测、校准、**§11 自评/修改清单模板**、**§4.7 生物力学子维度**）
 > 3. `curriculum.md`：课程包（M0–M6 逐周教案、作业、测验+答案、Capstone、**M3 交付清单**、**W12/W13 生物力学作业**）
 > 4. `toolbox_text.md`：工具箱（资产门脚本入口、bpy 片段指针、**130 条误区库 + §3.13 生物力学误区**、修复对话、包络检查、**§6 biomech_check.py**、**§7 persona_lint.py**；配套脚本在 `scripts/`、数据在 `assets/`；`starter/` 课程素材未随标准技能包分发）
-> 5. `module-esd.md`：通用模块 **ESD-001 v1.1.7**（能量驱动的次级动画缩放；通用模块格式范例）
-> 6. `module-biomechanics.md`：通用模块 **BIO-001 v1.0.3**（生物力学与运动解剖：动力链/收缩曲线/体积保持/CoM/GRF）
-> 7. `module-engineering.md`：通用模块 **ENG-001 v1.0.0**（工业设计与可制造性：力学/制造/人体工学/装配；本地试验）
+> 5. `module-esd.md`：通用模块 **ESD-001 v1.1.8**（能量驱动的次级动画缩放；通用模块格式范例）
+> 6. `module-biomechanics.md`：通用模块 **BIO-001 v1.0.4**（生物力学与运动解剖：动力链/收缩曲线/体积保持/CoM/GRF）
+> 7. `module-engineering.md`：通用模块 **ENG-001 v1.0.1**（工业设计与可制造性：力学/制造/人体工学/装配；本地试验）
 >
 > 目标：把学生从 L0 带到 L3 毕业（可独立交付），并具备向 L4（管线/自动化）推进的能力。
 
@@ -294,7 +294,7 @@ E. 换方向（重新定义目标）
 
 ## 10. 治理（人设自身的版本与维护）
 
-- **版本**：semver；本文件 **V5.6.0**（V5.4.0：`sample_esd_from_blend.py` 落地 ESD 采样闭环；`biomech_check.py` 补 airtime/driver-binding/退出码/亚帧，Hips Z 阈值统一 2cm；rubric N/A 归一化、curriculum 口径与 M3 计分修正；V5.3.10 测试自证；更早版本见下）。
+- **版本**：semver；本文件 **V5.6.1**（V5.4.0：`sample_esd_from_blend.py` 落地 ESD 采样闭环；`biomech_check.py` 补 airtime/driver-binding/退出码/亚帧，Hips Z 阈值统一 2cm；rubric N/A 归一化、curriculum 口径与 M3 计分修正；V5.3.10 测试自证；更早版本见下）。
 - **变更记录**：
   - V5.0.0：四文件体系（主文档/评分表/课程包/工具箱）。
   - V5.1.0：新增「能量驱动的次级动画缩放」通用模块（ESD-001）；补红线 31–33；信条更新"能量决定幅度、锚点决定位置"。
@@ -311,8 +311,9 @@ E. 换方向（重新定义目标）
   - V5.3.9：Blender **4.2.16 LTS** 实测——starter 4 件资产构建成功、`verify_starter` 28/28、legacy Action/NLA 兼容 9/9；新增随包 `persona_tools/test_blender42_compat.py`；记录跨版本 spawn 需剔除 `OCIO`/`BLENDER_*` 环境变量；重打包为 v5.3.9。
   - V5.3.10：测试自证修复——`test_biomech_nla.py` 加 4.2 legacy 分支、映射边界断言（100/108/109/111/115/117/118）与 depsgraph 逐帧对拍、V 形曲线、崩溃时 fail+exit 1；`biomech_check.py` 修正 repeat 末帧映射（strip.frame_end → action_frame_end）；ESD §3.1 补驱动量口径、§5 补采样器 roadmap；BIO §2.1 补 distal-to-proximal 例外；rubric §6 补 N/A 规则；README 明确包内可复现边界；重打包为 v5.3.10。
   - V5.4.0：新增 `persona_tools/sample_esd_from_blend.py`（.blend → measured spec，内置 `--selftest`）与 config 模板，ESD §5 采样器从 roadmap 转实现；`biomech_check.py` 补 `check_airtime` / `check_driver_binding` / 退出码 / `--subframe`，Hips Z 默认阈值统一 2 cm；P1 口径统一（脚底三档、N/A 归一化、M3 计分、路由排除词、lint 等价检查）；重打包为 v5.4.0。
-  - V5.6.0：新增 ENG-001 工业设计与可制造性模块；`engineering_check.py` / `engineering_regression.py` / `tests/engineering/`；路由/load_plan/persona_lint/selftest 接入；重打包为 v5.5.0。
-- V5.6.0：新增通用模块治理层（module-format / schema / registry / preflight / module_lint / module_conflict / module_selftest / audit_claims）；路由强制预审，输出数字必须带模块引用或显式假设；重打包为 v5.6.0。
+  - V5.5.0：新增 ENG-001 工业设计与可制造性模块；`engineering_check.py` / `engineering_regression.py` / `tests/engineering/`；路由/load_plan/persona_lint/selftest 接入；重打包为 v5.5.0。
+- V5.6.1：新增通用模块治理层（module-format / schema / registry / preflight / module_lint / module_conflict / module_selftest / audit_claims）；路由强制预审，输出数字必须带模块引用或显式假设；重打包为 v5.6.0。
+- V5.6.1：修复预审误 block（新增 proceed_core）、审计误判、ASCII 词边界/英文触发词、焊接 coverage 缺口；模块版本 ENG 1.0.1 / BIO 1.0.4 / ESD 1.1.8；重打包为 v5.6.1。
 - **审查周期**：每季度复核一次；Blender 大版本更新后立即复核兼容性章节。
 - **引用来源**：Blender Manual、Python API、Release Notes、实测回执；教材/论文在 curriculum 中列出。
 - **兼容矩阵**：Blender 4.2 LTS / 5.0+ / 5.2 的行为差异（EEVEE Next、Action Slots、FFMPEG media_type、GN API、Extensions）。
@@ -337,9 +338,9 @@ E. 换方向（重新定义目标）
 
 | 模块 ID | 文件 | 用途 | 加载条件 | 状态 |
 |---|---|---|---|---|
-| `ESD-001` | [module-esd.md](module-esd.md) | 能量驱动的次级动画缩放（形变/抖动/粒子/音效/UI） | 存在冲击/释放事件且能量衰减的次级动画任务（§12.5 / `load_router.py` 命中 ESD 触发词） | stable v1.1.7 |
-| `BIO-001` | [module-biomechanics.md](module-biomechanics.md) | 生物力学与运动解剖：动力链/收缩曲线/肌肉体积/CoM/GRF | 人体/类人生物动画（§12.5 / `load_router.py` 命中 BIO 触发词） | stable v1.0.3 |
-| `ENG-001` | [module-engineering.md](module-engineering.md) | 工业设计与可制造性：重心/支撑面/应力/干涉、壁厚/拔模/悬垂、握持、装配 | 可制造性/装配/人体工学任务（§12.5 / `load_router.py` 命中 ENG 触发词） | stable v1.0.0 |
+| `ESD-001` | [module-esd.md](module-esd.md) | 能量驱动的次级动画缩放（形变/抖动/粒子/音效/UI） | 存在冲击/释放事件且能量衰减的次级动画任务（§12.5 / `load_router.py` 命中 ESD 触发词） | stable v1.1.8 |
+| `BIO-001` | [module-biomechanics.md](module-biomechanics.md) | 生物力学与运动解剖：动力链/收缩曲线/肌肉体积/CoM/GRF | 人体/类人生物动画（§12.5 / `load_router.py` 命中 BIO 触发词） | stable v1.0.4 |
+| `ENG-001` | [module-engineering.md](module-engineering.md) | 工业设计与可制造性：重心/支撑面/应力/干涉、壁厚/拔模/悬垂、握持、装配 | 可制造性/装配/人体工学任务（§12.5 / `load_router.py` 命中 ENG 触发词） | stable v1.0.1 |
 
 ### 12.2 模块文件格式（新模块照抄）
 

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """module_selftest.py — 预审闸门回归（纯 Python，不需要 Blender）。
 
-覆盖：命中 proceed / 缺覆盖 ask / 无模块 block / 数值冲突 ask。
+覆盖：模块 proceed / 核心 proceed_core / 英文模块命中 / 无模块 block /
+COM/UV 不误触发 / 数值冲突 ask / 覆盖缺数据 ask。
 用法：python scripts/module_selftest.py [--root .]
 """
 import argparse
@@ -44,7 +45,20 @@ def main():
                   any(m["id"] == "BIO-001" for m in r["selected"])))
 
     r = preflight.evaluate(root, "焊接过渡怎么处理")
-    cases.append(("uncovered_capability_ask", r["decision"] == "ask" and r["coverage_unmapped"]))
+    cases.append(("weld_block", r["decision"] == "block" and not r["selected"]))
+
+    r = preflight.evaluate(root, "建模入门")
+    cases.append(("core_model_proceed", r["decision"] == "proceed_core" and not r["selected"]))
+
+    r = preflight.evaluate(root, "Review this walk cycle")
+    cases.append(("english_gait_proceed", r["decision"] == "proceed"
+                  and any(m["id"] == "BIO-001" for m in r["selected"])))
+
+    r = preflight.evaluate(root, "please compare these two meshes")
+    cases.append(("com_no_bio", all(m["id"] != "BIO-001" for m in r["selected"])))
+
+    r = preflight.evaluate(root, "拉伸一下这个 UV")
+    cases.append(("uv_no_esd", all(m["id"] != "ESD-001" for m in r["selected"])))
 
     r = preflight.evaluate(root, "今天天气怎么样")
     cases.append(("no_module_block", r["decision"] == "block" and not r["selected"]))

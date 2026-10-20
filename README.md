@@ -26,7 +26,7 @@ mentor › L2 · Review mode · score 2.1 / 3 — critical: foot sliding
 
 ![Example session: prompt, rubric score, P0/P1/P2 fixes, machine acceptance](docs/demo.svg)
 
-> **Not a Blender add-on.** The skill gives your AI agent the mentor's playbook. You still need Blender installed to open `.blend` files and run acceptance checks (see [Requirements](#requirements)).
+> **Not a Blender add-on.** The skill gives your AI agent the mentor's playbook. It can generate commands and, when the host has shell/Blender access (or an MCP bridge), run `blender -b ... --python ...` automatically. Without that access it cannot operate Blender's UI for you. You still need Blender installed to open `.blend` files and run acceptance checks (see [Requirements](#requirements)).
 
 ## Rubric at a glance
 
@@ -85,21 +85,23 @@ Use blender-mentor to walk me through M1 modeling and topology.
 | Requirement | Needed for |
 |---|---|
 | Blender 4.2 LTS / 5.x | `.blend` acceptance scripts (`blender -b ... --python scripts/...`) |
-| Python 3 | `selftest.py`, `persona_lint.py`, `load_router.py` |
+| Python 3 | `selftest.py`, `persona_lint.py`, `load_router.py`, `preflight.py` |
+| Optional: shell or Blender MCP/RT bridge | Automatic script execution; without it, copy commands into Blender Scripting or a terminal manually |
 
 ## How it works
 
 ```text
 SKILL.md       routing + D1–D4 delivery loop + machine-acceptance commands
-references/    6 persona documents, loaded on demand
+references/    8 reference files (7 persona docs + module format), loaded on demand
 scripts/       18 executable tools
 assets/        ESD templates, load plans, deny-word example
 ```
 
 1. `SKILL.md` routes the request and sets the delivery loop.
-2. `load_router.py` builds a per-task load plan, so only the relevant references are loaded.
-3. Acceptance scripts run against your local `.blend` through headless Blender.
-4. Your files stay local; the acceptance tools do not upload anything.
+2. `preflight.py` classifies it: `proceed` (module-backed), `proceed_core` (teaching/operations, no module needed), `ask`, or `block` (reference data required but not covered).
+3. `load_router.py` builds a per-task load plan and only loads modules selected by preflight; `proceed_core` tasks get core docs, never modules.
+4. Acceptance scripts run against your local `.blend` through headless Blender.
+5. Your files stay local; the acceptance tools do not upload anything.
 
 <details>
 <summary><strong>Advanced installation</strong></summary>
@@ -138,7 +140,7 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 ├── .claude-plugin/marketplace.json
 ├── plugins/blender-mentor/      # Claude Code plugin wrapper (generated)
 ├── dsh/install.ps1 / install.sh # DSH one-line installers
-├── references/                  # 6 persona documents, loaded on demand
+├── references/                  # 8 reference files (7 persona docs + module format)
 ├── scripts/                     # 18 executable tools
 ├── assets/                      # ESD templates, load plans, deny example
 ├── docs/                        # banner + example session image
@@ -165,14 +167,14 @@ No. Acceptance scripts run locally and print JSON/text; they do not upload files
 DSH, Claude Code, Claude.ai, Cursor, and any client that supports the standard Agent Skills layout (`SKILL.md` + resources).
 
 **What do the two version numbers mean?**
-The persona suite is **V5.6.0**; the packaged skill release is **v5.6.0**.
+The persona suite is **V5.6.1**; the packaged skill release is **v5.6.1**.
 
 ## Development
 
 ```bash
 python -m compileall -q scripts tools
 python scripts/persona_lint.py . --allow-no-deny   # structure gate
-python scripts/selftest.py .                       # 21 pass + 1 skipped
+python scripts/selftest.py .                       # 24 pass + 1 skipped
 ```
 
 Blender-side checks:
@@ -185,7 +187,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 Rebuild the skill directory:
 
 ```bash
-python tools/build_skill.py --source <V5.6.0 suite> --out <repo parent> --force
+python tools/build_skill.py --source <V5.6.1 suite> --out <repo parent> --force
 ```
 
 ## License

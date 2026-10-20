@@ -36,6 +36,20 @@ def norm(text):
     return (text or "").lower().replace("_", " ").strip()
 
 
+CJK_RE = re.compile(r"[\u4e00-\u9fff]")
+
+
+def keyword_hit(keyword, text):
+    """中文用子串；ASCII 用词边界，避免 COM 命中 compare/composition。"""
+    kw, t = norm(keyword), norm(text)
+    if not kw:
+        return False
+    if CJK_RE.search(kw):
+        return kw in t
+    pattern = r"(?<![a-z0-9])" + re.escape(kw) + r"(?![a-z0-9])"
+    return re.search(pattern, t) is not None
+
+
 def load_registry(root, registry_path=None):
     path = registry_path or os.path.join(root, "assets", "module_registry.json")
     if not os.path.isfile(path):
@@ -210,14 +224,14 @@ def select_modules(modules, task, max_modules=2):
         intent = m.get("intent") or {}
         includes = [norm(x) for x in intent.get("include", [])]
         excludes = [norm(x) for x in intent.get("exclude", [])]
-        if any(x and x in t for x in excludes):
+        if any(x and keyword_hit(x, t) for x in excludes):
             continue
-        hits = [x for x in includes if x and x in t]
+        hits = [x for x in includes if keyword_hit(x, t)]
         if not hits:
             continue
         cap_hits = 0
         for cap in m.get("coverage", []):
-            if any(norm(k) and norm(k) in t for k in cap.get("keywords", [])):
+            if any(keyword_hit(k, t) for k in cap.get("keywords", [])):
                 cap_hits += 1
         score = len(hits) * 10 + cap_hits * 3
         if m.get("status") == "deprecated":
@@ -233,8 +247,7 @@ def coverage_for(selected, task):
     required = set()
     for m in selected:
         for cap in m.get("coverage", []):
-            kws = [norm(k) for k in cap.get("keywords", [])]
-            if any(k and k in t for k in kws):
+            if any(keyword_hit(k, t) for k in cap.get("keywords", [])):
                 matched.append({"module": m.get("id"), "keywords": cap.get("keywords"),
                                 "data_keys": cap.get("data_keys", [])})
                 required.update(cap.get("data_keys", []))

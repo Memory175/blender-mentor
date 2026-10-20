@@ -1,7 +1,7 @@
 {
   "schema": "mentor-module/1",
   "id": "ESD-001",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "status": "stable",
   "kind": "hybrid",
   "domain": [
@@ -20,18 +20,33 @@
       "冲击",
       "衰减",
       "挤压",
-      "拉伸"
+      "拉伸",
+      "secondary animation",
+      "bounce",
+      "squash",
+      "stretch",
+      "jitter",
+      "particles",
+      "energy decay",
+      "impact",
+      "deformation"
     ],
     "exclude": [
       "人体解剖",
-      "产品制造"
+      "产品制造",
+      "UV",
+      "uv map",
+      "topology"
     ]
   },
   "coverage": [
     {
       "keywords": [
         "弹跳",
-        "冲击"
+        "冲击",
+        "bounce",
+        "impact",
+        "energy decay"
       ],
       "data_keys": [
         "energy_decay_ratio"
@@ -41,7 +56,10 @@
       "keywords": [
         "形变",
         "挤压",
-        "拉伸"
+        "拉伸",
+        "squash",
+        "stretch",
+        "deformation"
       ],
       "data_keys": [
         "squash_depth_pct"
@@ -50,7 +68,9 @@
     {
       "keywords": [
         "抖动",
-        "次级"
+        "次级",
+        "jitter",
+        "secondary animation"
       ],
       "data_keys": [
         "hold_frames"

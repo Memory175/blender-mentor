@@ -16,6 +16,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 import preflight as _preflight  # noqa: E402
+from module_governance import keyword_hit  # noqa: E402
 PLAN_PATH = os.path.join(ROOT, "assets", "load_plan.json")
 
 
@@ -32,10 +33,9 @@ def _tokens(path):
 
 
 def _matches(task, triggers, excludes=None):
-    low = task.lower()
-    if any(x.lower() in low for x in (excludes or [])):
+    if any(keyword_hit(x, task) for x in (excludes or [])):
         return []
-    return [t for t in triggers if t.lower() in low]
+    return [t for t in triggers if keyword_hit(t, task)]
 
 
 def _entry(item, kind):
@@ -52,6 +52,7 @@ def route(task, budget=None, plan=None, preflight_result=None, run_preflight=Tru
             pf = _preflight.evaluate(ROOT, task)
         except Exception as exc:  # noqa: BLE001
             pf = {"decision": "error", "error": str(exc), "selected": [], "questions": []}
+    core_allowed = pf is None or pf.get("decision") in ("proceed", "proceed_core")
     modules_allowed = pf is None or pf.get("decision") == "proceed"
     allowed_ids = {m.get("id") for m in (pf or {}).get("selected", [])}
     selected, dropped = [], []
@@ -64,12 +65,21 @@ def route(task, budget=None, plan=None, preflight_result=None, run_preflight=Tru
             entry["triggers_hit"] = hits
             selected.append(entry)
     modules = []
+    seen_module_ids = set()
     for item in plan.get("modules", []):
         hits = _matches(task, item.get("triggers", []), item.get("exclude"))
         if hits:
             entry = _entry(item, "module")
             entry["id"] = item["id"]
             entry["triggers_hit"] = hits
+            modules.append(entry)
+            seen_module_ids.add(item["id"])
+    # 英文别名/preflight 选中但 load_plan 触发器没有命中的模块，也按 selected 注入
+    for item in plan.get("modules", []):
+        if item["id"] in allowed_ids and item["id"] not in seen_module_ids:
+            entry = _entry(item, "module")
+            entry["id"] = item["id"]
+            entry["triggers_hit"] = ["preflight"]
             modules.append(entry)
     modules.sort(key=lambda e: e["triggers_hit"][0])
     kept_modules = []
@@ -114,7 +124,7 @@ def route(task, budget=None, plan=None, preflight_result=None, run_preflight=Tru
         if d["kind"] == "module":
             warnings.append("module dropped: " + d["file"])
     result = {
-        "status": "ok" if modules_allowed else "blocked_modules",
+        "status": "ok" if core_allowed else "blocked",
         "task": task,
         "files": selected,
         "dropped": dropped,
@@ -123,6 +133,7 @@ def route(task, budget=None, plan=None, preflight_result=None, run_preflight=Tru
         "over_budget": bool(budget and total() > budget),
         "warnings": warnings,
         "modules_allowed": modules_allowed,
+        "core_allowed": core_allowed,
         "preflight": None if pf is None else {
             "decision": pf.get("decision"),
             "selected": pf.get("selected", []),
@@ -199,7 +210,7 @@ def main(argv=None):
             return 2
     result = route(task, budget, plan, preflight_result=pf, run_preflight=not no_preflight)
     print("LOAD_PLAN " + json.dumps(result, ensure_ascii=False))
-    if strict and not result["modules_allowed"]:
+    if strict and not result["core_allowed"]:
         return 2
     return 0
 

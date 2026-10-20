@@ -1,7 +1,7 @@
 {
   "schema": "mentor-module/1",
   "id": "BIO-001",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "status": "stable",
   "kind": "hybrid",
   "domain": [
@@ -22,7 +22,16 @@
       "CoM",
       "GRF",
       "跳跃",
-      "步态"
+      "步态",
+      "biomechanics",
+      "center of mass",
+      "gait",
+      "walk cycle",
+      "walking",
+      "running",
+      "jump",
+      "muscle chain",
+      "muscle"
     ],
     "exclude": [
       "机械结构",
@@ -34,7 +43,11 @@
       "keywords": [
         "走路",
         "跑步",
-        "步态"
+        "步态",
+        "walk cycle",
+        "walking",
+        "running",
+        "gait"
       ],
       "data_keys": [
         "grf_peak_bw",
@@ -44,7 +57,9 @@
     {
       "keywords": [
         "跳跃",
-        "受击"
+        "受击",
+        "jump",
+        "jumping"
       ],
       "data_keys": [
         "airtime_s",
@@ -54,7 +69,9 @@
     {
       "keywords": [
         "肌肉",
-        "动力链"
+        "动力链",
+        "muscle",
+        "muscle chain"
       ],
       "data_keys": [
         "muscle_volume_delta_pct"

@@ -5,7 +5,7 @@
 
 ## 0. 三条硬规则
 
-1. **先预审，再加载**：任何任务先跑 `preflight.py`，只有 `decision=proceed` 才继续。
+1. **先预审，再加载**：任何任务先跑 `preflight.py`，只有 `proceed` / `proceed_core` 才继续。
 2. **无数据不编造**：模块没有的数值/标准，不得凭经验补；只能走「用户提供 / 显式假设 / 缩小范围」。
 3. **冲突必停**：模块之间数值、触发、规则冲突时，不得自动按优先级裁决；必须输出冲突表并询问用户。
 
@@ -18,10 +18,10 @@ assets/module_registry.json        # 注册表：ID、文件、版本、sha256�
 assets/module.schema.json          # JSON Schema（结构参考）
 assets/modules/_template.json      # 新模块模板
 scripts/module_governance.py       # 共享校验/冲突/选择逻辑
-scripts/preflight.py               # 预审闸门（proceed / ask / block）
+scripts/preflight.py               # 预审闸门（proceed / proceed_core / ask / block）
+scripts/module_selftest.py         # 预审回归（10 个场景）
 scripts/module_lint.py             # 格式/证据/注册表检查
 scripts/module_conflict.py         # 冲突巡查
-scripts/module_selftest.py         # 预审回归（5 个场景）
 ```
 
 ## 2. 模块字段
@@ -89,8 +89,9 @@ task → 命中模块（include/exclude）
 | decision | 触发条件 | 行为 |
 |---|---|---|
 | `proceed` | 有模块、有覆盖、无冲突 | 只加载 selected，继续 |
+| `proceed_core` | 任务不需要参考模块，但命中核心教学/操作触发词 | 加载 main/rubric/课程；不加载模块，不跑模块引用审计 |
 | `ask` | 冲突，或缺数据但 `unknown_policy=ask` | 停下，输出问题与选项 |
-| `block` | 无模块，或 `unknown_policy=block` | 不进入执行，不编造 |
+| `block` | 需要参考数据但没有模块覆盖，或 `unknown_policy=block` | 不进入执行，不编造 |
 
 命令：
 
@@ -98,22 +99,26 @@ task → 命中模块（include/exclude）
 python scripts/preflight.py --task "马克杯能注塑吗？壁厚和拔模审一下" --json .preflight.json
 ```
 
-退出码：`0=proceed`，`2=ask/block`。
+退出码：`0=proceed/proceed_core`，`2=ask/block`。
 
 ## 3.1 输出引用审计
 
 预审只保证「有数据」；交付前还要保证「输出用了数据」。规则：
 
-- 带单位/百分号/角度的数字，行内必须带 `[模块ID:data_key]`；
-- 无模块数据时只能写 `[ASSUMPTION]` 或 `[ASSUMPTION:原因]`；
+- **只对 `proceed` 的模块支撑交付审计**；`proceed_core` 默认 skip，不强迫给教学帧号/面数挂模块引用；
+- 带单位/百分号/角度的数字，行内必须带以下之一：
+  - `[模块ID:data_key]`（模块数据）
+  - `[PROJECT]` / `[MEASURED]`（项目实测：帧号、面数、采样值）
+  - `[EXAMPLE]`（教学示例值）
+  - `[ASSUMPTION]` / `[ASSUMPTION:原因]`（显式假设）
 - 引用必须存在于本次 `preflight` 的 `data` 中，否则算 dangling；
-- `audit_claims.py` 返回 `fail` 时不得交付。
+- `audit_claims.py` 返回 `fail` 时不得交付；`--scope all` 仅用于诊断；`--warn-only` 只告警。
 
 ```bash
 python scripts/audit_claims.py --text answer.md --preflight .preflight.json --json .claims.json
 ```
 
-退出码：`0=pass/warn`，`1=uncited/dangling`。
+退出码：`0=pass/warn/skipped`，`1=uncited/dangling`。
 
 ## 3.2 Router 强制
 
@@ -123,9 +128,10 @@ python scripts/audit_claims.py --text answer.md --preflight .preflight.json --js
 python scripts/load_router.py --task "..." --preflight .preflight.json
 ```
 
-- `decision != proceed` → `modules_allowed=false`，不输出任何模块文件；
+- `proceed_core` / `ask` / `block` → `modules_allowed=false`，不输出任何模块文件；
+- `core_allowed` 决定是否还能加载核心文件；`false` 时停止执行；
 - 只加载 `preflight.selected` 里的模块；
-- `--strict` → 模块被阻断时 exit 2；
+- `--strict` → core 被阻断时 exit 2；
 - `--no-preflight` 只用于诊断，正式流程禁止。
 
 ## 4. 冲突类型与处理

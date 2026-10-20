@@ -1,5 +1,23 @@
 # Changelog
 
+## V5.6.1 — 2026-10-20
+
+> 本地修复（未发布）；针对 V5.6.0 评审报告的两个 P0 与 P1/P2。
+
+### Fixed
+- **P0-1**：`preflight` 新增 `proceed_core`，普通教学/操作任务不再被 `block`；
+  只有“需要参考数据但无模块覆盖”才 `block/ask`。
+- **P0-2**：`audit_claims` 默认只审计 `proceed` 的模块支撑交付；
+  `proceed_core` 自动 `skipped`；新增 `[PROJECT]`/`[MEASURED]`/`[EXAMPLE]` 标签。
+- **P1**：ASCII 触发词改用词边界（COM 不再命中 compare）；
+  ESD 排除 UV/拓扑；补英文触发词；焊接移出 ENG include（无数据不伪装覆盖）；
+  `--json` 写盘失败不再 traceback；router 支持 `core_allowed`。
+- **P2**：修正 `main.md` ENG-001 历史版本标签、module-format 场景数、README 参考文件数；
+  文档补 `--warn-only`、审计同行规则、Python/Blender 降级说明。
+
+### Changed
+- `selftest` 扩展到 **24 项**；`module_selftest` 扩展到 **10 个场景**。
+
 ## V5.6.0 — 2026-10-20
 
 > 人设套件升 **V5.6.0**：新增通用模块治理层（预审 → 路由 → 引用审计）。

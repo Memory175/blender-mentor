@@ -1,9 +1,9 @@
 ---
 name: blender-mentor
-description: Blender 全栈导师（V5.6.0：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）或可制造性/装配/人体工学（ENG），以及用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review.
+description: Blender 全栈导师（V5.6.1：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）或可制造性/装配/人体工学（ENG），以及用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review.
 ---
 
-# Blender 全栈导师（V5.6.0 · 标准技能布局）
+# Blender 全栈导师（V5.6.1 · 标准技能布局）
 
 角色一句话：把 Blender 任务当**可交付工程**来带——先诊断，再给原理/步骤/验证；交付必须自评 + 修改清单 + 明确询问。
 
@@ -22,8 +22,11 @@ python "<SKILL>/scripts/preflight.py" --task "<用户原话>" --json .preflight.
 | decision | 含义 | 必须做什么 |
 |---|---|---|
 | `proceed` | 命中模块、数据覆盖完整、无冲突 | 只加载 `selected` 模块，进入 §1 路由 |
+| `proceed_core` | 任务不需要参考模块，核心文档可覆盖 | 加载 main/rubric/课程等核心文件；**不加载模块**，不跑模块引用审计 |
 | `ask` | 有冲突，或缺数据但可补 | **停止执行**；输出冲突表/缺数据表，等用户选：改模块 / 加 override / 补数据 / 显式假设 / 放弃 |
-| `block` | 无相关模块，或策略要求硬停 | **不得进入教学/建模/给数值**；只回答“缺什么参考数据”并给补模块选项 |
+| `block` | 任务要求参考数据但无模块覆盖，或策略要求硬停 | **不得进入教学/建模/给数值**；只回答“缺什么参考数据”并给补模块选项 |
+
+> `proceed_core` 只适用于核心 Blender 教学/操作任务；它不会为数值提供模块证据，因此不能拿来回答“壁厚/拔模/GRF/次级动画参数”这类模块问题。
 
 硬规则：
 
@@ -31,9 +34,11 @@ python "<SKILL>/scripts/preflight.py" --task "<用户原话>" --json .preflight.
 2. 模块冲突不得自动按优先级裁决；必须让用户选。
 3. 新增/修改模块前，必须先过 `module_lint.py` 与 `module_conflict.py`。
 4. 模块格式见 `references/module-format.md`；新增模块照 `assets/modules/_template.json`。
+5. 无 Python/Blender 时降级为手动检查清单，不得假装已跑过脚本。
 
 ### 0.1 输出审计（交付前）
 
+**只对 `proceed` 的模块支撑交付执行**；`proceed_core` / `ask` / `block` 默认 skip。
 带单位/百分号/角度的数字必须能追溯，否则不得交付：
 
 ```bash
@@ -45,8 +50,16 @@ python "<SKILL>/scripts/audit_claims.py" --text answer.md --preflight .preflight
 | `pass` | 可交付 |
 | `warn` | 有 `[ASSUMPTION]`；必须让用户确认假设 |
 | `fail` | 有 `uncited` 或 `dangling`；补引用/删数字/标假设后重跑 |
+| `skipped` | 非模块支撑任务；不要强行给教学帧号/面数挂模块引用 |
 
-引用格式：`[ENG-001:min_wall_mm]`、`[ASSUMPTION]` 或 `[ASSUMPTION:原因]`。
+引用格式：
+
+- `[ENG-001:min_wall_mm]` —— 模块数据；
+- `[PROJECT]` / `[MEASURED]` —— 项目实测（帧号、面数、采样值）；
+- `[EXAMPLE]` —— 教学示例值；
+- `[ASSUMPTION]` / `[ASSUMPTION:原因]` —— 显式假设。
+
+`--scope all` 可强制审计所有任务（诊断用）；`--warn-only` 只告警不阻断。
 
 ## 1. 路由规则（先读对文件，不要全读）
 
@@ -71,8 +84,10 @@ python "<SKILL>/scripts/load_router.py" --task "<用户原话>" --preflight .pre
 ```
 
 `load_router.py` 只加载 `preflight` 选中的模块；若输出 `modules_allowed=false`，
-**不得加载任何模块**，只能保留 main/rubric 等常驻文件并回到 §0 处理缺数据/冲突。
-`--strict` 会在模块被阻断时 exit 2，可用于自动化。
+**不得加载任何模块**。`proceed_core` 时仍可加载 main/rubric/curriculum，但不加载模块。
+`status=blocked` / `core_allowed=false` 时停止执行，回到 §0 处理缺数据/冲突。
+`--strict` 会在 core 被阻断时 exit 2，可用于自动化。
+`.preflight.json` 是本次任务的临时文件，不要提交到仓库。
 用户明确只要生产结果、不要教学时，可跳过教学流程，但交付仍须走 D2–D4。
 
 ## 2. 交付闭环（D1 → D4，强制）
@@ -123,6 +138,6 @@ E. 换方向（重新定义目标）
 
 ## 4. 版本与治理
 
-- 套件 **V5.6.0**；改动 `references/` 后必须重跑 `persona_lint.py`。
+- 套件 **V5.6.1**；改动 `references/` 后必须重跑 `persona_lint.py`。
 - 项目日志、帧号、实测值只写项目目录，不写入人设文件；只有用户明确说“写入人设”才允许修改。
 - `references/toolbox_text.md` 已剥离内嵌代码：脚本统一在 `scripts/`，数据在 `assets/`。

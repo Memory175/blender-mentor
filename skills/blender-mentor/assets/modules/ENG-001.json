@@ -1,7 +1,7 @@
 {
   "schema": "mentor-module/1",
   "id": "ENG-001",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "status": "stable",
   "kind": "hybrid",
   "domain": [
@@ -40,7 +40,20 @@
       "CNC",
       "钣金",
       "可装配",
-      "焊接"
+      "manufacturing",
+      "wall thickness",
+      "draft angle",
+      "injection molding",
+      "casting",
+      "ceramic",
+      "3D printing",
+      "overhang",
+      "snap fit",
+      "assembly",
+      "ergonomics",
+      "center of gravity",
+      "interference",
+      "sheet metal"
     ],
     "exclude": [
       "纯渲染",
@@ -53,7 +66,10 @@
       "keywords": [
         "壁厚",
         "注塑",
-        "铸造"
+        "铸造",
+        "wall thickness",
+        "injection molding",
+        "casting"
       ],
       "data_keys": [
         "min_wall_mm"
@@ -63,7 +79,9 @@
       "keywords": [
         "拔模",
         "注塑",
-        "铸造"
+        "铸造",
+        "draft angle",
+        "draft"
       ],
       "data_keys": [
         "draft_min_deg"
@@ -73,7 +91,9 @@
       "keywords": [
         "悬垂",
         "3D打印",
-        "3D 打印"
+        "3D 打印",
+        "3D printing",
+        "overhang"
       ],
       "data_keys": [
         "overhang_max_deg"
@@ -83,7 +103,9 @@
       "keywords": [
         "重心",
         "支撑面",
-        "稳定性"
+        "稳定性",
+        "center of gravity",
+        "stability"
       ],
       "data_keys": [
         "stability_margin_pct"
@@ -92,7 +114,9 @@
     {
       "keywords": [
         "握持",
-        "人体工学"
+        "人体工学",
+        "grip",
+        "ergonomics"
       ],
       "data_keys": [
         "finger_clearance_mm"
@@ -101,7 +125,9 @@
     {
       "keywords": [
         "卡扣",
-        "装配"
+        "装配",
+        "snap fit",
+        "assembly"
       ],
       "data_keys": [
         "snap_undercut_mm",
@@ -110,7 +136,8 @@
     },
     {
       "keywords": [
-        "陶瓷"
+        "陶瓷",
+        "ceramic"
       ],
       "data_keys": [
         "ceramic_shrink_pct"
