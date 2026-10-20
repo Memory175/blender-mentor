@@ -1,6 +1,6 @@
 {
   "version": "1.2.0",
-  "suite_version": "V5.11.0",
+  "suite_version": "V5.11.1",
   "always": [
     {
       "file": "references/main.md",

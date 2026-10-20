@@ -1,6 +1,6 @@
 # INT-001 — 室内设计/内饰：中式风格两室两厅公寓
 
-> 版本：0.1.0 · 状态：experimental · 来源：用户提供的模块草案，已转成 mentor-module/1
+> 版本：0.1.1 · 状态：experimental · 来源：用户提供的模块草案，已转成 mentor-module/1
 > 范围：中式风格 + 两室两厅公寓 + Blender 资产级建模
 > **不是施工图，不是当地合规判定。** 结构/消防/无障碍/能耗必须当地专业复核。
 
@@ -48,16 +48,33 @@
 4. 结构、消防、无障碍、能耗只能提示专业复核，不判 `pass`。
 5. 来源元数据 pending，不能把本模块写成“当地规范已核验”。
 
-## 5. 来源状态
+## 5. 来源状态与可靠性分级
 
-| source_id | 类型 | 状态 |
-|---|---|---|
-| `SRC-STYLE-CHINESE-*` | web | pending / 未提供 URL |
-| `SRC-CODE-XJ-*` / `SRC-CODE-HQ-*` | code | pending / jurisdiction CN-UNKNOWN |
-| `SRC-ERG-DINING` / `SRC-FURN-CORE` | book/code | pending / 未提供版次 |
-| `SRC-BLENDER-UNITS` | web | metadata-only / Blender Manual |
+| 等级 | 含义 |
+|---|---|
+| `code_reference` | 政府网站/规范转发文件，可作为尺寸下限参考；**不等于当地现行合规判定** |
+| `industry_reference` | 行业文章/案例，只作风格倾向参考，不替代规范与工具书 |
+| `community_convention` | 社区通行惯例，用于 Blender 资产尺度基准，不具规范效力 |
+| `pending` | 未锁定当地 jurisdiction，需补充 |
 
-来源审计结果预期为 **warn**，不是 pass；使用前必须补 URL、版次、条款/页码并复核。
+| source_id | 标题 | 类型 | 等级 | URL/备注 |
+|---|---|---|---|---|
+| `SRC-CODE-XJ-LIVING` | 新疆住建厅转发住宅规范文件（6.2 卧室、起居室尺寸） | 政府文件 | code_reference | zjt.xinjiang.gov.cn PDF |
+| `SRC-CODE-XJ-BEDROOM` | 同上，双人/单人卧室短边轴线宽度 | 政府文件 | code_reference | 同上 |
+| `SRC-CODE-HQ-HEIGHT` | 横琴政府文件：层高、净高、过道、门洞 | 政府文件 | code_reference | hengqin.gov.cn PDF |
+| `SRC-CODE-HQ-CORRIDOR` | 同上，套内过道净宽 | 政府文件 | code_reference | 同上 |
+| `SRC-CODE-HQ-DOOR` | 同上，门洞通行净宽 | 政府文件 | code_reference | 同上 |
+| `SRC-CODE-HB-HEIGHT` | 湖北住建厅文件：层高 ≥3 m、净高 ≥2.6 m | 政府文件 | code_reference | zjt.hubei.gov.cn |
+| `SRC-ERG-DINING` | 海南住建厅文件：餐厅通道、通行/转身宽度、家具尺寸表 | 政府文件 | code_reference | zjt.hainan.gov.cn PDF |
+| `SRC-LAYOUT-PRINCIPLE` | 住宅套型功能分区与流线原则 | 政府文件/条文说明 | code_reference | 新疆 6.1.5、海南 4.3.3 |
+| `SRC-STYLE-CHINESE-COLOR` | 中式/新中式色彩行业文章 | 行业文章 | industry_reference | kudashi / kujiale / modaiyun |
+| `SRC-STYLE-CHINESE-MATERIAL` | 中式材料倾向 | 行业文章 | industry_reference | shangceng / zhuzhaibupin |
+| `SRC-STYLE-CHINESE-LIGHT` | 中式卧室/茶室照明色温与照度建议 | 行业文章 | industry_reference | dfcgzs / smzdm |
+| `SRC-STYLE-CHINESE-FORM` | 中式造型语言（对称、格栅、留白、明式/清式） | 行业文章 | industry_reference | 多篇行业文章综合 |
+| `SRC-FURN-CORE` | 床/床头柜/衣柜/书桌尺寸附表 + 餐桌/餐椅人体工学参考 | 政府文件 + 行业资料 | code_reference / industry_reference | 海南附表 + Baidu 百科 |
+| `SRC-BLENDER-UNITS` | Blender 单位惯例：1 BU = 1 m，标准门/餐椅/餐桌尺度 | 社区惯例 | community_convention | Blender Artists / Being Animator |
+
+**当前审计：`source_audit` = warn**，不是 pass。原因：13 条来源均为 `pending`/`metadata-only`，尚未逐页核对条款/页码/版次；`SRC-CODE-*` 的 jurisdiction 登记为 `CN-UNKNOWN`，仅作参考下限，不能替代项目所在地现行规范。
 
 ## 6. 使用方式
 

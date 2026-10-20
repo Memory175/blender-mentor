@@ -1,7 +1,7 @@
 {
   "schema": "mentor-module/1",
   "id": "INT-001",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "status": "experimental",
   "kind": "hybrid",
   "domain": [
@@ -239,9 +239,10 @@
         "kitchen_bath_clear_min_m": 2.2
       },
       "unit": "m",
-      "source_id": "SRC-CODE-HQ-HEIGHT",
+      "source_id": "SRC-CODE-HB-HEIGHT",
       "confidence": "medium",
-      "notes": "新建住宅层高不应低于 3.00 m；卧室/起居室净高不应低于 2.60 m，局部净高不应低于 2.20 m 且低净高面积不超过室内使用面积的 1/3。Blender 建模若按常见 2.7–2.8 m 净高，属于示意尺度，不能替代当地报建层高。"
+      "notes": "新建住宅层高不应低于 3.00 m；卧室/起居室净高不应低于 2.60 m，局部净高不应低于 2.20 m 且低净高面积不超过室内使用面积的 1/3。Blender 建模若按常见 2.7–2.8 m 净高，属于示意尺度，不能替代当地报建层高。",
+      "source_note": "层高/净高主参考湖北文件；横琴文件另见 SRC-CODE-HQ-HEIGHT。"
     },
     {
       "key": "lay_apt_corridor_width",
@@ -432,6 +433,11 @@
       "version": "0.1.0",
       "date": "2026-10-20",
       "note": "Initial draft converted from user-provided INT-001 JSON; source metadata pending."
+    },
+    {
+      "version": "0.1.1",
+      "date": "2026-10-20",
+      "note": "来源表补 URL/出版方/可靠性分级；新增 SRC-CODE-HB-HEIGHT；层高数据改引湖北文件；状态仍 pending。"
     }
   ],
   "style_layout_independence": {

@@ -135,10 +135,10 @@ ASSET_FILES = [
 
 SKILL_MD =  r"""---
 name: blender-mentor
-description: Blender 全栈导师（V5.11.0：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）或可制造性/装配/人体工学（ENG），以及用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review.
+description: Blender 全栈导师（V5.11.1：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）或可制造性/装配/人体工学（ENG），以及用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review.
 ---
 
-# Blender 全栈导师（V5.11.0 · 标准技能布局）
+# Blender 全栈导师（V5.11.1 · 标准技能布局）
 
 角色一句话：把 Blender 任务当**可交付工程**来带——先诊断，再给原理/步骤/验证；交付必须自评 + 修改清单 + 明确询问。
 
@@ -350,7 +350,7 @@ E. 换方向（重新定义目标）
 
 ## 4. 版本与治理
 
-- 套件 **V5.11.0**；改动 `references/` 后必须重跑 `persona_lint.py`。
+- 套件 **V5.11.1**；改动 `references/` 后必须重跑 `persona_lint.py`。
 - 项目日志、帧号、实测值只写项目目录，不写入人设文件；只有用户明确说“写入人设”才允许修改。
 - `references/toolbox_text.md` 已剥离内嵌代码：脚本统一在 `scripts/`，数据在 `assets/`。
 """
@@ -532,7 +532,7 @@ New modules, or modules that declare a `source_id`, reference `assets/source_reg
 DSH, Claude Code, Claude.ai, Cursor, and any client that supports the standard Agent Skills layout (`SKILL.md` + resources).
 
 **What do the two version numbers mean?**
-The persona suite is **V5.11.0**; the packaged skill release is **v5.11.0**.
+The persona suite is **V5.11.1**; the packaged skill release is **v5.11.1**.
 
 ## Development
 
@@ -552,7 +552,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 Rebuild the skill directory:
 
 ```bash
-python tools/build_skill.py --source <V5.11.0 suite> --out <repo parent> --force
+python tools/build_skill.py --source <V5.11.1 suite> --out <repo parent> --force
 ```
 
 ## License
@@ -741,7 +741,7 @@ dsh plugin --profile web add github:OWNER/REPO
 DSH、Claude Code、Claude.ai、Cursor，以及任何支持标准 Agent Skills 布局（`SKILL.md` + 资源目录）的客户端。
 
 **两个版本号是什么意思？**
-人设套件为 **V5.11.0**；打包后的技能发布版本为 **v5.11.0**。
+人设套件为 **V5.11.1**；打包后的技能发布版本为 **v5.11.1**。
 
 ## 开发与验证
 
@@ -761,7 +761,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 重建技能目录：
 
 ```bash
-python tools/build_skill.py --source <V5.11.0 套件目录> --out <仓库父目录> --force
+python tools/build_skill.py --source <V5.11.1 套件目录> --out <仓库父目录> --force
 ```
 
 ## 许可
@@ -775,6 +775,17 @@ MIT，见 [LICENSE](LICENSE)。课程文档中的第三方参考书目仅作引�
 
 
 CHANGELOG_MD =  r"""# Changelog
+
+## V5.11.1 — 2026-10-20
+
+> INT-001 来源表补全；人设套件升 **V5.11.1**。
+
+### Changed
+- INT-001 版本 0.1.0 → **0.1.1**；
+- 来源表补 URL/出版方/edition/reliability；新增 `SRC-CODE-HB-HEIGHT`；
+- 层高数据改引湖北文件；`source_registry` 29 条；
+- 来源仍为 pending/metadata-only，`source_audit` 仍为 **warn**；
+- 模块 registry hash 更新；其它模块版本不变。
 
 ## V5.11.0 — 2026-10-20
 
@@ -1660,7 +1671,7 @@ def write_claude_plugin(skill_dir, repo_slug):
         "name": "blender-mentor",
         "displayName": "Blender Mentor",
         "description": desc,
-        "version": "5.11.0",
+        "version": "5.11.1",
         "author": {"name": owner},
         "homepage": repo_url,
         "repository": repo_url,
@@ -1697,7 +1708,7 @@ def write_claude_plugin(skill_dir, repo_slug):
             "name": "blender-mentor",
             "source": "./plugins/blender-mentor",
             "description": desc,
-            "version": "5.11.0",
+            "version": "5.11.1",
         }],
     }
     write_text(os.path.join(skill_dir, ".claude-plugin", "marketplace.json"),
@@ -1715,7 +1726,7 @@ def write_dsh_plugin(skill_dir, repo_slug):
     owner = repo_slug.split("/")[0]
     repo_url = "https://github.com/%s" % repo_slug
     pkg_name = "blender-mentor"
-    version = "5.11.0"
+    version = "5.11.1"
     desc = ("Blender full-stack mentor AI Skill: teaching, 0-3 rubric grading, "
             "asset/animation acceptance (ESD/BIO/ENG).")
 

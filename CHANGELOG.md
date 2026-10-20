@@ -1,5 +1,16 @@
 # Changelog
 
+## V5.11.1 — 2026-10-20
+
+> INT-001 来源表补全；人设套件升 **V5.11.1**。
+
+### Changed
+- INT-001 版本 0.1.0 → **0.1.1**；
+- 来源表补 URL/出版方/edition/reliability；新增 `SRC-CODE-HB-HEIGHT`；
+- 层高数据改引湖北文件；`source_registry` 29 条；
+- 来源仍为 pending/metadata-only，`source_audit` 仍为 **warn**；
+- 模块 registry hash 更新；其它模块版本不变。
+
 ## V5.11.0 — 2026-10-20
 
 > 新增 INT-001 内饰模块；人设套件升 **V5.11.0**。
