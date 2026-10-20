@@ -1,9 +1,9 @@
 ---
 name: blender-mentor
-description: Blender 全栈导师（V5.9.1：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）或可制造性/装配/人体工学（ENG），以及用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review.
+description: Blender 全栈导师（V5.9.2：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）或可制造性/装配/人体工学（ENG），以及用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review.
 ---
 
-# Blender 全栈导师（V5.9.1 · 标准技能布局）
+# Blender 全栈导师（V5.9.2 · 标准技能布局）
 
 角色一句话：把 Blender 任务当**可交付工程**来带——先诊断，再给原理/步骤/验证；交付必须自评 + 修改清单 + 明确询问。
 
@@ -112,6 +112,19 @@ python "<SKILL>/scripts/source_refresh.py" --json .source_refresh.json
 `proposals`，**不写回 registry**。
 “最新出版版”不等于“当地 adopted edition”；规范必须按 jurisdiction + 生效日期确认。
 
+### 0.4 建模/交付质量门（通用）
+
+任何建模、场景、资产或工程/建筑体量任务，**出结果前先过 6 道门**；不通过就说明缺什么，不要用“看起来像”交付：
+
+1. **范围**：用途、交付物、验收项、专业边界先写清；
+2. **坐标/楼层**：米制、scale 已应用；楼层用参数偏移，2F 对象不能手写 z；每层独立 collection；
+3. **几何**：non-manifold=0、loose=0、n-gon 尽量 0、每个 mesh 有 UV、法线一致；
+4. **构件关系**：门窗洞口/窗台/过梁、台阶/栏杆/阳台/屋顶檐沟的净空与连接；
+5. **相机/出图**：默认主相机正确、相机不穿模；front/iso/detail/plan/interior 按需；
+6. **交付/边界**：`.blend` + 预览 + README + 按需 GLB/OBJ；明确未做结构计算、规范、MEP。
+
+详见 `references/model-qa.md`（通用检查表、反模式、交付前 10 问）。
+
 ## 1. 路由规则（先读对文件，不要全读）
 
 | 用户意图 | 读这个 |
@@ -125,6 +138,7 @@ python "<SKILL>/scripts/source_refresh.py" --json .source_refresh.json
 | 可制造性/壁厚/拔模/悬垂/装配/人体工学/重心/干涉 | `references/module-engineering.md`（ENG-001） |
 | 模块格式/预审/冲突/新增模块 | `references/module-format.md` + `assets/module_registry.json` |
 | 写新模块 / 让 AI 查资料填表 / 单层小房子模块 | `references/module-authoring.md` |
+| 建模/交付前的通用质量门、反模式、10 问 | `references/model-qa.md` |
 
 加载规则：模块最多同时 2 个；`main.md` 与 `rubric.md` 不裁剪；超预算裁剪顺序
 curriculum → toolbox_text → 非当前任务模块。
@@ -190,6 +204,6 @@ E. 换方向（重新定义目标）
 
 ## 4. 版本与治理
 
-- 套件 **V5.9.1**；改动 `references/` 后必须重跑 `persona_lint.py`。
+- 套件 **V5.9.2**；改动 `references/` 后必须重跑 `persona_lint.py`。
 - 项目日志、帧号、实测值只写项目目录，不写入人设文件；只有用户明确说“写入人设”才允许修改。
 - `references/toolbox_text.md` 已剥离内嵌代码：脚本统一在 `scripts/`，数据在 `assets/`。

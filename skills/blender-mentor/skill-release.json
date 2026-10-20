@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "skillId": "blender-mentor",
   "channel": "stable",
-  "version": "5.9.1",
+  "version": "5.9.2",
   "source": {
     "repository": "https://github.com/Memory175/blender-mentor"
   }

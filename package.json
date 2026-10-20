@@ -1,6 +1,6 @@
 {
   "name": "blender-mentor",
-  "version": "5.9.1",
+  "version": "5.9.2",
   "description": "Blender full-stack mentor AI Skill: teaching, 0-3 rubric grading, asset/animation acceptance (ESD/BIO/ENG).",
   "type": "module",
   "main": "./lib/index.js",

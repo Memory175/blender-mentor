@@ -78,6 +78,7 @@ Use blender-mentor to walk me through M1 modeling and topology.
 | **Engineering precheck (ENG-001)** | stability, wall thickness, draft, overhang/support, interference, clearance |
 | **M0–M6 curriculum** | modeling & topology → UV/materials/lighting/render → animation/rigging → physics/geometry nodes/pipeline |
 | **22 executable tools** | 6 `.blend` acceptance scripts + engineering precheck + module governance (preflight/lint/conflict/claim audit) + source governance (audit/refresh) + regression/routing tools |
+| **Delivery QA gate** | floors/coordinates, mesh/UV, camera/export, professional-boundary checks |
 | **Knowledge base** | 130 common misconceptions + 40 red lines |
 
 ## Requirements
@@ -92,7 +93,7 @@ Use blender-mentor to walk me through M1 modeling and topology.
 
 ```text
 SKILL.md       routing + D1–D4 delivery loop + machine-acceptance commands
-references/    9 reference files (7 persona docs + module format + authoring guide), loaded on demand
+references/    10 reference files (7 persona docs + module format + authoring guide + model QA), loaded on demand
 scripts/       22 executable tools
 assets/        ESD templates, load plans, deny-word example, source registry template
 ```
@@ -141,7 +142,7 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 ├── .claude-plugin/marketplace.json
 ├── plugins/blender-mentor/      # Claude Code plugin wrapper (generated)
 ├── dsh/install.ps1 / install.sh # DSH one-line installers
-├── references/                  # 9 reference files (7 persona docs + module format + authoring guide)
+├── references/                  # 10 reference files (7 persona docs + module format + authoring guide + model QA)
 ├── scripts/                     # 22 executable tools
 ├── assets/                      # ESD templates, load plans, deny example
 ├── docs/                        # banner + example session image
@@ -171,14 +172,14 @@ New modules, or modules that declare a `source_id`, reference `assets/source_reg
 DSH, Claude Code, Claude.ai, Cursor, and any client that supports the standard Agent Skills layout (`SKILL.md` + resources).
 
 **What do the two version numbers mean?**
-The persona suite is **V5.9.1**; the packaged skill release is **v5.9.1**.
+The persona suite is **V5.9.2**; the packaged skill release is **v5.9.2**.
 
 ## Development
 
 ```bash
 python -m compileall -q scripts tools
 python scripts/persona_lint.py . --allow-no-deny   # structure gate
-python scripts/selftest.py .                       # 26 pass + 1 skipped
+python scripts/selftest.py .                       # 27 pass + 1 skipped
 ```
 
 Blender-side checks:
@@ -191,7 +192,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 Rebuild the skill directory:
 
 ```bash
-python tools/build_skill.py --source <V5.9.1 suite> --out <repo parent> --force
+python tools/build_skill.py --source <V5.9.2 suite> --out <repo parent> --force
 ```
 
 ## License

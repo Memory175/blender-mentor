@@ -54,6 +54,17 @@ def main(argv=None):
     checks.append({"check": "lint_equivalence", "skip": True, "pass": None,
                    "detail": "disabled: toolbox_text.md has no embedded code (standard layout)"})
 
+    # 2.2) 通用建模/交付质量门必须存在，且 SKILL 必须能路由到它
+    qa_ref = os.path.join(root, "references", "model-qa.md")
+    try:
+        skill_text = open(os.path.join(root, "SKILL.md"), encoding="utf-8").read()
+    except OSError:
+        skill_text = ""
+    _check(checks, "model_qa_reference",
+           os.path.isfile(qa_ref) and "references/model-qa.md" in skill_text,
+           {"reference": os.path.isfile(qa_ref),
+            "routed_from_skill": "references/model-qa.md" in skill_text})
+
     # 3) expand template -> params + envelope_check pass
     with open(os.path.join(ROOT, "assets", "esd_spec.template.json"), encoding="utf-8") as fh:
         template = json.load(fh)
