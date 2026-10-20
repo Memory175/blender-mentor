@@ -1,0 +1,118 @@
+{
+  "schema": "mentor-module/1",
+  "id": "ESD-001",
+  "version": "1.1.7",
+  "status": "stable",
+  "kind": "hybrid",
+  "domain": [
+    "animation",
+    "vfx"
+  ],
+  "intent": {
+    "include": [
+      "次级动画",
+      "弹跳",
+      "形变",
+      "抖动",
+      "粒子",
+      "音效",
+      "能量",
+      "冲击",
+      "衰减",
+      "挤压",
+      "拉伸"
+    ],
+    "exclude": [
+      "人体解剖",
+      "产品制造"
+    ]
+  },
+  "coverage": [
+    {
+      "keywords": [
+        "弹跳",
+        "冲击"
+      ],
+      "data_keys": [
+        "energy_decay_ratio"
+      ]
+    },
+    {
+      "keywords": [
+        "形变",
+        "挤压",
+        "拉伸"
+      ],
+      "data_keys": [
+        "squash_depth_pct"
+      ]
+    },
+    {
+      "keywords": [
+        "抖动",
+        "次级"
+      ],
+      "data_keys": [
+        "hold_frames"
+      ]
+    }
+  ],
+  "data": [
+    {
+      "key": "energy_decay_ratio",
+      "value": [
+        0.35,
+        0.65
+      ],
+      "unit": "ratio",
+      "scope": "bounce",
+      "source": "references/module-esd.md §3.1",
+      "confidence": "medium"
+    },
+    {
+      "key": "squash_depth_pct",
+      "value": [
+        10,
+        25
+      ],
+      "unit": "percent",
+      "scope": "deform",
+      "source": "references/module-esd.md §3.2",
+      "confidence": "medium"
+    },
+    {
+      "key": "hold_frames",
+      "value": [
+        2,
+        6
+      ],
+      "unit": "frames",
+      "scope": "secondary",
+      "source": "references/module-esd.md §3.3",
+      "confidence": "low"
+    }
+  ],
+  "rules": [
+    {
+      "id": "energy.decay",
+      "check": "energy_decay_ratio within data range",
+      "severity": "warn",
+      "evidence": "data.energy_decay_ratio"
+    },
+    {
+      "id": "squash.depth",
+      "check": "squash_depth_pct within data range",
+      "severity": "warn",
+      "evidence": "data.squash_depth_pct"
+    }
+  ],
+  "assumptions": [],
+  "unknown_policy": "ask",
+  "requires": [],
+  "conflicts_with": [],
+  "references": [
+    "references/module-esd.md"
+  ],
+  "tests": [],
+  "changelog": []
+}

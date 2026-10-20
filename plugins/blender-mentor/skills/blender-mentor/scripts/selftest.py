@@ -18,7 +18,7 @@ ROOT = os.path.dirname(TOOLS)
 
 
 def _load(name, path):
-    ns = {"__name__": name}
+    ns = {"__name__": name, "__file__": path}
     with open(path, encoding="utf-8") as fh:
         exec(compile(fh.read(), path, "exec"), ns)
     return ns
@@ -124,6 +124,14 @@ def main(argv=None):
         _check(checks, "router_engineering_task",
                any("module-engineering" in f["file"] for f in r7["files"]),
                [f["file"] for f in r7["files"]])
+        r8 = router["route"]("焊接过渡怎么处理")
+        r9 = router["route"]("这个马克杯能注塑吗？壁厚和拔模帮我审一下")
+        _check(checks, "router_preflight_gate",
+               r8["modules_allowed"] is False
+               and not any("module-engineering" in f["file"] for f in r8["files"])
+               and r9["modules_allowed"] is True
+               and any("module-engineering" in f["file"] for f in r9["files"]),
+               {"weld": r8["modules_allowed"], "mug": r9["modules_allowed"]})
         eng_path = os.path.join(TOOLS, "engineering_check.py")
         try:
             compile(open(eng_path, encoding="utf-8").read(), eng_path, "exec")
@@ -149,6 +157,39 @@ def main(argv=None):
                        {"fixtures": os.path.isdir(fixtures), "expected": expected_ok})
             except Exception as exc:  # noqa: BLE001
                 _check(checks, "engineering_regression_assets", False, str(exc))
+        # 2.5) 模块治理：格式 lint + 预审决策
+        try:
+            ml = _load("module_lint", os.path.join(TOOLS, "module_lint.py"))
+            lint_result = ml["run"](root)
+            _check(checks, "module_governance_lint",
+                   lint_result["status"] in ("pass", "warn"),
+                   {"status": lint_result["status"], "problems": lint_result["problems"][:5]})
+            pf = _load("preflight", os.path.join(TOOLS, "preflight.py"))
+            decisions = {
+                "eng": pf["evaluate"](root, "马克杯能注塑吗？壁厚和拔模审一下")["decision"],
+                "weld": pf["evaluate"](root, "焊接过渡怎么处理")["decision"],
+                "none": pf["evaluate"](root, "今天天气怎么样")["decision"],
+            }
+            _check(checks, "module_preflight_gate",
+                   decisions["eng"] == "proceed" and decisions["weld"] == "ask" and decisions["none"] == "block",
+                   decisions)
+            ac = _load("audit_claims", os.path.join(TOOLS, "audit_claims.py"))
+            claim_dir = os.path.join(root, "tests", "module_governance", "claims")
+            if not os.path.isdir(claim_dir):
+                checks.append({"check": "claim_audit_gate", "skip": True, "pass": None,
+                               "detail": "tests/module_governance not shipped; claim audit fixtures optional"})
+            else:
+                pf_data = json.load(open(os.path.join(claim_dir, "preflight_eng.json"), encoding="utf-8"))
+                good = ac["audit"](open(os.path.join(claim_dir, "good.md"), encoding="utf-8").read(), pf_data)
+                bad = ac["audit"](open(os.path.join(claim_dir, "uncited.md"), encoding="utf-8").read(), pf_data)
+                dangling = ac["audit"](open(os.path.join(claim_dir, "dangling.md"), encoding="utf-8").read(), pf_data)
+                _check(checks, "claim_audit_gate",
+                       good["status"] == "pass" and bad["status"] == "fail" and bool(bad["uncited"])
+                       and dangling["status"] == "fail" and bool(dangling["dangling"]),
+                       {"good": good["status"], "uncited": len(bad["uncited"]), "dangling": len(dangling["dangling"])})
+        except Exception as exc:  # noqa: BLE001
+            _check(checks, "module_governance_lint", False, str(exc))
+            _check(checks, "module_preflight_gate", False, str(exc))
         cfg_path = os.path.join(ROOT, "assets", "esd_sample_config.template.json")
         try:
             cfg = json.load(open(cfg_path, encoding="utf-8"))

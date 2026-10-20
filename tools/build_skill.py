@@ -105,9 +105,14 @@ def match_script(heading):
 COPIED_TOOLS = [
     "sample_esd_from_blend.py",
     "expand_esd_spec.py",
-    "load_router.py",
     "engineering_check.py",
     "engineering_regression.py",
+    "module_governance.py",
+    "preflight.py",
+    "module_lint.py",
+    "module_conflict.py",
+    "module_selftest.py",
+    "audit_claims.py",
 ]
 
 ASSET_FILES = [
@@ -116,18 +121,59 @@ ASSET_FILES = [
     "esd_spec.template.json",
     "deny.example.txt",
     "engineering_check.template.json",
+    "module.schema.json",
+    "module_registry.json",
 ]
 
 SKILL_MD = r"""---
 name: blender-mentor
-description: Blender 全栈导师（V5.5.0：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）或可制造性/装配/人体工学（ENG），以及用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review.
+description: Blender 全栈导师（V5.6.0：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）或可制造性/装配/人体工学（ENG），以及用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review.
 ---
 
-# Blender 全栈导师（V5.5.0 · 标准技能布局）
+# Blender 全栈导师（V5.6.0 · 标准技能布局）
 
 角色一句话：把 Blender 任务当**可交付工程**来带——先诊断，再给原理/步骤/验证；交付必须自评 + 修改清单 + 明确询问。
 
 > `<SKILL>` = 本技能目录的绝对路径（下文命令同）；路径含空格时给命令加引号。
+
+## 0. 预审闸门（强制，先于路由）
+
+任何任务（教学、批改、建模、验收、问答）**第一步**都先跑：
+
+```bash
+python "<SKILL>/scripts/preflight.py" --task "<用户原话>" --json .preflight.json
+```
+
+按 `decision` 行动，不得跳过：
+
+| decision | 含义 | 必须做什么 |
+|---|---|---|
+| `proceed` | 命中模块、数据覆盖完整、无冲突 | 只加载 `selected` 模块，进入 §1 路由 |
+| `ask` | 有冲突，或缺数据但可补 | **停止执行**；输出冲突表/缺数据表，等用户选：改模块 / 加 override / 补数据 / 显式假设 / 放弃 |
+| `block` | 无相关模块，或策略要求硬停 | **不得进入教学/建模/给数值**；只回答“缺什么参考数据”并给补模块选项 |
+
+硬规则：
+
+1. 模块没有的数值/标准，不得凭经验补；只能标 `[ASSUMPTION]`（需用户同意）或拒绝。
+2. 模块冲突不得自动按优先级裁决；必须让用户选。
+3. 新增/修改模块前，必须先过 `module_lint.py` 与 `module_conflict.py`。
+4. 模块格式见 `references/module-format.md`；新增模块照 `assets/modules/_template.json`。
+
+### 0.1 输出审计（交付前）
+
+带单位/百分号/角度的数字必须能追溯，否则不得交付：
+
+```bash
+python "<SKILL>/scripts/audit_claims.py" --text answer.md --preflight .preflight.json --json .claims.json
+```
+
+| 结果 | 处理 |
+|---|---|
+| `pass` | 可交付 |
+| `warn` | 有 `[ASSUMPTION]`；必须让用户确认假设 |
+| `fail` | 有 `uncited` 或 `dangling`；补引用/删数字/标假设后重跑 |
+
+引用格式：`[ENG-001:min_wall_mm]`、`[ASSUMPTION]` 或 `[ASSUMPTION:原因]`。
 
 ## 1. 路由规则（先读对文件，不要全读）
 
@@ -140,11 +186,20 @@ description: Blender 全栈导师（V5.5.0：建模/拓扑/UV/材质/灯光/渲�
 | 次级动画/形变/包络/弹跳/粒子/镜头震动 | `references/module-esd.md` |
 | 人体/类人/走路/跑跳/受击/动力链/肌肉体积 | `references/module-biomechanics.md` |
 | 可制造性/壁厚/拔模/悬垂/装配/人体工学/重心/干涉 | `references/module-engineering.md`（ENG-001） |
+| 模块格式/预审/冲突/新增模块 | `references/module-format.md` + `assets/module_registry.json` |
 
 加载规则：模块最多同时 2 个；`main.md` 与 `rubric.md` 不裁剪；超预算裁剪顺序
 curriculum → toolbox_text → 非当前任务模块。
-需要机器清单时：`python "<SKILL>/scripts/load_router.py" --task "人体走路循环，需要验收脚本"`。
-`load_router.py` 输出的是套件官方上限（含 main+rubric 常驻），按上表取用即可，不必全读。
+需要机器清单时，必须先预审再路由：
+
+```bash
+python "<SKILL>/scripts/preflight.py" --task "<用户原话>" --json .preflight.json
+python "<SKILL>/scripts/load_router.py" --task "<用户原话>" --preflight .preflight.json
+```
+
+`load_router.py` 只加载 `preflight` 选中的模块；若输出 `modules_allowed=false`，
+**不得加载任何模块**，只能保留 main/rubric 等常驻文件并回到 §0 处理缺数据/冲突。
+`--strict` 会在模块被阻断时 exit 2，可用于自动化。
 用户明确只要生产结果、不要教学时，可跳过教学流程，但交付仍须走 D2–D4。
 
 ## 2. 交付闭环（D1 → D4，强制）
@@ -195,7 +250,7 @@ E. 换方向（重新定义目标）
 
 ## 4. 版本与治理
 
-- 套件 **V5.5.0**；改动 `references/` 后必须重跑 `persona_lint.py`。
+- 套件 **V5.6.0**；改动 `references/` 后必须重跑 `persona_lint.py`。
 - 项目日志、帧号、实测值只写项目目录，不写入人设文件；只有用户明确说“写入人设”才允许修改。
 - `references/toolbox_text.md` 已剥离内嵌代码：脚本统一在 `scripts/`，数据在 `assets/`。
 """
@@ -280,7 +335,7 @@ Use blender-mentor to walk me through M1 modeling and topology.
 | **0–3 rubric** | critical items, scoring anchors, and a self-review template |
 | **Engineering precheck (ENG-001)** | stability, wall thickness, draft, overhang/support, interference, clearance |
 | **M0–M6 curriculum** | modeling & topology → UV/materials/lighting/render → animation/rigging → physics/geometry nodes/pipeline |
-| **12 executable tools** | 10 acceptance scripts + engineering precheck (stability/wall/draft/overhang/interference) + regression runner |
+| **18 executable tools** | 10 acceptance scripts + engineering precheck + module governance (preflight/lint/conflict/claim audit) + regression runner |
 | **Knowledge base** | 130 common misconceptions + 40 red lines |
 
 ## Requirements
@@ -295,7 +350,7 @@ Use blender-mentor to walk me through M1 modeling and topology.
 ```text
 SKILL.md       routing + D1–D4 delivery loop + machine-acceptance commands
 references/    6 persona documents, loaded on demand
-scripts/       12 executable tools
+scripts/       18 executable tools
 assets/        ESD templates, load plans, deny-word example
 ```
 
@@ -342,7 +397,7 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 ├── plugins/blender-mentor/      # Claude Code plugin wrapper (generated)
 ├── dsh/install.ps1 / install.sh # DSH one-line installers
 ├── references/                  # 6 persona documents, loaded on demand
-├── scripts/                     # 12 executable tools
+├── scripts/                     # 18 executable tools
 ├── assets/                      # ESD templates, load plans, deny example
 ├── docs/                        # banner + example session image
 └── tools/build_skill.py         # maintainer build tool
@@ -368,14 +423,14 @@ No. Acceptance scripts run locally and print JSON/text; they do not upload files
 DSH, Claude Code, Claude.ai, Cursor, and any client that supports the standard Agent Skills layout (`SKILL.md` + resources).
 
 **What do the two version numbers mean?**
-The persona suite is **V5.5.0**; the packaged skill release is **v5.5.1** (packaging fix).
+The persona suite is **V5.6.0**; the packaged skill release is **v5.6.0**.
 
 ## Development
 
 ```bash
 python -m compileall -q scripts tools
 python scripts/persona_lint.py . --allow-no-deny   # structure gate
-python scripts/selftest.py .                       # 17 pass + 1 skipped
+python scripts/selftest.py .                       # 21 pass + 1 skipped
 ```
 
 Blender-side checks:
@@ -388,7 +443,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 Rebuild the skill directory:
 
 ```bash
-python tools/build_skill.py --source <V5.5.0 suite> --out <repo parent> --force
+python tools/build_skill.py --source <V5.6.0 suite> --out <repo parent> --force
 ```
 
 ## License
@@ -479,7 +534,7 @@ bash dsh/install.sh
 | **0–3 评分表** | 关键项、评分锚点、自评模板 |
 | **工程预检（ENG-001）** | 稳定性、壁厚、拔模、悬垂/支撑、干涉、配合间隙 |
 | **M0–M6 课程包** | 建模与拓扑 → UV/材质/灯光/渲染 → 动画/绑定 → 物理/几何节点/管线 |
-| **12 个可执行工具** | 10 个验收脚本 + 工程预检（稳定性/壁厚/拔模/悬垂/干涉）+ 回归测试 |
+| **18 个可执行工具** | 10 个验收脚本 + 工程预检 + 模块治理（预审/lint/冲突/引用审计）+ 回归测试 |
 | **知识库** | 130 条常见误区 + 40 条红线 |
 
 ## 环境要求
@@ -494,7 +549,7 @@ bash dsh/install.sh
 ```text
 SKILL.md       路由 + D1–D4 交付闭环 + 机器验收命令
 references/    6 份人设文档，按需加载
-scripts/       12 个可执行工具
+scripts/       18 个可执行工具
 assets/        ESD 模板、加载清单、拒绝词示例
 ```
 
@@ -541,7 +596,7 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 ├── plugins/blender-mentor/      # Claude Code 插件包装（自动生成）
 ├── dsh/install.ps1 / install.sh # DSH 一键安装脚本
 ├── references/                  # 6 份人设文档，按需加载
-├── scripts/                     # 12 个可执行工具
+├── scripts/                     # 18 个可执行工具
 ├── assets/                      # ESD 模板、加载清单、拒绝词示例
 ├── docs/                        # banner + 示例会话图
 └── tools/build_skill.py         # 维护侧构建工具
@@ -567,14 +622,14 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 DSH、Claude Code、Claude.ai、Cursor，以及任何支持标准 Agent Skills 布局（`SKILL.md` + 资源目录）的客户端。
 
 **两个版本号是什么意思？**
-人设套件为 **V5.5.0**；打包后的技能发布版本为 **v5.5.1**（打包修复）。
+人设套件为 **V5.6.0**；打包后的技能发布版本为 **v5.6.0**。
 
 ## 开发与验证
 
 ```bash
 python -m compileall -q scripts tools
 python scripts/persona_lint.py . --allow-no-deny   # 结构门
-python scripts/selftest.py .                       # 17 pass + 1 skipped
+python scripts/selftest.py .                       # 21 pass + 1 skipped
 ```
 
 Blender 侧检查：
@@ -587,7 +642,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 重建技能目录：
 
 ```bash
-python tools/build_skill.py --source <V5.5.0 套件目录> --out <仓库父目录> --force
+python tools/build_skill.py --source <V5.6.0 套件目录> --out <仓库父目录> --force
 ```
 
 ## 许可
@@ -600,6 +655,22 @@ MIT，见 [LICENSE](LICENSE)。课程文档中的第三方参考书目仅作引�
 """
 
 CHANGELOG_MD = """# Changelog
+
+## V5.6.0 — 2026-10-20
+
+> 人设套件升 **V5.6.0**：新增通用模块治理层（预审 → 路由 → 引用审计）。
+
+### Added
+- `references/module-format.md`：模块格式、证据要求、冲突协议、新增模块 SOP；
+- `assets/module.schema.json` / `assets/module_registry.json` / `assets/modules/*.json`；
+- `scripts/preflight.py`：`proceed / ask / block` 预审闸门；
+- `scripts/module_lint.py` / `module_conflict.py` / `module_selftest.py`；
+- `scripts/audit_claims.py`：输出数字必须带模块引用或 `[ASSUMPTION]`。
+
+### Changed
+- `load_router.py` 强制接预审：`modules_allowed=false` 时不加载任何模块；
+- `SKILL.md` 新增 §0 预审、§0.1 输出审计、§1 预审后路由；
+- `selftest` 扩展到 **21 项**。
 
 ## V5.5.1 — 2026-10-20
 
@@ -1322,7 +1393,7 @@ def write_claude_plugin(skill_dir, repo_slug):
         "name": "blender-mentor",
         "displayName": "Blender Mentor",
         "description": desc,
-        "version": "5.5.1",
+        "version": "5.6.0",
         "author": {"name": owner},
         "homepage": repo_url,
         "repository": repo_url,
@@ -1359,7 +1430,7 @@ def write_claude_plugin(skill_dir, repo_slug):
             "name": "blender-mentor",
             "source": "./plugins/blender-mentor",
             "description": desc,
-            "version": "5.5.1",
+            "version": "5.6.0",
         }],
     }
     write_text(os.path.join(skill_dir, ".claude-plugin", "marketplace.json"),
@@ -1377,7 +1448,7 @@ def write_dsh_plugin(skill_dir, repo_slug):
     owner = repo_slug.split("/")[0]
     repo_url = "https://github.com/%s" % repo_slug
     pkg_name = "blender-mentor"
-    version = "5.5.1"
+    version = "5.6.0"
     desc = ("Blender full-stack mentor AI Skill: teaching, 0-3 rubric grading, "
             "asset/animation acceptance (ESD/BIO/ENG).")
 
@@ -1573,11 +1644,12 @@ def build(source, out_root, force=False, repo_slug="OWNER/REPO"):
         write_text(os.path.join(refs, REF_NAMES[key]),
                    rewrite_layout_refs(rewrite_doc_names(texts[key])))
 
-    # 5.1) 通用模块 ENG-001
-    module_src = os.path.join(suite, "module-engineering.md")
-    if not os.path.isfile(module_src):
-        raise RuntimeError("missing module: %s" % module_src)
-    shutil.copyfile(module_src, os.path.join(refs, "module-engineering.md"))
+    # 5.1) 通用模块 ENG-001 + 治理规范
+    for extra_ref in ("module-engineering.md", "module-format.md"):
+        module_src = os.path.join(suite, extra_ref)
+        if not os.path.isfile(module_src):
+            raise RuntimeError("missing module reference: %s" % module_src)
+        shutil.copyfile(module_src, os.path.join(refs, extra_ref))
 
     # 6) 独立工具 + 资产文件
     tools_src = os.path.join(suite, "persona_tools")
@@ -1604,12 +1676,19 @@ def build(source, out_root, force=False, repo_slug="OWNER/REPO"):
         else:
             shutil.copyfile(src, os.path.join(assets, asset))
 
-    # 6.1) 最终版 lint/selftest（含 ENG-001 校验）
+    # 6.1) 最终版 lint/selftest/router（含治理层校验）
     for rel, fname in (("scripts/persona_lint.py", "persona_lint.py"),
-                       ("scripts/selftest.py", "selftest.py")):
+                       ("scripts/selftest.py", "selftest.py"),
+                       ("scripts/load_router.py", "load_router.py")):
         src = os.path.join(tools_src, fname)
         if os.path.isfile(src):
             shutil.copyfile(src, os.path.join(skill_dir, rel))
+
+    # 6.15) 模块 JSON 目录
+    modules_src = os.path.join(tools_src, "modules")
+    if not os.path.isdir(modules_src):
+        raise RuntimeError("missing modules dir: %s" % modules_src)
+    shutil.copytree(modules_src, os.path.join(assets, "modules"), dirs_exist_ok=True)
 
     # 6.2) 工程回归 fixture/config/expected
     tests_src = os.path.join(suite, "tests")

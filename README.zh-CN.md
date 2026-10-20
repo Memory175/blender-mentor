@@ -77,7 +77,7 @@ bash dsh/install.sh
 | **0–3 评分表** | 关键项、评分锚点、自评模板 |
 | **工程预检（ENG-001）** | 稳定性、壁厚、拔模、悬垂/支撑、干涉、配合间隙 |
 | **M0–M6 课程包** | 建模与拓扑 → UV/材质/灯光/渲染 → 动画/绑定 → 物理/几何节点/管线 |
-| **12 个可执行工具** | 10 个验收脚本 + 工程预检（稳定性/壁厚/拔模/悬垂/干涉）+ 回归测试 |
+| **18 个可执行工具** | 10 个验收脚本 + 工程预检 + 模块治理（预审/lint/冲突/引用审计）+ 回归测试 |
 | **知识库** | 130 条常见误区 + 40 条红线 |
 
 ## 环境要求
@@ -92,7 +92,7 @@ bash dsh/install.sh
 ```text
 SKILL.md       路由 + D1–D4 交付闭环 + 机器验收命令
 references/    6 份人设文档，按需加载
-scripts/       12 个可执行工具
+scripts/       18 个可执行工具
 assets/        ESD 模板、加载清单、拒绝词示例
 ```
 
@@ -139,7 +139,7 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 ├── plugins/blender-mentor/      # Claude Code 插件包装（自动生成）
 ├── dsh/install.ps1 / install.sh # DSH 一键安装脚本
 ├── references/                  # 6 份人设文档，按需加载
-├── scripts/                     # 12 个可执行工具
+├── scripts/                     # 18 个可执行工具
 ├── assets/                      # ESD 模板、加载清单、拒绝词示例
 ├── docs/                        # banner + 示例会话图
 └── tools/build_skill.py         # 维护侧构建工具
@@ -165,14 +165,14 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 DSH、Claude Code、Claude.ai、Cursor，以及任何支持标准 Agent Skills 布局（`SKILL.md` + 资源目录）的客户端。
 
 **两个版本号是什么意思？**
-人设套件为 **V5.5.0**；打包后的技能发布版本为 **v5.5.1**（打包修复）。
+人设套件为 **V5.6.0**；打包后的技能发布版本为 **v5.6.0**。
 
 ## 开发与验证
 
 ```bash
 python -m compileall -q scripts tools
 python scripts/persona_lint.py . --allow-no-deny   # 结构门
-python scripts/selftest.py .                       # 17 pass + 1 skipped
+python scripts/selftest.py .                       # 21 pass + 1 skipped
 ```
 
 Blender 侧检查：
@@ -185,7 +185,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 重建技能目录：
 
 ```bash
-python tools/build_skill.py --source <V5.5.0 套件目录> --out <仓库父目录> --force
+python tools/build_skill.py --source <V5.6.0 套件目录> --out <仓库父目录> --force
 ```
 
 ## 许可

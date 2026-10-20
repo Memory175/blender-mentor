@@ -1,5 +1,21 @@
 # Changelog
 
+## V5.6.0 — 2026-10-20
+
+> 人设套件升 **V5.6.0**：新增通用模块治理层（预审 → 路由 → 引用审计）。
+
+### Added
+- `references/module-format.md`：模块格式、证据要求、冲突协议、新增模块 SOP；
+- `assets/module.schema.json` / `assets/module_registry.json` / `assets/modules/*.json`；
+- `scripts/preflight.py`：`proceed / ask / block` 预审闸门；
+- `scripts/module_lint.py` / `module_conflict.py` / `module_selftest.py`；
+- `scripts/audit_claims.py`：输出数字必须带模块引用或 `[ASSUMPTION]`。
+
+### Changed
+- `load_router.py` 强制接预审：`modules_allowed=false` 时不加载任何模块；
+- `SKILL.md` 新增 §0 预审、§0.1 输出审计、§1 预审后路由；
+- `selftest` 扩展到 **21 项**。
+
 ## V5.5.1 — 2026-10-20
 
 > 打包修复；人设套件仍为 **V5.5.0**。

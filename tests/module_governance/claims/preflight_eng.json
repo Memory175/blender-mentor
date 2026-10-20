@@ -1,0 +1,8 @@
+{
+  "decision": "proceed",
+  "selected": [{"id": "ENG-001", "version": "1.0.0", "status": "stable"}],
+  "data": {
+    "min_wall_mm": {"module": "ENG-001", "key": "min_wall_mm", "value": 1.5, "unit": "mm"},
+    "draft_min_deg": {"module": "ENG-001", "key": "draft_min_deg", "value": 1.0, "unit": "deg"}
+  }
+}

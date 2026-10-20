@@ -14,6 +14,8 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
+sys.path.insert(0, HERE)
+import preflight as _preflight  # noqa: E402
 PLAN_PATH = os.path.join(ROOT, "assets", "load_plan.json")
 
 
@@ -42,8 +44,16 @@ def _entry(item, kind):
             "tokens_est": _tokens(item["file"])}
 
 
-def route(task, budget=None, plan=None):
+def route(task, budget=None, plan=None, preflight_result=None, run_preflight=True):
     plan = plan or _load_plan()
+    pf = preflight_result
+    if pf is None and run_preflight:
+        try:
+            pf = _preflight.evaluate(ROOT, task)
+        except Exception as exc:  # noqa: BLE001
+            pf = {"decision": "error", "error": str(exc), "selected": [], "questions": []}
+    modules_allowed = pf is None or pf.get("decision") == "proceed"
+    allowed_ids = {m.get("id") for m in (pf or {}).get("selected", [])}
     selected, dropped = [], []
     for item in plan.get("always", []):
         selected.append(_entry(item, "always"))
@@ -62,8 +72,18 @@ def route(task, budget=None, plan=None):
             entry["triggers_hit"] = hits
             modules.append(entry)
     modules.sort(key=lambda e: e["triggers_hit"][0])
-    selected.extend(modules[:2])
-    for extra in modules[2:]:
+    kept_modules = []
+    for entry in modules:
+        if not modules_allowed:
+            dropped.append({"file": entry["file"], "kind": "module",
+                            "reason": "preflight decision: %s (modules blocked)" % pf.get("decision")})
+        elif allowed_ids and entry["id"] not in allowed_ids:
+            dropped.append({"file": entry["file"], "kind": "module",
+                            "reason": "not selected by preflight"})
+        else:
+            kept_modules.append(entry)
+    selected.extend(kept_modules[:2])
+    for extra in kept_modules[2:]:
         dropped.append({"file": extra["file"], "kind": "module",
                         "reason": "max 2 modules per task"})
 
@@ -94,6 +114,7 @@ def route(task, budget=None, plan=None):
         if d["kind"] == "module":
             warnings.append("module dropped: " + d["file"])
     result = {
+        "status": "ok" if modules_allowed else "blocked_modules",
         "task": task,
         "files": selected,
         "dropped": dropped,
@@ -101,6 +122,14 @@ def route(task, budget=None, plan=None):
         "budget": budget,
         "over_budget": bool(budget and total() > budget),
         "warnings": warnings,
+        "modules_allowed": modules_allowed,
+        "preflight": None if pf is None else {
+            "decision": pf.get("decision"),
+            "selected": pf.get("selected", []),
+            "missing": pf.get("missing", []),
+            "conflicts": pf.get("conflicts", []),
+            "questions": pf.get("questions", []),
+        },
         "policy": plan.get("policy", []),
         "tools_hint": plan.get("tools", []),
     }
@@ -109,7 +138,8 @@ def route(task, budget=None, plan=None):
 
 def main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
-    task, budget, list_only = None, None, False
+    task, budget, list_only, preflight_path = None, None, False, None
+    no_preflight, strict = False, False
     i = 0
     while i < len(argv):
         a = argv[i]
@@ -119,6 +149,15 @@ def main(argv=None):
         elif a == "--budget" and i + 1 < len(argv):
             budget = int(float(argv[i + 1]))
             i += 2
+        elif a == "--preflight" and i + 1 < len(argv):
+            preflight_path = argv[i + 1]
+            i += 2
+        elif a == "--no-preflight":
+            no_preflight = True
+            i += 1
+        elif a == "--strict":
+            strict = True
+            i += 1
         elif a == "--list":
             list_only = True
             i += 1
@@ -149,8 +188,19 @@ def main(argv=None):
             {"status": "fail", "error": "usage: load_router.py --task TEXT [--budget N]"},
             ensure_ascii=False))
         return 2
-    result = route(task, budget, plan)
+    pf = None
+    if preflight_path:
+        try:
+            with open(preflight_path, encoding="utf-8") as fh:
+                pf = json.load(fh)
+        except (OSError, ValueError) as exc:
+            print("LOAD_PLAN " + json.dumps(
+                {"status": "fail", "error": "preflight: " + str(exc)}, ensure_ascii=False))
+            return 2
+    result = route(task, budget, plan, preflight_result=pf, run_preflight=not no_preflight)
     print("LOAD_PLAN " + json.dumps(result, ensure_ascii=False))
+    if strict and not result["modules_allowed"]:
+        return 2
     return 0
 
 

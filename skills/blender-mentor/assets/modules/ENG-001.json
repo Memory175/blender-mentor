@@ -1,0 +1,226 @@
+{
+  "schema": "mentor-module/1",
+  "id": "ENG-001",
+  "version": "1.0.0",
+  "status": "stable",
+  "kind": "hybrid",
+  "domain": [
+    "engineering",
+    "manufacturing",
+    "ergonomics",
+    "assembly"
+  ],
+  "intent": {
+    "include": [
+      "可制造",
+      "制造",
+      "工程审查",
+      "壁厚",
+      "拔模",
+      "注塑",
+      "铸造",
+      "陶瓷",
+      "3D打印",
+      "3D 打印",
+      "悬垂",
+      "装配",
+      "卡扣",
+      "螺丝",
+      "胶水",
+      "一体化",
+      "人体工学",
+      "握持",
+      "重心",
+      "支撑面",
+      "应力",
+      "干涉",
+      "碰撞",
+      "倒扣",
+      "DFM",
+      "CNC",
+      "钣金",
+      "可装配",
+      "焊接"
+    ],
+    "exclude": [
+      "纯渲染",
+      "绑定",
+      "动画表演"
+    ]
+  },
+  "coverage": [
+    {
+      "keywords": [
+        "壁厚",
+        "注塑",
+        "铸造"
+      ],
+      "data_keys": [
+        "min_wall_mm"
+      ]
+    },
+    {
+      "keywords": [
+        "拔模",
+        "注塑",
+        "铸造"
+      ],
+      "data_keys": [
+        "draft_min_deg"
+      ]
+    },
+    {
+      "keywords": [
+        "悬垂",
+        "3D打印",
+        "3D 打印"
+      ],
+      "data_keys": [
+        "overhang_max_deg"
+      ]
+    },
+    {
+      "keywords": [
+        "重心",
+        "支撑面",
+        "稳定性"
+      ],
+      "data_keys": [
+        "stability_margin_pct"
+      ]
+    },
+    {
+      "keywords": [
+        "握持",
+        "人体工学"
+      ],
+      "data_keys": [
+        "finger_clearance_mm"
+      ]
+    },
+    {
+      "keywords": [
+        "卡扣",
+        "装配"
+      ],
+      "data_keys": [
+        "snap_undercut_mm",
+        "assembly_clearance_mm"
+      ]
+    },
+    {
+      "keywords": [
+        "陶瓷"
+      ],
+      "data_keys": [
+        "ceramic_shrink_pct"
+      ]
+    }
+  ],
+  "data": [
+    {
+      "key": "min_wall_mm",
+      "value": 1.5,
+      "unit": "mm",
+      "scope": "injection",
+      "source": "references/module-engineering.md §3.1",
+      "confidence": "high"
+    },
+    {
+      "key": "draft_min_deg",
+      "value": 1.0,
+      "unit": "deg",
+      "scope": "injection/casting",
+      "source": "references/module-engineering.md §3.2",
+      "confidence": "high"
+    },
+    {
+      "key": "overhang_max_deg",
+      "value": 45.0,
+      "unit": "deg",
+      "scope": "FDM",
+      "source": "references/module-engineering.md §3.5",
+      "confidence": "high"
+    },
+    {
+      "key": "stability_margin_pct",
+      "value": 10.0,
+      "unit": "percent",
+      "scope": "rigid-body",
+      "source": "references/module-engineering.md §1.2",
+      "confidence": "medium"
+    },
+    {
+      "key": "finger_clearance_mm",
+      "value": 25.0,
+      "unit": "mm",
+      "scope": "ergonomics",
+      "source": "references/module-engineering.md §4.1",
+      "confidence": "medium"
+    },
+    {
+      "key": "snap_undercut_mm",
+      "value": 0.5,
+      "unit": "mm",
+      "scope": "snap-fit",
+      "source": "references/module-engineering.md §5.1",
+      "confidence": "medium"
+    },
+    {
+      "key": "assembly_clearance_mm",
+      "value": 0.2,
+      "unit": "mm",
+      "scope": "assembly",
+      "source": "references/module-engineering.md §5.1",
+      "confidence": "medium"
+    },
+    {
+      "key": "ceramic_shrink_pct",
+      "value": [
+        10,
+        20
+      ],
+      "unit": "percent",
+      "scope": "ceramic",
+      "source": "references/module-engineering.md §3.4",
+      "confidence": "medium"
+    }
+  ],
+  "rules": [
+    {
+      "id": "wall.min",
+      "check": "wall_min_mm >= data.min_wall_mm",
+      "severity": "fail",
+      "evidence": "data.min_wall_mm"
+    },
+    {
+      "id": "draft.min",
+      "check": "draft_deg >= data.draft_min_deg",
+      "severity": "warn",
+      "evidence": "data.draft_min_deg"
+    },
+    {
+      "id": "overhang.max",
+      "check": "overhang_deg <= data.overhang_max_deg",
+      "severity": "warn",
+      "evidence": "data.overhang_max_deg"
+    },
+    {
+      "id": "assembly.clearance",
+      "check": "gap_mm >= data.assembly_clearance_mm",
+      "severity": "fail",
+      "evidence": "data.assembly_clearance_mm"
+    }
+  ],
+  "assumptions": [],
+  "unknown_policy": "ask",
+  "requires": [],
+  "conflicts_with": [],
+  "references": [
+    "references/module-engineering.md"
+  ],
+  "tests": [
+    "tests/engineering"
+  ],
+  "changelog": []
+}

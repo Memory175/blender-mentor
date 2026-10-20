@@ -1,0 +1,36 @@
+{
+  "schema": "mentor-module/1",
+  "id": "NEW-001",
+  "version": "0.1.0",
+  "status": "experimental",
+  "kind": "hybrid",
+  "domain": ["replace-me"],
+  "intent": {
+    "include": ["replace-me"],
+    "exclude": []
+  },
+  "coverage": [
+    {
+      "keywords": ["replace-me"],
+      "data_keys": ["replace_me_value"]
+    }
+  ],
+  "data": [
+    {
+      "key": "replace_me_value",
+      "value": 0,
+      "unit": "replace-me",
+      "scope": "replace-me",
+      "source": "replace-me: file/section or standard",
+      "confidence": "low"
+    }
+  ],
+  "rules": [],
+  "assumptions": [],
+  "unknown_policy": "ask",
+  "requires": [],
+  "conflicts_with": [],
+  "references": [],
+  "tests": [],
+  "changelog": ["0.1.0: initial draft"]
+}

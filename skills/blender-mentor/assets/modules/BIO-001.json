@@ -1,0 +1,135 @@
+{
+  "schema": "mentor-module/1",
+  "id": "BIO-001",
+  "version": "1.0.3",
+  "status": "stable",
+  "kind": "hybrid",
+  "domain": [
+    "animation",
+    "biomechanics"
+  ],
+  "intent": {
+    "include": [
+      "人体",
+      "类人",
+      "走路",
+      "跑步",
+      "跑跳",
+      "受击",
+      "动力链",
+      "肌肉",
+      "生物力学",
+      "CoM",
+      "GRF",
+      "跳跃",
+      "步态"
+    ],
+    "exclude": [
+      "机械结构",
+      "产品制造"
+    ]
+  },
+  "coverage": [
+    {
+      "keywords": [
+        "走路",
+        "跑步",
+        "步态"
+      ],
+      "data_keys": [
+        "grf_peak_bw",
+        "com_support_margin_pct"
+      ]
+    },
+    {
+      "keywords": [
+        "跳跃",
+        "受击"
+      ],
+      "data_keys": [
+        "airtime_s",
+        "landing_flexion_deg"
+      ]
+    },
+    {
+      "keywords": [
+        "肌肉",
+        "动力链"
+      ],
+      "data_keys": [
+        "muscle_volume_delta_pct"
+      ]
+    }
+  ],
+  "data": [
+    {
+      "key": "grf_peak_bw",
+      "value": [
+        2.0,
+        3.0
+      ],
+      "unit": "body_weight",
+      "scope": "running",
+      "source": "references/module-biomechanics.md §2.3",
+      "confidence": "medium"
+    },
+    {
+      "key": "com_support_margin_pct",
+      "value": 10.0,
+      "unit": "percent",
+      "scope": "gait",
+      "source": "references/module-biomechanics.md §2.1",
+      "confidence": "medium"
+    },
+    {
+      "key": "airtime_s",
+      "value": [
+        0.15,
+        0.6
+      ],
+      "unit": "s",
+      "scope": "jump",
+      "source": "references/module-biomechanics.md §2.5",
+      "confidence": "low"
+    },
+    {
+      "key": "landing_flexion_deg",
+      "value": 60.0,
+      "unit": "deg",
+      "scope": "landing",
+      "source": "references/module-biomechanics.md §2.6",
+      "confidence": "medium"
+    },
+    {
+      "key": "muscle_volume_delta_pct",
+      "value": 15.0,
+      "unit": "percent",
+      "scope": "muscle-drive",
+      "source": "references/module-biomechanics.md §3.2",
+      "confidence": "medium"
+    }
+  ],
+  "rules": [
+    {
+      "id": "com.support",
+      "check": "com_xy inside support_polygon + margin",
+      "severity": "fail",
+      "evidence": "data.com_support_margin_pct"
+    },
+    {
+      "id": "grf.peak",
+      "check": "grf_peak_bw within data range",
+      "severity": "warn",
+      "evidence": "data.grf_peak_bw"
+    }
+  ],
+  "assumptions": [],
+  "unknown_policy": "ask",
+  "requires": [],
+  "conflicts_with": [],
+  "references": [
+    "references/module-biomechanics.md"
+  ],
+  "tests": [],
+  "changelog": []
+}
