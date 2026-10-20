@@ -1,5 +1,15 @@
 # Changelog
 
+## V5.4.5 — 2026-10-20
+
+> 技能包发布版本；人设套件版本仍为 **V5.4.0**（六件套版本锚点不变）。
+
+### Changed
+- 新增 Last commit 徽章；
+- 收掉重复：Blender 版本只在 Requirements 表声明，移除 Requirements 中的客户端行；
+- 保持 Quick start 默认顺序：DSH → Claude Code → Cursor；
+- 版本升至 `5.4.5`。
+
 ## V5.4.4 — 2026-10-20
 
 > 技能包发布版本；人设套件版本仍为 **V5.4.0**（六件套版本锚点不变）。

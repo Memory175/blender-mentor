@@ -9,6 +9,7 @@
 [![validate-skill](https://github.com/Memory175/blender-mentor/actions/workflows/validate.yml/badge.svg)](https://github.com/Memory175/blender-mentor/actions)
 [![release](https://img.shields.io/github/v/release/Memory175/blender-mentor?color=2f81f7)](https://github.com/Memory175/blender-mentor/releases)
 [![license](https://img.shields.io/github/license/Memory175/blender-mentor?color=3fb950)](https://github.com/Memory175/blender-mentor/blob/main/LICENSE)
+[![last commit](https://img.shields.io/github/last-commit/Memory175/blender-mentor?color=8b5cf6)](https://github.com/Memory175/blender-mentor/commits/main)
 [![Blender](https://img.shields.io/badge/Blender-4.2%20LTS%20%7C%205.x-orange)](https://www.blender.org/download/)
 
 ## 实际效果
@@ -25,7 +26,7 @@
 
 ![示例会话：提问、评分、P0/P1/P2 修改清单、机器验收](docs/demo.svg)
 
-> **这不是 Blender 插件。** 技能给 AI 客户端装上导师的“工作手册”；打开 `.blend` 和跑验收脚本仍然需要你本机安装 Blender 4.2 LTS / 5.x。
+> **这不是 Blender 插件。** 技能给 AI 客户端装上导师的“工作手册”；打开 `.blend` 和跑验收脚本仍然需要你本机安装 Blender（见[环境要求](#环境要求)）。
 
 ## 评分速览
 
@@ -83,7 +84,6 @@ bash dsh/install.sh
 | 需要 | 用途 |
 |---|---|
 | Blender 4.2 LTS / 5.x | `.blend` 验收脚本（`blender -b ... --python scripts/...`） |
-| Claude Code / DSH / Claude.ai / Cursor | 加载技能 |
 | Python 3 | `selftest.py`、`persona_lint.py`、`load_router.py` |
 
 ## 工作原理
@@ -163,7 +163,7 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 **支持哪些客户端？**
 DSH、Claude Code、Claude.ai、Cursor，以及任何支持标准 Agent Skills 布局（`SKILL.md` + 资源目录）的客户端。
 
-**为什么同时看到 V5.4.0 和 v5.4.4？**
+**为什么同时看到 V5.4.0 和 v5.4.5？**
 V5.4.0 是人设套件版本（六份源文档）；v5.4.4 是打包后的技能发布版本，两者独立版本号。
 
 ## 开发与验证

@@ -9,6 +9,7 @@ It diagnoses your level, teaches a structured lesson, grades your work with a 0�
 [![validate-skill](https://github.com/Memory175/blender-mentor/actions/workflows/validate.yml/badge.svg)](https://github.com/Memory175/blender-mentor/actions)
 [![release](https://img.shields.io/github/v/release/Memory175/blender-mentor?color=2f81f7)](https://github.com/Memory175/blender-mentor/releases)
 [![license](https://img.shields.io/github/license/Memory175/blender-mentor?color=3fb950)](https://github.com/Memory175/blender-mentor/blob/main/LICENSE)
+[![last commit](https://img.shields.io/github/last-commit/Memory175/blender-mentor?color=8b5cf6)](https://github.com/Memory175/blender-mentor/commits/main)
 [![Blender](https://img.shields.io/badge/Blender-4.2%20LTS%20%7C%205.x-orange)](https://www.blender.org/download/)
 
 ## What it looks like
@@ -25,7 +26,7 @@ mentor › L2 · Review mode · score 2.1 / 3 — critical: foot sliding
 
 ![Example session: prompt, rubric score, P0/P1/P2 fixes, machine acceptance](docs/demo.svg)
 
-> **Not a Blender add-on.** The skill gives your AI agent the mentor's playbook. You still need Blender 4.2 LTS / 5.x installed to open `.blend` files and run acceptance checks.
+> **Not a Blender add-on.** The skill gives your AI agent the mentor's playbook. You still need Blender installed to open `.blend` files and run acceptance checks (see [Requirements](#requirements)).
 
 ## Rubric at a glance
 
@@ -83,7 +84,6 @@ Use blender-mentor to walk me through M1 modeling and topology.
 | Requirement | Needed for |
 |---|---|
 | Blender 4.2 LTS / 5.x | `.blend` acceptance scripts (`blender -b ... --python scripts/...`) |
-| Claude Code / DSH / Claude.ai / Cursor | Loading the skill |
 | Python 3 | `selftest.py`, `persona_lint.py`, `load_router.py` |
 
 ## How it works
@@ -163,7 +163,7 @@ No. Acceptance scripts run locally and print JSON/text; they do not upload files
 **Which clients are supported?**
 DSH, Claude Code, Claude.ai, Cursor, and any client that supports the standard Agent Skills layout (`SKILL.md` + resources).
 
-**Why do I see V5.4.0 and v5.4.4?**
+**Why do I see V5.4.0 and v5.4.5?**
 V5.4.0 is the persona-suite version (the six source documents). v5.4.4 is the packaged skill release; they are versioned independently.
 
 ## Development

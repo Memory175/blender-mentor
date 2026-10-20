@@ -207,6 +207,7 @@ It diagnoses your level, teaches a structured lesson, grades your work with a 0�
 [![validate-skill](https://github.com/Memory175/blender-mentor/actions/workflows/validate.yml/badge.svg)](https://github.com/Memory175/blender-mentor/actions)
 [![release](https://img.shields.io/github/v/release/Memory175/blender-mentor?color=2f81f7)](https://github.com/Memory175/blender-mentor/releases)
 [![license](https://img.shields.io/github/license/Memory175/blender-mentor?color=3fb950)](https://github.com/Memory175/blender-mentor/blob/main/LICENSE)
+[![last commit](https://img.shields.io/github/last-commit/Memory175/blender-mentor?color=8b5cf6)](https://github.com/Memory175/blender-mentor/commits/main)
 [![Blender](https://img.shields.io/badge/Blender-4.2%20LTS%20%7C%205.x-orange)](https://www.blender.org/download/)
 
 ## What it looks like
@@ -223,7 +224,7 @@ mentor › L2 · Review mode · score 2.1 / 3 — critical: foot sliding
 
 ![Example session: prompt, rubric score, P0/P1/P2 fixes, machine acceptance](docs/demo.svg)
 
-> **Not a Blender add-on.** The skill gives your AI agent the mentor's playbook. You still need Blender 4.2 LTS / 5.x installed to open `.blend` files and run acceptance checks.
+> **Not a Blender add-on.** The skill gives your AI agent the mentor's playbook. You still need Blender installed to open `.blend` files and run acceptance checks (see [Requirements](#requirements)).
 
 ## Rubric at a glance
 
@@ -281,7 +282,6 @@ Use blender-mentor to walk me through M1 modeling and topology.
 | Requirement | Needed for |
 |---|---|
 | Blender 4.2 LTS / 5.x | `.blend` acceptance scripts (`blender -b ... --python scripts/...`) |
-| Claude Code / DSH / Claude.ai / Cursor | Loading the skill |
 | Python 3 | `selftest.py`, `persona_lint.py`, `load_router.py` |
 
 ## How it works
@@ -361,7 +361,7 @@ No. Acceptance scripts run locally and print JSON/text; they do not upload files
 **Which clients are supported?**
 DSH, Claude Code, Claude.ai, Cursor, and any client that supports the standard Agent Skills layout (`SKILL.md` + resources).
 
-**Why do I see V5.4.0 and v5.4.4?**
+**Why do I see V5.4.0 and v5.4.5?**
 V5.4.0 is the persona-suite version (the six source documents). v5.4.4 is the packaged skill release; they are versioned independently.
 
 ## Development
@@ -405,6 +405,7 @@ README_ZH_MD = r"""# Blender Mentor
 [![validate-skill](https://github.com/Memory175/blender-mentor/actions/workflows/validate.yml/badge.svg)](https://github.com/Memory175/blender-mentor/actions)
 [![release](https://img.shields.io/github/v/release/Memory175/blender-mentor?color=2f81f7)](https://github.com/Memory175/blender-mentor/releases)
 [![license](https://img.shields.io/github/license/Memory175/blender-mentor?color=3fb950)](https://github.com/Memory175/blender-mentor/blob/main/LICENSE)
+[![last commit](https://img.shields.io/github/last-commit/Memory175/blender-mentor?color=8b5cf6)](https://github.com/Memory175/blender-mentor/commits/main)
 [![Blender](https://img.shields.io/badge/Blender-4.2%20LTS%20%7C%205.x-orange)](https://www.blender.org/download/)
 
 ## 实际效果
@@ -421,7 +422,7 @@ README_ZH_MD = r"""# Blender Mentor
 
 ![示例会话：提问、评分、P0/P1/P2 修改清单、机器验收](docs/demo.svg)
 
-> **这不是 Blender 插件。** 技能给 AI 客户端装上导师的“工作手册”；打开 `.blend` 和跑验收脚本仍然需要你本机安装 Blender 4.2 LTS / 5.x。
+> **这不是 Blender 插件。** 技能给 AI 客户端装上导师的“工作手册”；打开 `.blend` 和跑验收脚本仍然需要你本机安装 Blender（见[环境要求](#环境要求)）。
 
 ## 评分速览
 
@@ -479,7 +480,6 @@ bash dsh/install.sh
 | 需要 | 用途 |
 |---|---|
 | Blender 4.2 LTS / 5.x | `.blend` 验收脚本（`blender -b ... --python scripts/...`） |
-| Claude Code / DSH / Claude.ai / Cursor | 加载技能 |
 | Python 3 | `selftest.py`、`persona_lint.py`、`load_router.py` |
 
 ## 工作原理
@@ -559,7 +559,7 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 **支持哪些客户端？**
 DSH、Claude Code、Claude.ai、Cursor，以及任何支持标准 Agent Skills 布局（`SKILL.md` + 资源目录）的客户端。
 
-**为什么同时看到 V5.4.0 和 v5.4.4？**
+**为什么同时看到 V5.4.0 和 v5.4.5？**
 V5.4.0 是人设套件版本（六份源文档）；v5.4.4 是打包后的技能发布版本，两者独立版本号。
 
 ## 开发与验证
@@ -593,6 +593,16 @@ MIT，见 [LICENSE](LICENSE)。课程文档中的第三方参考书目仅作引�
 """
 
 CHANGELOG_MD = """# Changelog
+
+## V5.4.5 — 2026-10-20
+
+> 技能包发布版本；人设套件版本仍为 **V5.4.0**（六件套版本锚点不变）。
+
+### Changed
+- 新增 Last commit 徽章；
+- 收掉重复：Blender 版本只在 Requirements 表声明，移除 Requirements 中的客户端行；
+- 保持 Quick start 默认顺序：DSH → Claude Code → Cursor；
+- 版本升至 `5.4.5`。
 
 ## V5.4.4 — 2026-10-20
 
@@ -1279,7 +1289,7 @@ def write_claude_plugin(skill_dir, repo_slug):
         "name": "blender-mentor",
         "displayName": "Blender Mentor",
         "description": desc,
-        "version": "5.4.4",
+        "version": "5.4.5",
         "author": {"name": owner},
         "homepage": repo_url,
         "repository": repo_url,
@@ -1316,7 +1326,7 @@ def write_claude_plugin(skill_dir, repo_slug):
             "name": "blender-mentor",
             "source": "./plugins/blender-mentor",
             "description": desc,
-            "version": "5.4.4",
+            "version": "5.4.5",
         }],
     }
     write_text(os.path.join(skill_dir, ".claude-plugin", "marketplace.json"),
@@ -1334,7 +1344,7 @@ def write_dsh_plugin(skill_dir, repo_slug):
     owner = repo_slug.split("/")[0]
     repo_url = "https://github.com/%s" % repo_slug
     pkg_name = "blender-mentor"
-    version = "5.4.4"
+    version = "5.4.5"
     desc = ("Blender full-stack mentor AI Skill: teaching, 0-3 rubric grading, "
             "asset/animation acceptance (ESD/BIO).")
 
