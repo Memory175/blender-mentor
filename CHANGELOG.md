@@ -1,5 +1,20 @@
 # Changelog
 
+## V5.11.3 — 2026-10-20
+
+> 人设 bug 修复；套件升 **V5.11.3**。
+
+### Fixed
+- `persona_lint` 未索引 `INT-001`：现校验 `module-int-001.md` 版本与 main 注册表一致；
+- `preflight` 强制 `INT-001` 缺口会误拦截已命中的 `INT-002` 等风格/布局变体；
+- `module_gap` 对“已有 INT 模块但缺 style/layout”误返回 `resolve_existing`，现返回 `missing_style_layout`；
+- `main.md` 仍写“七个文件”且缺 INT-001 模块表/加载表，现补为八个文件；
+- `SKILL.md` 描述缺 INT/室内触发词，现补 interior design / Chinese-style interior / two-bedroom apartment。
+
+### Tests
+- `module_selftest` 扩到 24 项（INT 变体、missing style/layout）；
+- `selftest` 27 项、干净安装 24 项不变。
+
 ## V5.11.2 — 2026-10-20
 
 > INT-001 收编 open questions；人设套件升 **V5.11.2**。

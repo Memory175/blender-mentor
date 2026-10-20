@@ -30,6 +30,7 @@ FILES = [
     "references/module-esd.md",
     "references/module-biomechanics.md",
     "references/module-engineering.md",
+    "references/module-int-001.md",
 ]
 ALIAS = {
     "main": FILES[0],
@@ -39,6 +40,7 @@ ALIAS = {
     "ESD-001": FILES[4],
     "BIO-001": FILES[5],
     "ENG-001": FILES[6],
+    "INT-001": FILES[7],
 }
 
 
@@ -64,7 +66,7 @@ def _check_refs(texts):
     all_heads = set()
     for hs in heads.values():
         all_heads |= hs
-    ref = re.compile(r"(主文档|rubric|curriculum|toolbox|ESD-001|BIO-001)"
+    ref = re.compile(r"(主文档|rubric|curriculum|toolbox|ESD-001|BIO-001|ENG-001|INT-001)"
                      r"\s*[`]?\s*§\s*(\d+(?:\.\d+)*)")
     bare = re.compile(r"§\s*(\d+(?:\.\d+)*)")
     broken = []
@@ -108,19 +110,24 @@ def _check_versions(texts):
     esd = re.search(r"^\| 版本 \| ([\d.]+) \|", texts[FILES[4]], re.M)
     bio = re.search(r"- \*\*版本\*\*：v([\d.]+)", texts[FILES[5]])
     eng = re.search(r"- \*\*版本\*\*：v([\d.]+)", texts[FILES[6]])
+    interior = re.search(r"版本：([\d.]+) · 状态：experimental", texts[FILES[7]])
     reg_esd = re.search(r"`ESD-001`.*\| stable v([\d.]+) \|", main)
     reg_bio = re.search(r"`BIO-001`.*\| stable v([\d.]+) \|", main)
     reg_eng = re.search(r"`ENG-001`.*\| stable v([\d.]+) \|", main)
+    reg_int = re.search(r"`INT-001`.*\| experimental v([\d.]+) \|", main)
     if not (esd and reg_esd and esd.group(1) == reg_esd.group(1)):
         problems.append("ESD-001 registry/module version mismatch")
     if not (bio and reg_bio and bio.group(1) == reg_bio.group(1)):
         problems.append("BIO-001 registry/module version mismatch")
     if not (eng and reg_eng and eng.group(1) == reg_eng.group(1)):
         problems.append("ENG-001 registry/module version mismatch")
+    if not (interior and reg_int and interior.group(1) == reg_int.group(1)):
+        problems.append("INT-001 registry/module version mismatch")
     return {"pass": not problems, "suite": ver,
             "module_versions": {"ESD-001": esd.group(1) if esd else None,
                                 "BIO-001": bio.group(1) if bio else None,
-                                "ENG-001": eng.group(1) if eng else None},
+                                "ENG-001": eng.group(1) if eng else None,
+                                "INT-001": interior.group(1) if interior else None},
             "problems": problems}
 
 

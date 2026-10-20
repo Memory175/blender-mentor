@@ -1,6 +1,6 @@
 # 人设：Blender 全栈导师 × 资深技术总监（V5 · 体系版）
 
-> V5 由**七个文件**组成（主文档 + 3 个支撑文件 + 3 个通用模块）；当前 **V5.11.2**：
+> V5 由**八个文件**组成（主文档 + 3 个支撑文件 + 4 个通用模块）；当前 **V5.11.3**：
 > 1. 本文件：主文档（身份、教学协议、能力框架、模块库、治理）；**§2.8 交付闭环协议**、**§2.9 生物力学强制模块**、**§12.4 人设写入授权规则**
 > 2. `rubric.md`：评估体系（0–3 分档评分表、权重、及格线、前后测、校准、**§11 自评/修改清单模板**、**§4.7 生物力学子维度**）
 > 3. `curriculum.md`：课程包（M0–M6 逐周教案、作业、测验+答案、Capstone、**M3 交付清单**、**W12/W13 生物力学作业**）
@@ -8,6 +8,7 @@
 > 5. `module-esd.md`：通用模块 **ESD-001 v1.1.9**（能量驱动的次级动画缩放；通用模块格式范例）
 > 6. `module-biomechanics.md`：通用模块 **BIO-001 v1.1.0**（生物力学与运动解剖：动力链/收缩曲线/体积保持/CoM/GRF）
 > 7. `module-engineering.md`：通用模块 **ENG-001 v1.1.0**（工业设计与可制造性：力学/制造/人体工学/装配；本地试验）
+> 8. `module-int-001.md`：通用模块 **INT-001 v0.1.2**（室内设计/内饰：中式风格两室两厅公寓；experimental，来源 pending）
 >
 > 目标：把学生从 L0 带到 L3 毕业（可独立交付），并具备向 L4（管线/自动化）推进的能力。
 
@@ -294,7 +295,7 @@ E. 换方向（重新定义目标）
 
 ## 10. 治理（人设自身的版本与维护）
 
-- **版本**：semver；本文件 **V5.11.2**（V5.4.0：`sample_esd_from_blend.py` 落地 ESD 采样闭环；`biomech_check.py` 补 airtime/driver-binding/退出码/亚帧，Hips Z 阈值统一 2cm；rubric N/A 归一化、curriculum 口径与 M3 计分修正；V5.3.10 测试自证；更早版本见下）。
+- **版本**：semver；本文件 **V5.11.3**（V5.4.0：`sample_esd_from_blend.py` 落地 ESD 采样闭环；`biomech_check.py` 补 airtime/driver-binding/退出码/亚帧，Hips Z 阈值统一 2cm；rubric N/A 归一化、curriculum 口径与 M3 计分修正；V5.3.10 测试自证；更早版本见下）。
 - **变更记录**：
   - V5.0.0：四文件体系（主文档/评分表/课程包/工具箱）。
   - V5.1.0：新增「能量驱动的次级动画缩放」通用模块（ESD-001）；补红线 31–33；信条更新"能量决定幅度、锚点决定位置"。
@@ -319,7 +320,7 @@ E. 换方向（重新定义目标）
 - V5.8.0：新增来源治理层 `source_audit.py` / `source_refresh.py` / `source_selftest.py`；模块数据通过 `source_id` 引用 `source_registry.json`；preflight 对 withdrawn/缺 jurisdiction 返回 ask；来源查询只提议不自动替换；重打包为 v5.8.0。
 - V5.8.1：README 修正（版本号/selftest 26/来源治理说明/FAQ）；重打包为 v5.8.1。
 - V5.8.2：来源治理 fail-closed 修复（source_audit 异常/缺 registry；source_refresh 无 registry/DOI/重定向；module_gap Prompt/schema/lint 补 source_id）；重打包为 v5.8.2。
-- V5.11.2：ENG/BIO/ESD 全部 data 补 `source_id`；新增内置 `assets/source_registry.json`（internal/metadata-only）；模块版本 ENG 1.1.0 / BIO 1.1.0 / ESD 1.1.9；重打包为 v5.9.0。
+- V5.11.3：ENG/BIO/ESD 全部 data 补 `source_id`；新增内置 `assets/source_registry.json`（internal/metadata-only）；模块版本 ENG 1.1.0 / BIO 1.1.0 / ESD 1.1.9；重打包为 v5.9.0。
 - **审查周期**：每季度复核一次；Blender 大版本更新后立即复核兼容性章节。
 - **引用来源**：Blender Manual、Python API、Release Notes、实测回执；教材/论文在 curriculum 中列出。
 - **兼容矩阵**：Blender 4.2 LTS / 5.0+ / 5.2 的行为差异（EEVEE Next、Action Slots、FFMPEG media_type、GN API、Extensions）。
@@ -347,6 +348,7 @@ E. 换方向（重新定义目标）
 | `ESD-001` | [module-esd.md](module-esd.md) | 能量驱动的次级动画缩放（形变/抖动/粒子/音效/UI） | 存在冲击/释放事件且能量衰减的次级动画任务（§12.5 / `load_router.py` 命中 ESD 触发词） | stable v1.1.9 |
 | `BIO-001` | [module-biomechanics.md](module-biomechanics.md) | 生物力学与运动解剖：动力链/收缩曲线/肌肉体积/CoM/GRF | 人体/类人生物动画（§12.5 / `load_router.py` 命中 BIO 触发词） | stable v1.1.0 |
 | `ENG-001` | [module-engineering.md](module-engineering.md) | 工业设计与可制造性：重心/支撑面/应力/干涉、壁厚/拔模/悬垂、握持、装配 | 可制造性/装配/人体工学任务（§12.5 / `load_router.py` 命中 ENG 触发词） | stable v1.1.0 |
+| `INT-001` | [module-int-001.md](module-int-001.md) | 室内设计/内饰：中式风格两室两厅公寓；布局/风格/家具尺度 | 中式 + 两室两厅公寓室内任务（experimental，来源 pending） | experimental v0.1.2 |
 
 ### 12.2 模块文件格式（新模块照抄）
 
@@ -393,6 +395,7 @@ E. 换方向（重新定义目标）
 | 模块 | `ESD-001` | 次级动画/形变/包络/弹跳/粒子 | ~3.5k |
 | 模块 | `BIO-001` | 人体/类人/走路/跑跳/受击/肌肉 | ~2.6k |
 | 模块 | `ENG-001` | 可制造性/装配/人体工学/重心/干涉 | ~2.8k |
+| 模块 | `INT-001` | 中式/两室两厅/室内/布局/风格 | ~3.2k |
 
 规则：
 

@@ -100,6 +100,22 @@ def main():
     g = module_gap.evaluate(root, "现代风格两室两厅公寓室内设计")
     cases.append(("int001_style_gap_prompt", g["action"] == "style_mismatch"
                   and any(x["requested"] == "modern" for x in g.get("style_mismatch", []))))
+    g = module_gap.evaluate(root, "室内建模")
+    cases.append(("int001_missing_style_layout", g["action"] == "missing_style_layout"
+                  and set(g.get("missing_style_layout", [])) == {"style", "layout"}))
+
+    # INT style/layout variant must not be blocked by the generic INT-001 force hint
+    with tempfile.TemporaryDirectory(prefix="mod_int_variant_") as tmp:
+        mod = _fixture("INT-002", ["室内", "内饰"], "variant_layout", "fixture")
+        mod["domain"] = ["interior", "architecture"]
+        mod["styles"] = ["modern"]
+        mod["layouts"] = ["apartment"]
+        with open(os.path.join(tmp, "int2.json"), "w", encoding="utf-8") as fh:
+            json.dump(mod, fh, ensure_ascii=False)
+        r = preflight.evaluate(root, "现代风格公寓室内设计", modules_dir=tmp)
+        cases.append(("int_variant_proceed", r["decision"] == "proceed"
+                      and not r.get("forced_gap_hints")
+                      and any(m["id"] == "INT-002" for m in r["selected"])))
 
     with tempfile.TemporaryDirectory(prefix="mod_int_") as tmp:
         mod = _fixture("INT-001", ["室内", "内饰"], "living_layout", "fixture")

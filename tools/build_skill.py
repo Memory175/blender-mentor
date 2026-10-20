@@ -135,10 +135,10 @@ ASSET_FILES = [
 
 SKILL_MD =  r"""---
 name: blender-mentor
-description: Blender 全栈导师（V5.11.2：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）或可制造性/装配/人体工学（ENG），以及用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review.
+description: Blender 全栈导师（V5.11.3：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG/INT 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）、可制造性/装配/人体工学（ENG），以及室内/内饰建模（INT-001：中式/新中式、两室两厅公寓、布局与建筑风格），还有用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review, interior design, Chinese-style interior, two-bedroom apartment layout.
 ---
 
-# Blender 全栈导师（V5.11.2 · 标准技能布局）
+# Blender 全栈导师（V5.11.3 · 标准技能布局）
 
 角色一句话：把 Blender 任务当**可交付工程**来带——先诊断，再给原理/步骤/验证；交付必须自评 + 修改清单 + 明确询问。
 
@@ -532,7 +532,7 @@ New modules, or modules that declare a `source_id`, reference `assets/source_reg
 DSH, Claude Code, Claude.ai, Cursor, and any client that supports the standard Agent Skills layout (`SKILL.md` + resources).
 
 **What do the two version numbers mean?**
-The persona suite is **V5.11.2**; the packaged skill release is **v5.11.2**.
+The persona suite is **V5.11.3**; the packaged skill release is **v5.11.3**.
 
 ## Development
 
@@ -552,7 +552,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 Rebuild the skill directory:
 
 ```bash
-python tools/build_skill.py --source <V5.11.2 suite> --out <repo parent> --force
+python tools/build_skill.py --source <V5.11.3 suite> --out <repo parent> --force
 ```
 
 ## License
@@ -741,7 +741,7 @@ dsh plugin --profile web add github:OWNER/REPO
 DSH、Claude Code、Claude.ai、Cursor，以及任何支持标准 Agent Skills 布局（`SKILL.md` + 资源目录）的客户端。
 
 **两个版本号是什么意思？**
-人设套件为 **V5.11.2**；打包后的技能发布版本为 **v5.11.2**。
+人设套件为 **V5.11.3**；打包后的技能发布版本为 **v5.11.3**。
 
 ## 开发与验证
 
@@ -761,7 +761,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 重建技能目录：
 
 ```bash
-python tools/build_skill.py --source <V5.11.2 套件目录> --out <仓库父目录> --force
+python tools/build_skill.py --source <V5.11.3 套件目录> --out <仓库父目录> --force
 ```
 
 ## 许可
@@ -775,6 +775,21 @@ MIT，见 [LICENSE](LICENSE)。课程文档中的第三方参考书目仅作引�
 
 
 CHANGELOG_MD =  r"""# Changelog
+
+## V5.11.3 — 2026-10-20
+
+> 人设 bug 修复；套件升 **V5.11.3**。
+
+### Fixed
+- `persona_lint` 未索引 `INT-001`：现校验 `module-int-001.md` 版本与 main 注册表一致；
+- `preflight` 强制 `INT-001` 缺口会误拦截已命中的 `INT-002` 等风格/布局变体；
+- `module_gap` 对“已有 INT 模块但缺 style/layout”误返回 `resolve_existing`，现返回 `missing_style_layout`；
+- `main.md` 仍写“七个文件”且缺 INT-001 模块表/加载表，现补为八个文件；
+- `SKILL.md` 描述缺 INT/室内触发词，现补 interior design / Chinese-style interior / two-bedroom apartment。
+
+### Tests
+- `module_selftest` 扩到 24 项（INT 变体、missing style/layout）；
+- `selftest` 27 项、干净安装 24 项不变。
 
 ## V5.11.2 — 2026-10-20
 
@@ -1684,7 +1699,7 @@ def write_claude_plugin(skill_dir, repo_slug):
         "name": "blender-mentor",
         "displayName": "Blender Mentor",
         "description": desc,
-        "version": "5.11.2",
+        "version": "5.11.3",
         "author": {"name": owner},
         "homepage": repo_url,
         "repository": repo_url,
@@ -1721,7 +1736,7 @@ def write_claude_plugin(skill_dir, repo_slug):
             "name": "blender-mentor",
             "source": "./plugins/blender-mentor",
             "description": desc,
-            "version": "5.11.2",
+            "version": "5.11.3",
         }],
     }
     write_text(os.path.join(skill_dir, ".claude-plugin", "marketplace.json"),
@@ -1739,7 +1754,7 @@ def write_dsh_plugin(skill_dir, repo_slug):
     owner = repo_slug.split("/")[0]
     repo_url = "https://github.com/%s" % repo_slug
     pkg_name = "blender-mentor"
-    version = "5.11.2"
+    version = "5.11.3"
     desc = ("Blender full-stack mentor AI Skill: teaching, 0-3 rubric grading, "
             "asset/animation acceptance (ESD/BIO/ENG).")
 

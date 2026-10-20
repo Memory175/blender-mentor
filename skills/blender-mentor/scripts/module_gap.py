@@ -125,6 +125,18 @@ def evaluate(root, task, modules_dir=None):
         return {"action": "none", "decision": decision, "task": task,
                 "selected": pf.get("selected", []),
                 "message": "模块已覆盖或属于核心任务，不需要新建模块。"}
+    if pf.get("selected") and (not pf.get("styles") or not pf.get("layouts")):
+        missing = []
+        if not pf.get("styles"):
+            missing.append("style")
+        if not pf.get("layouts"):
+            missing.append("layout")
+        return {"action": "missing_style_layout", "decision": decision, "task": task,
+                "selected": pf.get("selected", []),
+                "missing_style_layout": missing,
+                "styles": pf.get("styles", []), "layouts": pf.get("layouts", []),
+                "questions": pf.get("questions", []),
+                "message": "已有内饰模块命中，但任务缺少 %s；先补问题再建模，不能按默认风格/布局静默执行。" % " + ".join(missing)}
     if pf.get("style_mismatch") or pf.get("layout_mismatch"):
         return {"action": "style_mismatch", "decision": decision, "task": task,
                 "selected": pf.get("selected", []),

@@ -53,9 +53,14 @@ def evaluate(root, task, modules_dir=None, registry_path=None, max_modules=2):
             hint_hits.append({"id": h.get("id"), "name": h.get("name"),
                               "hits": hits, "why": h.get("why", ""),
                               "force": bool(h.get("force", False))})
-    # 强制缺口优先：内饰/室内建模必须独立模块，不能被普通建模或 ENG/BIO/ESD 放行
+    # 强制缺口优先：内饰/室内建模必须独立模块，不能被普通建模或 ENG/BIO/ESD 放行。
+    # 同一个强制域已由任意 INT-* 模块覆盖时，不再要求必须命中提示里的具体 id（如 INT-001）。
     hint_hits.sort(key=lambda x: (1 if x.get("force") else 0, len(x["hits"])), reverse=True)
-    force_hits = [h for h in hint_hits if h.get("force") and h["id"] not in sel_ids]
+    interior_covered = any(str(mid).startswith("INT-") for mid in sel_ids)
+    force_hits = [h for h in hint_hits
+                  if h.get("force")
+                  and h["id"] not in sel_ids
+                  and not (str(h["id"]).startswith("INT-") and interior_covered)]
     interior_selected = [m for m in selected
                          if "interior" in (m.get("domain") or [])
                          or str(m.get("id", "")).startswith("INT-")]
