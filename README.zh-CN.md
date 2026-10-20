@@ -1,83 +1,109 @@
-# blender-mentor
+# Blender Mentor
 
-![Blender 全栈导师 AI Agent Skill](docs/banner.png)
+**把 Claude Code / DSH / Cursor 变成一位 Blender 资深导师 + 技术总监。**
 
-> Blender 全栈导师 V5.4.0 · AI Agent Skill（标准布局）
-> 把这个仓库放进支持 Agent Skills 的客户端（DSH / Claude Code / Claude.ai / Cursor 等），
-> 让 Agent 以「资深 Blender 导师 + 技术总监」的方式教学、评分、验收与排错。
+先诊断你的水平，再用结构化课程带你做；交付后用 0–3 评分表打分，并对你的 `.blend` 跑机器验收——资产、曲线、渲染、ESD 次级动画、生物力学。
 
-[English](README.md) | **简体中文**
+**简体中文** | [English](README.md)
 
 [![validate-skill](https://github.com/Memory175/blender-mentor/actions/workflows/validate.yml/badge.svg)](https://github.com/Memory175/blender-mentor/actions)
+[![release](https://img.shields.io/github/v/release/Memory175/blender-mentor?color=2f81f7)](https://github.com/Memory175/blender-mentor/releases)
+[![license](https://img.shields.io/github/license/Memory175/blender-mentor?color=3fb950)](https://github.com/Memory175/blender-mentor/blob/main/LICENSE)
+[![Blender](https://img.shields.io/badge/Blender-4.2%20LTS%20%7C%205.x-orange)](https://www.blender.org/download/)
 
-## 这是什么
+![示例会话：提问、评分、P0/P1/P2 修改清单、机器验收](docs/demo.svg)
 
-`SKILL.md` 是常驻操作手册（路由 + D1–D4 交付闭环 + 机器验收命令）；`references/` 是六份可按需加载的人设文档；`scripts/` 是可执行的验收工具；`assets/` 是模板与规则数据。
+> **这不是 Blender 插件。** 技能给 AI 客户端装上导师的“工作手册”；打开 `.blend` 和跑验收脚本仍然需要你本机安装 Blender 4.2 LTS / 5.x。
 
-核心行为：
+## 快速开始
 
-- **先诊断再动手**：按 rubric 判断 L0–L3 candidate，再决定讲解 / 陪练 / 验收 / 救火 / 评审模式；
-- **交付闭环 D1→D4**：交付 → 对产物采样自评 → P0/P1/P2 修改清单 → 明确选项询问；
-- **机器验收**：资产门、曲线审计、渲染探针、ESD 包络断言、生物力学检查；
-- **不伪造、不越权、不替用户签核**；验收数据必须来自产物。
+**DSH** — 克隆并安装（Windows / Linux / macOS / WSL）：
 
-## 仓库结构
+```bash
+git clone --depth 1 https://github.com/Memory175/blender-mentor.git
+cd blender-mentor
 
-```text
-.
-├── SKILL.md                 # Agent Skill 入口（必须）
-├── README.md                # English
-├── README.zh-CN.md          # 简体中文
-├── LICENSE                  # MIT
-├── CHANGELOG.md
-├── .gitignore
-├── package.json             # DSH 插件清单（dsh.bundle.patch）
-├── cordis.patch.yml         # DSH Cordis 补丁（skill-filesystem provider）
-├── lib/index.js             # DSH 插件适配器
-├── skills/
-│   └── blender-mentor/      # DSH 内置技能（自动生成）
-├── .claude-plugin/
-│   └── marketplace.json     # Claude Code 插件市场
-├── .github/workflows/validate.yml
-├── tools/
-│   └── build_skill.py       # 维护侧构建工具（从 V5.4.0 六件套重建技能）
-├── plugins/
-│   └── blender-mentor/      # Claude Code 插件包装（自动生成）
-├── dsh/
-│   ├── install.ps1          # DSH 一键安装（Windows）
-│   ├── install.sh           # DSH 安装脚本（Linux/macOS/WSL）
-│   └── README.md
-├── references/              # 人设文档（按需加载）
-│   ├── main.md              # 身份/边界/六段模板/40 条红线
-│   ├── rubric.md            # 0–3 分评分表/关键项/自评模板
-│   ├── curriculum.md        # M0–M6 课程包
-│   ├── toolbox_text.md      # 130 条误区库（已剥离代码）
-│   ├── module-esd.md        # ESD-001 能量驱动次级动画
-│   └── module-biomechanics.md # BIO-001 生物力学
-├── scripts/                 # 10 个可执行脚本
-│   ├── asset_gate.py        # 资产门（Blender 无头）
-│   ├── curve_audit.py       # 曲线审计
-│   ├── render_probe.py      # 渲染探针（//probe.png）
-│   ├── envelope_check.py    # ESD 包络断言
-│   ├── expand_esd_spec.py   # ESD 模板展开
-│   ├── sample_esd_from_blend.py # 从 .blend 采样 measured spec
-│   ├── biomech_check.py     # BIO-001 生物力学验收
-│   ├── persona_lint.py      # 人设结构门 + 拒绝词扫描
-│   ├── load_router.py       # 按任务生成加载清单
-│   └── selftest.py          # 工具链自检（严格三态）
-└── assets/
-    ├── load_plan.json
-    ├── esd_spec.template.json
-    ├── esd_spec.example.json
-    ├── esd_sample_config.template.json
-    └── deny.example.txt
+# Windows
+powershell -NoProfile -ExecutionPolicy Bypass -File dsh/install.ps1
+
+# Linux / macOS / WSL
+bash dsh/install.sh
 ```
 
-## 安装
+**Claude Code** — 作为插件安装：
+
+```text
+/plugin marketplace add Memory175/blender-mentor
+/plugin install blender-mentor@blender-mentor-marketplace
+```
+
+**Cursor / 其他 Agent Skills 客户端** — 克隆仓库，让你的客户端加载 `SKILL.md`（Cursor 里可用 `@SKILL.md`；想常驻就加一条指向它的项目规则）。
+
+然后新开一个 agent 会话，直接说：
+
+```text
+用 blender-mentor 带我过 M1 建模与拓扑。
+```
+
+## 实际效果
+
+输入：
+
+```text
+帮我审这个走路循环，按评分表打分并给 P0/P1/P2 修改清单。
+```
+
+会得到（示例，非真实工程数据）：
+
+- **定位：** L2 · Review 模式
+- **评分：** 2.1 / 3 · 关键项：脚底滑动
+- **P0：** 锁定 1 / 13 / 25 帧接触点；补脚跟滚动。
+- **P1：** 髋部 Y 位移减少 18%；清理肩部反向旋转。
+- **P2：** 蹬地阶段加脚趾弯曲；重新核对 12 帧步频。
+- **机器验收：** `asset_gate` PASS · `curve_audit` 3 个 warning · `render_probe` PASS
+- **下一步问题：** “先修 P0，还是我直接生成修正后的关键帧？”
+
+## 包含什么
+
+| 组成 | 作用 |
+|---|---|
+| **导师行为** | L0–L3 水平诊断；讲解 / 教练 / 验收 / 救火 / 评审 五种模式 |
+| **D1–D4 交付闭环** | 交付 → 自评 → P0/P1/P2 修改清单 → 明确的下一步问题 |
+| **0–3 评分表** | 关键项、评分锚点、自评模板 |
+| **M0–M6 课程包** | 建模与拓扑 → UV/材质/灯光/渲染 → 动画/绑定 → 物理/几何节点/管线 |
+| **10 个验收脚本** | 资产门、曲线审计、渲染探针、ESD 包络、生物力学、路由、lint、自检 |
+| **知识库** | 130 条常见误区 + 40 条红线 |
+
+## 环境要求
+
+| 需要 | 用途 |
+|---|---|
+| Blender 4.2 LTS / 5.x | `.blend` 验收脚本（`blender -b ... --python scripts/...`） |
+| Claude Code / DSH / Claude.ai / Cursor | 加载技能 |
+| Python 3 | `selftest.py`、`persona_lint.py`、`load_router.py` |
+
+只做教学、点评和规划时不需要装 Blender；要检查 `.blend`、跑渲染探针和机器验收时，才需要本机 Blender。
+
+## 工作原理
+
+```text
+SKILL.md       路由 + D1–D4 交付闭环 + 机器验收命令
+references/    6 份人设文档，按需加载
+scripts/       10 个可执行验收工具
+assets/        ESD 模板、加载清单、拒绝词示例
+```
+
+1. `SKILL.md` 负责路由，并设定交付闭环。
+2. `load_router.py` 生成该任务的加载清单，只加载相关 references。
+3. 验收脚本通过无头 Blender 操作你本地的 `.blend`。
+4. 文件不出本机；验收工具不会上传任何内容。
+
+<details>
+<summary><strong>安装方式（全部客户端）</strong></summary>
 
 ### DSH（本机）
 
-Windows 一键安装（用 `git clone`，不依赖 raw.githubusercontent.com）：
+Windows 一行命令：
 
 ```powershell
 git clone --depth 1 https://github.com/Memory175/blender-mentor.git "$env:TEMP\blender-mentor-src"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\blender-mentor-src\dsh\install.ps1"; Remove-Item -Recurse -Force "$env:TEMP\blender-mentor-src"
@@ -89,19 +115,15 @@ Linux / macOS / WSL：
 tmp="$(mktemp -d)"; git clone --depth 1 https://github.com/Memory175/blender-mentor.git "$tmp/bm" && bash "$tmp/bm/dsh/install.sh"; rm -rf "$tmp"
 ```
 
-备选：从 latest Release 下载安装脚本（如果 release 附件网络可达）：
+备选——从 latest Release 下载安装脚本：
 
 ```powershell
 irm https://github.com/Memory175/blender-mentor/releases/latest/download/dsh-install.ps1 -OutFile "$env:TEMP\dsh-install.ps1"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\dsh-install.ps1"
 ```
 
-先 clone 再装：`powershell -File dsh/install.ps1` / `bash dsh/install.sh`。
+### DSH 插件市场
 
-### DSH（插件市场）
-
-本仓库同时是一个 DSH 技能插件：`package.json` 声明
-`dsh.bundle.patch → cordis.patch.yml`，把内置的 `skills/blender-mentor/`
-挂载为 filesystem skill provider。dsh.so 收录通过后可用：
+本仓库同时是 DSH 技能插件：`package.json` 声明 `dsh.bundle.patch → cordis.patch.yml`，挂载内置的 `skills/blender-mentor/`。dsh.so 收录通过后可用：
 
 ```bash
 dsh plugin --profile web add github:Memory175/blender-mentor
@@ -109,53 +131,93 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 
 ### Claude Code
 
-放到用户级 `~/.claude/skills/blender-mentor/`，或项目级 `.claude/skills/blender-mentor/`。
-
-也可以用本仓库的插件市场一键安装：
-
 ```text
 /plugin marketplace add Memory175/blender-mentor
 /plugin install blender-mentor@blender-mentor-marketplace
 ```
 
-### Claude.ai（支持 Skills 的版本）
+或把仓库复制到 `~/.claude/skills/blender-mentor/`（用户级）/ `.claude/skills/blender-mentor/`（项目级）。
 
-把仓库打成 zip（或直接上传本仓库的 `SKILL.md` + 目录），上传到 Skills 库即可。
+### Claude.ai
+
+把技能目录（`SKILL.md` + `references/`、`scripts/`、`assets/`）打成 zip，上传到 Skills 库。
 
 ### Cursor
 
-直接用 Cursor 打开本仓库；对话中 `@SKILL.md`、`@references/main.md` 引用。想常驻可把 `SKILL.md` 放进 `.cursor/rules/`。
+用 Cursor 打开仓库，在对话里引用 `@SKILL.md` / `@references/main.md`；想常驻可加一条指向 `SKILL.md` 的项目规则。
 
-## 验证
+</details>
 
-```bash
-python -m compileall -q scripts
-python scripts/persona_lint.py . --allow-no-deny   # 结构门
-python scripts/selftest.py .                       # 工具链自检（14 pass + 1 skipped）
+<details>
+<summary><strong>仓库结构</strong></summary>
+
+```text
+.
+├── SKILL.md                     # Agent Skill 入口（必须）
+├── README.md / README.zh-CN.md  # English / 简体中文
+├── LICENSE                      # MIT
+├── CHANGELOG.md
+├── package.json                 # DSH 插件清单（dsh.bundle.patch）
+├── cordis.patch.yml             # DSH Cordis 补丁（skill-filesystem provider）
+├── lib/index.js                 # DSH 插件适配器
+├── skills/blender-mentor/       # DSH 内置技能（自动生成）
+├── .claude-plugin/marketplace.json
+├── plugins/blender-mentor/      # Claude Code 插件包装（自动生成）
+├── dsh/install.ps1 / install.sh # DSH 一键安装脚本
+├── references/                  # 6 份人设文档，按需加载
+├── scripts/                     # 10 个可执行验收脚本
+├── assets/                      # ESD 模板、加载清单、拒绝词示例
+├── docs/                        # banner + 示例会话图
+└── tools/build_skill.py         # 维护侧构建工具
 ```
 
-Blender 侧（需要本机 Blender 4.2 LTS / 5.x）：
+</details>
+
+## 常见问题
+
+**这是 Blender 插件吗？**
+不是。它是 Agent Skill：给 AI 客户端加载的指令 + 脚本；Blender 需要另外安装。
+
+**需要先装 Blender 吗？**
+只做教学、点评和规划不需要；要打开 `.blend`、跑渲染探针和机器验收时需要 Blender 4.2 LTS / 5.x。
+
+**它会控制 Blender 界面吗？**
+不会。它编写并执行 bpy/无头脚本，审查你提供的产物；不会替你点鼠标建模。
+
+**我的 `.blend` 会被上传吗？**
+不会。验收脚本在本机运行，输出 JSON/文本，不上传文件。
+
+**支持哪些客户端？**
+DSH、Claude Code、Claude.ai、Cursor，以及任何支持标准 Agent Skills 布局（`SKILL.md` + 资源目录）的客户端。
+
+**为什么同时看到 V5.4.0 和 v5.4.3？**
+V5.4.0 是人设套件版本（六份源文档）；v5.4.3 是打包后的技能发布版本，两者独立版本号。
+
+## 开发与验证
+
+```bash
+python -m compileall -q scripts tools
+python scripts/persona_lint.py . --allow-no-deny   # 结构门
+python scripts/selftest.py .                       # 14 pass + 1 skipped
+```
+
+Blender 侧检查：
 
 ```bash
 blender -b file.blend --python scripts/asset_gate.py -- --json gate.json
 blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --support 1-4
 ```
 
-## 使用示例
+重建技能目录：
 
-```text
-用 blender-mentor 带我过一遍 M1 建模与拓扑
-帮我审这个走路循环：按评分表打分，给 P0/P1/P2 修改清单
-弹跳动画的形变包络帮我做成可验收的 spec
-这个 Blender 报错什么原因？先给我 L2 提示
+```bash
+python tools/build_skill.py --source <V5.4.0 六件套目录> --out <仓库父目录> --force
 ```
 
-## 版本与更新
-
-- 人设套件版本：**V5.4.0**；技能包发布版本：**v5.4.2**（详见 `CHANGELOG.md`）；
-- 修改 `references/` 后必须重跑 `persona_lint.py`；
-- 重新生成技能目录：`python tools/build_skill.py --source <V5.4.0 六件套目录> --out <仓库父目录> --force`（会保留 `.git`）。
-
-## License
+## 许可
 
 MIT，见 [LICENSE](LICENSE)。课程文档中的第三方参考书目仅作引用，版权归原作者。
+
+---
+
+如果这个技能帮你省了时间，点个 ⭐ 能让更多人找到它 · [反馈问题](https://github.com/Memory175/blender-mentor/issues) · [Release](https://github.com/Memory175/blender-mentor/releases)

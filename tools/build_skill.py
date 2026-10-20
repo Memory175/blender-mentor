@@ -196,334 +196,468 @@ E. 换方向（重新定义目标）
 """
 
 
-README_EN_MD = """# blender-mentor
+README_EN_MD = r"""# Blender Mentor
 
-![Blender Mentor - AI Agent Skill banner](docs/banner.png)
+**Turn Claude Code / DSH / Cursor into a senior Blender mentor + technical director.**
 
-> **Blender Full-Stack Mentor V5.4.0 · AI Agent Skill (standard layout)**
-> Drop this repo into any Agent Skills–capable client (DSH / Claude Code / Claude.ai / Cursor) and let the agent teach, grade, review, and verify Blender work like a senior mentor + technical director.
+It diagnoses your level, teaches a structured lesson, grades your work with a 0–3 rubric, and runs machine acceptance on your `.blend` — assets, curves, renders, ESD secondary animation, and biomechanics.
 
 **English** | [简体中文](README.zh-CN.md)
 
-[![validate-skill](https://github.com/OWNER/REPO/actions/workflows/validate.yml/badge.svg)](https://github.com/OWNER/REPO/actions)
+[![validate-skill](https://github.com/Memory175/blender-mentor/actions/workflows/validate.yml/badge.svg)](https://github.com/Memory175/blender-mentor/actions)
+[![release](https://img.shields.io/github/v/release/Memory175/blender-mentor?color=2f81f7)](https://github.com/Memory175/blender-mentor/releases)
+[![license](https://img.shields.io/github/license/Memory175/blender-mentor?color=3fb950)](https://github.com/Memory175/blender-mentor/blob/main/LICENSE)
+[![Blender](https://img.shields.io/badge/Blender-4.2%20LTS%20%7C%205.x-orange)](https://www.blender.org/download/)
 
-## What it is
+![Example session: prompt, rubric score, P0/P1/P2 fixes, machine acceptance](docs/demo.svg)
 
-`SKILL.md` is the resident operating manual (routing + D1–D4 delivery loop + machine-acceptance commands); `references/` holds six on-demand persona documents; `scripts/` ships executable acceptance tools; `assets/` holds templates and rule data.
+> **Not a Blender add-on.** The skill gives your AI agent the mentor's playbook. You still need Blender 4.2 LTS / 5.x installed to open `.blend` files and run acceptance checks.
 
-Core behavior:
+## Quick start
 
-- **Diagnose before acting** — place the learner at an L0–L3 candidate level via the rubric, then choose explain / coach / accept / firefight / review mode.
-- **Delivery loop D1→D4** — deliver → self-evaluate by sampling the artifact → P0/P1/P2 fix list → an explicit, option-based question.
-- **Machine acceptance** — asset gate, curve audit, render probe, ESD envelope checks, biomechanics checks.
-- **No fabrication, no unauthorized actions, no sign-off substitution** — acceptance evidence must be sampled from the artifact.
+**DSH** — clone and install (Windows / Linux / macOS / WSL):
 
-## Repository layout
+```bash
+git clone --depth 1 https://github.com/Memory175/blender-mentor.git
+cd blender-mentor
 
-```text
-.
-├── SKILL.md                 # Agent Skill entry point (required)
-├── README.md                # English (this file)
-├── README.zh-CN.md          # 简体中文
-├── LICENSE                  # MIT
-├── CHANGELOG.md
-├── .gitignore
-├── package.json             # DSH plugin manifest (dsh.bundle.patch)
-├── cordis.patch.yml         # DSH Cordis patch (skill-filesystem provider)
-├── lib/index.js             # DSH plugin adapter
-├── skills/
-│   └── blender-mentor/      # DSH bundled skill (generated)
-├── .claude-plugin/
-│   └── marketplace.json     # Claude Code plugin marketplace
-├── .github/workflows/validate.yml
-├── tools/
-│   └── build_skill.py       # maintainer build tool (rebuild from the V5.4.0 six-file suite)
-├── plugins/
-│   └── blender-mentor/      # Claude Code plugin wrapper (generated)
-├── dsh/
-│   ├── install.ps1          # DSH one-line installer (Windows)
-│   ├── install.sh           # DSH installer (Linux/macOS/WSL)
-│   └── README.md
-├── references/              # persona documents, loaded on demand
-│   ├── main.md              # identity / boundaries / six-part template / 40 red lines
-│   ├── rubric.md            # 0–3 scoring rubric / critical items / self-review template
-│   ├── curriculum.md        # M0–M6 course package
-│   ├── toolbox_text.md      # 130-misconception library (code stripped)
-│   ├── module-esd.md        # ESD-001 energy-scaled secondary animation
-│   └── module-biomechanics.md # BIO-001 biomechanics
-├── scripts/                 # 10 executable scripts
-│   ├── asset_gate.py        # asset gate (headless Blender)
-│   ├── curve_audit.py       # curve audit
-│   ├── render_probe.py      # render probe (//probe.png)
-│   ├── envelope_check.py    # ESD envelope assertions
-│   ├── expand_esd_spec.py   # expand ESD template to executable spec
-│   ├── sample_esd_from_blend.py # sample a measured spec from a .blend
-│   ├── biomech_check.py     # BIO-001 biomechanics acceptance
-│   ├── persona_lint.py      # persona structure gate + deny-word scan
-│   ├── load_router.py       # generate the load plan for a task
-│   └── selftest.py          # toolchain self-test (strict three-state)
-└── assets/
-    ├── load_plan.json
-    ├── esd_spec.template.json
-    ├── esd_spec.example.json
-    ├── esd_sample_config.template.json
-    └── deny.example.txt
+# Windows
+powershell -NoProfile -ExecutionPolicy Bypass -File dsh/install.ps1
+
+# Linux / macOS / WSL
+bash dsh/install.sh
 ```
 
-## Installation
+**Claude Code** — install as a plugin:
+
+```text
+/plugin marketplace add Memory175/blender-mentor
+/plugin install blender-mentor@blender-mentor-marketplace
+```
+
+**Cursor / other Agent Skills clients** — clone the repo and point your client at `SKILL.md` (in Cursor, mention `@SKILL.md`; for an always-on rule, add a project rule that references it).
+
+Then open a new agent session and try:
+
+```text
+Use blender-mentor to walk me through M1 modeling and topology.
+```
+
+## See it in action
+
+Prompt:
+
+```text
+Review this walk cycle. Grade it with the rubric and give me a P0/P1/P2 fix list.
+```
+
+What comes back (illustrative):
+
+- **Placement:** L2 · Review mode
+- **Score:** 2.1 / 3 · critical item: foot sliding
+- **P0:** Lock contact frames 1 / 13 / 25; add heel roll.
+- **P1:** Reduce hip Y translation 18%; clean shoulder counter-rotation.
+- **P2:** Add toe flex on push-off; re-check the 12-frame cadence.
+- **Acceptance:** `asset_gate` PASS · `curve_audit` 3 warnings · `render_probe` PASS
+- **Next question:** "Fix P0 first, or should I generate the corrected keyframes?"
+
+## What you get
+
+| Component | What it does |
+|---|---|
+| **Mentor behavior** | L0–L3 level diagnosis; explain / coach / accept / firefight / review modes |
+| **D1–D4 delivery loop** | deliver → self-review → P0/P1/P2 fix list → explicit next-step question |
+| **0–3 rubric** | critical items, scoring anchors, and a self-review template |
+| **M0–M6 curriculum** | modeling & topology → UV/materials/lighting/render → animation/rigging → physics/geometry nodes/pipeline |
+| **10 acceptance scripts** | asset gate, curve audit, render probe, ESD envelope, biomechanics, router, lint, self-test |
+| **Knowledge base** | 130 common misconceptions + 40 red lines |
+
+## Requirements
+
+| Requirement | Needed for |
+|---|---|
+| Blender 4.2 LTS / 5.x | `.blend` acceptance scripts (`blender -b ... --python scripts/...`) |
+| Claude Code / DSH / Claude.ai / Cursor | Loading the skill |
+| Python 3 | `selftest.py`, `persona_lint.py`, `load_router.py` |
+
+Teaching and critique work without Blender installed. File inspection, render probes, and machine acceptance require a local Blender.
+
+## How it works
+
+```text
+SKILL.md       routing + D1–D4 delivery loop + machine-acceptance commands
+references/    6 persona documents, loaded on demand
+scripts/       10 executable acceptance tools
+assets/        ESD templates, load plans, deny-word example
+```
+
+1. `SKILL.md` routes the request and sets the delivery loop.
+2. `load_router.py` builds a per-task load plan, so only the relevant references are loaded.
+3. Acceptance scripts run against your local `.blend` through headless Blender.
+4. Your files stay local; the acceptance tools do not upload anything.
+
+<details>
+<summary><strong>Installation — all clients</strong></summary>
 
 ### DSH (local)
 
-One-line install on Windows (uses `git clone`; no dependence on raw.githubusercontent.com):
+Windows one-liner:
 
 ```powershell
-git clone --depth 1 https://github.com/OWNER/REPO.git "$env:TEMP\\blender-mentor-src"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\\blender-mentor-src\\dsh\\install.ps1"; Remove-Item -Recurse -Force "$env:TEMP\\blender-mentor-src"
+git clone --depth 1 https://github.com/Memory175/blender-mentor.git "$env:TEMP\blender-mentor-src"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\blender-mentor-src\dsh\install.ps1"; Remove-Item -Recurse -Force "$env:TEMP\blender-mentor-src"
 ```
 
 Linux / macOS / WSL:
 
 ```bash
-tmp="$(mktemp -d)"; git clone --depth 1 https://github.com/OWNER/REPO.git "$tmp/bm" && bash "$tmp/bm/dsh/install.sh"; rm -rf "$tmp"
+tmp="$(mktemp -d)"; git clone --depth 1 https://github.com/Memory175/blender-mentor.git "$tmp/bm" && bash "$tmp/bm/dsh/install.sh"; rm -rf "$tmp"
 ```
 
-Alternative: download the installer from the latest Release (if release assets are reachable):
+Alternative — download the installer from the latest Release:
 
 ```powershell
-irm https://github.com/OWNER/REPO/releases/latest/download/dsh-install.ps1 -OutFile "$env:TEMP\\dsh-install.ps1"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\\dsh-install.ps1"
+irm https://github.com/Memory175/blender-mentor/releases/latest/download/dsh-install.ps1 -OutFile "$env:TEMP\dsh-install.ps1"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\dsh-install.ps1"
 ```
 
-From a clone: `powershell -File dsh/install.ps1` / `bash dsh/install.sh`.
+### DSH plugin market
 
-### DSH (plugin market)
-
-This repository is also a DSH skill plugin: `package.json` declares
-`dsh.bundle.patch → cordis.patch.yml`, which mounts the bundled
-`skills/blender-mentor/` as a filesystem skill provider. After the dsh.so
-listing is approved, install it with:
+This repository is also a DSH skill plugin: `package.json` declares `dsh.bundle.patch → cordis.patch.yml`, which mounts the bundled `skills/blender-mentor/`. After the dsh.so listing is approved:
 
 ```bash
-dsh plugin --profile web add github:OWNER/REPO
+dsh plugin --profile web add github:Memory175/blender-mentor
 ```
 
 ### Claude Code
 
-Place it in `~/.claude/skills/blender-mentor/` (user level) or `.claude/skills/blender-mentor/` (project level).
-
-Or install it as a plugin from this repository's marketplace:
-
 ```text
-/plugin marketplace add OWNER/REPO
+/plugin marketplace add Memory175/blender-mentor
 /plugin install blender-mentor@blender-mentor-marketplace
 ```
 
-### Claude.ai (Skills-enabled plans)
+Or copy the repo into `~/.claude/skills/blender-mentor/` (user level) / `.claude/skills/blender-mentor/` (project level).
 
-Zip the repo (or upload `SKILL.md` together with its directories) and add it to your Skills library.
+### Claude.ai
+
+Zip the skill folder (`SKILL.md` + `references/`, `scripts/`, `assets/`) and add it to your Skills library.
 
 ### Cursor
 
-Open this repo in Cursor and reference it in chat with `@SKILL.md` / `@references/main.md`. To keep it always on, put `SKILL.md` under `.cursor/rules/`.
+Open the repo and reference `@SKILL.md` / `@references/main.md` in chat. For always-on behavior, add a project rule that points at `SKILL.md`.
 
-## Verify
+</details>
+
+<details>
+<summary><strong>Repository layout</strong></summary>
+
+```text
+.
+├── SKILL.md                     # Agent Skill entry point (required)
+├── README.md / README.zh-CN.md  # English / 简体中文
+├── LICENSE                      # MIT
+├── CHANGELOG.md
+├── package.json                 # DSH plugin manifest (dsh.bundle.patch)
+├── cordis.patch.yml             # DSH Cordis patch (skill-filesystem provider)
+├── lib/index.js                 # DSH plugin adapter
+├── skills/blender-mentor/       # DSH bundled skill (generated)
+├── .claude-plugin/marketplace.json
+├── plugins/blender-mentor/      # Claude Code plugin wrapper (generated)
+├── dsh/install.ps1 / install.sh # DSH one-line installers
+├── references/                  # 6 persona documents, loaded on demand
+├── scripts/                     # 10 executable acceptance scripts
+├── assets/                      # ESD templates, load plans, deny example
+├── docs/                        # banner + example session image
+└── tools/build_skill.py         # maintainer build tool
+```
+
+</details>
+
+## FAQ
+
+**Is this a Blender add-on?**
+No. It is an Agent Skill: instructions + scripts that an AI client loads. Blender itself is a separate install.
+
+**Do I need Blender installed?**
+For teaching, critique, and planning: no. For opening `.blend` files, rendering probes, and machine acceptance: yes, Blender 4.2 LTS / 5.x.
+
+**Does it control the Blender GUI?**
+No. It writes and runs bpy/headless scripts and reviews the artifacts you provide; it does not click through the interface.
+
+**Is my `.blend` uploaded?**
+No. Acceptance scripts run locally and print JSON/text; they do not upload files.
+
+**Which clients are supported?**
+DSH, Claude Code, Claude.ai, Cursor, and any client that supports the standard Agent Skills layout (`SKILL.md` + resources).
+
+**Why do I see V5.4.0 and v5.4.3?**
+V5.4.0 is the persona-suite version (the six source documents). v5.4.3 is the packaged skill release; they are versioned independently.
+
+## Development
 
 ```bash
 python -m compileall -q scripts tools
 python scripts/persona_lint.py . --allow-no-deny   # structure gate
-python scripts/selftest.py .                       # toolchain self-test (14 pass + 1 skipped)
+python scripts/selftest.py .                       # 14 pass + 1 skipped
 ```
 
-Blender-side checks (requires Blender 4.2 LTS / 5.x):
+Blender-side checks:
 
 ```bash
 blender -b file.blend --python scripts/asset_gate.py -- --json gate.json
 blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --support 1-4
 ```
 
-## Usage examples
+Rebuild the skill directory:
 
-```text
-Use blender-mentor to walk me through M1 modeling and topology
-Review this walk cycle: grade it with the rubric and give a P0/P1/P2 fix list
-Turn this bounce animation's deformation envelope into an acceptance-testable spec
-Why is Blender throwing this error? Start with an L2 hint
+```bash
+python tools/build_skill.py --source <V5.4.0 six-file suite> --out <repo parent> --force
 ```
-
-## Versioning & updates
-
-- Suite version: **V5.4.0**; skill package release: **v5.4.2** (see `CHANGELOG.md`);
-- After editing anything in `references/`, re-run `persona_lint.py`;
-- Rebuild the skill directory: `python tools/build_skill.py --source <V5.4.0 six-file suite> --out <repo parent> --force` (keeps `.git`).
 
 ## License
 
 MIT — see [LICENSE](LICENSE). Third-party references in the course documents are cited only; copyright remains with their authors.
+
+---
+
+If this saves you time, a ⭐ helps others find it · [Report an issue](https://github.com/Memory175/blender-mentor/issues) · [Releases](https://github.com/Memory175/blender-mentor/releases)
 """
 
+README_ZH_MD = r"""# Blender Mentor
 
-README_ZH_MD = """# blender-mentor
+**把 Claude Code / DSH / Cursor 变成一位 Blender 资深导师 + 技术总监。**
 
-![Blender 全栈导师 AI Agent Skill](docs/banner.png)
+先诊断你的水平，再用结构化课程带你做；交付后用 0–3 评分表打分，并对你的 `.blend` 跑机器验收——资产、曲线、渲染、ESD 次级动画、生物力学。
 
-> Blender 全栈导师 V5.4.0 · AI Agent Skill（标准布局）
-> 把这个仓库放进支持 Agent Skills 的客户端（DSH / Claude Code / Claude.ai / Cursor 等），
-> 让 Agent 以「资深 Blender 导师 + 技术总监」的方式教学、评分、验收与排错。
+**简体中文** | [English](README.md)
 
-[English](README.md) | **简体中文**
+[![validate-skill](https://github.com/Memory175/blender-mentor/actions/workflows/validate.yml/badge.svg)](https://github.com/Memory175/blender-mentor/actions)
+[![release](https://img.shields.io/github/v/release/Memory175/blender-mentor?color=2f81f7)](https://github.com/Memory175/blender-mentor/releases)
+[![license](https://img.shields.io/github/license/Memory175/blender-mentor?color=3fb950)](https://github.com/Memory175/blender-mentor/blob/main/LICENSE)
+[![Blender](https://img.shields.io/badge/Blender-4.2%20LTS%20%7C%205.x-orange)](https://www.blender.org/download/)
 
-[![validate-skill](https://github.com/OWNER/REPO/actions/workflows/validate.yml/badge.svg)](https://github.com/OWNER/REPO/actions)
+![示例会话：提问、评分、P0/P1/P2 修改清单、机器验收](docs/demo.svg)
 
-## 这是什么
+> **这不是 Blender 插件。** 技能给 AI 客户端装上导师的“工作手册”；打开 `.blend` 和跑验收脚本仍然需要你本机安装 Blender 4.2 LTS / 5.x。
 
-`SKILL.md` 是常驻操作手册（路由 + D1–D4 交付闭环 + 机器验收命令）；`references/` 是六份可按需加载的人设文档；`scripts/` 是可执行的验收工具；`assets/` 是模板与规则数据。
+## 快速开始
 
-核心行为：
+**DSH** — 克隆并安装（Windows / Linux / macOS / WSL）：
 
-- **先诊断再动手**：按 rubric 判断 L0–L3 candidate，再决定讲解 / 陪练 / 验收 / 救火 / 评审模式；
-- **交付闭环 D1→D4**：交付 → 对产物采样自评 → P0/P1/P2 修改清单 → 明确选项询问；
-- **机器验收**：资产门、曲线审计、渲染探针、ESD 包络断言、生物力学检查；
-- **不伪造、不越权、不替用户签核**；验收数据必须来自产物。
+```bash
+git clone --depth 1 https://github.com/Memory175/blender-mentor.git
+cd blender-mentor
 
-## 仓库结构
+# Windows
+powershell -NoProfile -ExecutionPolicy Bypass -File dsh/install.ps1
 
-```text
-.
-├── SKILL.md                 # Agent Skill 入口（必须）
-├── README.md                # English
-├── README.zh-CN.md          # 简体中文
-├── LICENSE                  # MIT
-├── CHANGELOG.md
-├── .gitignore
-├── package.json             # DSH 插件清单（dsh.bundle.patch）
-├── cordis.patch.yml         # DSH Cordis 补丁（skill-filesystem provider）
-├── lib/index.js             # DSH 插件适配器
-├── skills/
-│   └── blender-mentor/      # DSH 内置技能（自动生成）
-├── .claude-plugin/
-│   └── marketplace.json     # Claude Code 插件市场
-├── .github/workflows/validate.yml
-├── tools/
-│   └── build_skill.py       # 维护侧构建工具（从 V5.4.0 六件套重建技能）
-├── plugins/
-│   └── blender-mentor/      # Claude Code 插件包装（自动生成）
-├── dsh/
-│   ├── install.ps1          # DSH 一键安装（Windows）
-│   ├── install.sh           # DSH 安装脚本（Linux/macOS/WSL）
-│   └── README.md
-├── references/              # 人设文档（按需加载）
-│   ├── main.md              # 身份/边界/六段模板/40 条红线
-│   ├── rubric.md            # 0–3 分评分表/关键项/自评模板
-│   ├── curriculum.md        # M0–M6 课程包
-│   ├── toolbox_text.md      # 130 条误区库（已剥离代码）
-│   ├── module-esd.md        # ESD-001 能量驱动次级动画
-│   └── module-biomechanics.md # BIO-001 生物力学
-├── scripts/                 # 10 个可执行脚本
-│   ├── asset_gate.py        # 资产门（Blender 无头）
-│   ├── curve_audit.py       # 曲线审计
-│   ├── render_probe.py      # 渲染探针（//probe.png）
-│   ├── envelope_check.py    # ESD 包络断言
-│   ├── expand_esd_spec.py   # ESD 模板展开
-│   ├── sample_esd_from_blend.py # 从 .blend 采样 measured spec
-│   ├── biomech_check.py     # BIO-001 生物力学验收
-│   ├── persona_lint.py      # 人设结构门 + 拒绝词扫描
-│   ├── load_router.py       # 按任务生成加载清单
-│   └── selftest.py          # 工具链自检（严格三态）
-└── assets/
-    ├── load_plan.json
-    ├── esd_spec.template.json
-    ├── esd_spec.example.json
-    ├── esd_sample_config.template.json
-    └── deny.example.txt
+# Linux / macOS / WSL
+bash dsh/install.sh
 ```
 
-## 安装
+**Claude Code** — 作为插件安装：
+
+```text
+/plugin marketplace add Memory175/blender-mentor
+/plugin install blender-mentor@blender-mentor-marketplace
+```
+
+**Cursor / 其他 Agent Skills 客户端** — 克隆仓库，让你的客户端加载 `SKILL.md`（Cursor 里可用 `@SKILL.md`；想常驻就加一条指向它的项目规则）。
+
+然后新开一个 agent 会话，直接说：
+
+```text
+用 blender-mentor 带我过 M1 建模与拓扑。
+```
+
+## 实际效果
+
+输入：
+
+```text
+帮我审这个走路循环，按评分表打分并给 P0/P1/P2 修改清单。
+```
+
+会得到（示例，非真实工程数据）：
+
+- **定位：** L2 · Review 模式
+- **评分：** 2.1 / 3 · 关键项：脚底滑动
+- **P0：** 锁定 1 / 13 / 25 帧接触点；补脚跟滚动。
+- **P1：** 髋部 Y 位移减少 18%；清理肩部反向旋转。
+- **P2：** 蹬地阶段加脚趾弯曲；重新核对 12 帧步频。
+- **机器验收：** `asset_gate` PASS · `curve_audit` 3 个 warning · `render_probe` PASS
+- **下一步问题：** “先修 P0，还是我直接生成修正后的关键帧？”
+
+## 包含什么
+
+| 组成 | 作用 |
+|---|---|
+| **导师行为** | L0–L3 水平诊断；讲解 / 教练 / 验收 / 救火 / 评审 五种模式 |
+| **D1–D4 交付闭环** | 交付 → 自评 → P0/P1/P2 修改清单 → 明确的下一步问题 |
+| **0–3 评分表** | 关键项、评分锚点、自评模板 |
+| **M0–M6 课程包** | 建模与拓扑 → UV/材质/灯光/渲染 → 动画/绑定 → 物理/几何节点/管线 |
+| **10 个验收脚本** | 资产门、曲线审计、渲染探针、ESD 包络、生物力学、路由、lint、自检 |
+| **知识库** | 130 条常见误区 + 40 条红线 |
+
+## 环境要求
+
+| 需要 | 用途 |
+|---|---|
+| Blender 4.2 LTS / 5.x | `.blend` 验收脚本（`blender -b ... --python scripts/...`） |
+| Claude Code / DSH / Claude.ai / Cursor | 加载技能 |
+| Python 3 | `selftest.py`、`persona_lint.py`、`load_router.py` |
+
+只做教学、点评和规划时不需要装 Blender；要检查 `.blend`、跑渲染探针和机器验收时，才需要本机 Blender。
+
+## 工作原理
+
+```text
+SKILL.md       路由 + D1–D4 交付闭环 + 机器验收命令
+references/    6 份人设文档，按需加载
+scripts/       10 个可执行验收工具
+assets/        ESD 模板、加载清单、拒绝词示例
+```
+
+1. `SKILL.md` 负责路由，并设定交付闭环。
+2. `load_router.py` 生成该任务的加载清单，只加载相关 references。
+3. 验收脚本通过无头 Blender 操作你本地的 `.blend`。
+4. 文件不出本机；验收工具不会上传任何内容。
+
+<details>
+<summary><strong>安装方式（全部客户端）</strong></summary>
 
 ### DSH（本机）
 
-Windows 一键安装（用 `git clone`，不依赖 raw.githubusercontent.com）：
+Windows 一行命令：
 
 ```powershell
-git clone --depth 1 https://github.com/OWNER/REPO.git "$env:TEMP\\blender-mentor-src"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\\blender-mentor-src\\dsh\\install.ps1"; Remove-Item -Recurse -Force "$env:TEMP\\blender-mentor-src"
+git clone --depth 1 https://github.com/Memory175/blender-mentor.git "$env:TEMP\blender-mentor-src"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\blender-mentor-src\dsh\install.ps1"; Remove-Item -Recurse -Force "$env:TEMP\blender-mentor-src"
 ```
 
 Linux / macOS / WSL：
 
 ```bash
-tmp="$(mktemp -d)"; git clone --depth 1 https://github.com/OWNER/REPO.git "$tmp/bm" && bash "$tmp/bm/dsh/install.sh"; rm -rf "$tmp"
+tmp="$(mktemp -d)"; git clone --depth 1 https://github.com/Memory175/blender-mentor.git "$tmp/bm" && bash "$tmp/bm/dsh/install.sh"; rm -rf "$tmp"
 ```
 
-备选：从 latest Release 下载安装脚本（如果 release 附件网络可达）：
+备选——从 latest Release 下载安装脚本：
 
 ```powershell
-irm https://github.com/OWNER/REPO/releases/latest/download/dsh-install.ps1 -OutFile "$env:TEMP\\dsh-install.ps1"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\\dsh-install.ps1"
+irm https://github.com/Memory175/blender-mentor/releases/latest/download/dsh-install.ps1 -OutFile "$env:TEMP\dsh-install.ps1"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\dsh-install.ps1"
 ```
 
-先 clone 再装：`powershell -File dsh/install.ps1` / `bash dsh/install.sh`。
+### DSH 插件市场
 
-### DSH（插件市场）
-
-本仓库同时是一个 DSH 技能插件：`package.json` 声明
-`dsh.bundle.patch → cordis.patch.yml`，把内置的 `skills/blender-mentor/`
-挂载为 filesystem skill provider。dsh.so 收录通过后可用：
+本仓库同时是 DSH 技能插件：`package.json` 声明 `dsh.bundle.patch → cordis.patch.yml`，挂载内置的 `skills/blender-mentor/`。dsh.so 收录通过后可用：
 
 ```bash
-dsh plugin --profile web add github:OWNER/REPO
+dsh plugin --profile web add github:Memory175/blender-mentor
 ```
 
 ### Claude Code
 
-放到用户级 `~/.claude/skills/blender-mentor/`，或项目级 `.claude/skills/blender-mentor/`。
-
-也可以用本仓库的插件市场一键安装：
-
 ```text
-/plugin marketplace add OWNER/REPO
+/plugin marketplace add Memory175/blender-mentor
 /plugin install blender-mentor@blender-mentor-marketplace
 ```
 
-### Claude.ai（支持 Skills 的版本）
+或把仓库复制到 `~/.claude/skills/blender-mentor/`（用户级）/ `.claude/skills/blender-mentor/`（项目级）。
 
-把仓库打成 zip（或直接上传本仓库的 `SKILL.md` + 目录），上传到 Skills 库即可。
+### Claude.ai
+
+把技能目录（`SKILL.md` + `references/`、`scripts/`、`assets/`）打成 zip，上传到 Skills 库。
 
 ### Cursor
 
-直接用 Cursor 打开本仓库；对话中 `@SKILL.md`、`@references/main.md` 引用。想常驻可把 `SKILL.md` 放进 `.cursor/rules/`。
+用 Cursor 打开仓库，在对话里引用 `@SKILL.md` / `@references/main.md`；想常驻可加一条指向 `SKILL.md` 的项目规则。
 
-## 验证
+</details>
 
-```bash
-python -m compileall -q scripts
-python scripts/persona_lint.py . --allow-no-deny   # 结构门
-python scripts/selftest.py .                       # 工具链自检（14 pass + 1 skipped）
+<details>
+<summary><strong>仓库结构</strong></summary>
+
+```text
+.
+├── SKILL.md                     # Agent Skill 入口（必须）
+├── README.md / README.zh-CN.md  # English / 简体中文
+├── LICENSE                      # MIT
+├── CHANGELOG.md
+├── package.json                 # DSH 插件清单（dsh.bundle.patch）
+├── cordis.patch.yml             # DSH Cordis 补丁（skill-filesystem provider）
+├── lib/index.js                 # DSH 插件适配器
+├── skills/blender-mentor/       # DSH 内置技能（自动生成）
+├── .claude-plugin/marketplace.json
+├── plugins/blender-mentor/      # Claude Code 插件包装（自动生成）
+├── dsh/install.ps1 / install.sh # DSH 一键安装脚本
+├── references/                  # 6 份人设文档，按需加载
+├── scripts/                     # 10 个可执行验收脚本
+├── assets/                      # ESD 模板、加载清单、拒绝词示例
+├── docs/                        # banner + 示例会话图
+└── tools/build_skill.py         # 维护侧构建工具
 ```
 
-Blender 侧（需要本机 Blender 4.2 LTS / 5.x）：
+</details>
+
+## 常见问题
+
+**这是 Blender 插件吗？**
+不是。它是 Agent Skill：给 AI 客户端加载的指令 + 脚本；Blender 需要另外安装。
+
+**需要先装 Blender 吗？**
+只做教学、点评和规划不需要；要打开 `.blend`、跑渲染探针和机器验收时需要 Blender 4.2 LTS / 5.x。
+
+**它会控制 Blender 界面吗？**
+不会。它编写并执行 bpy/无头脚本，审查你提供的产物；不会替你点鼠标建模。
+
+**我的 `.blend` 会被上传吗？**
+不会。验收脚本在本机运行，输出 JSON/文本，不上传文件。
+
+**支持哪些客户端？**
+DSH、Claude Code、Claude.ai、Cursor，以及任何支持标准 Agent Skills 布局（`SKILL.md` + 资源目录）的客户端。
+
+**为什么同时看到 V5.4.0 和 v5.4.3？**
+V5.4.0 是人设套件版本（六份源文档）；v5.4.3 是打包后的技能发布版本，两者独立版本号。
+
+## 开发与验证
+
+```bash
+python -m compileall -q scripts tools
+python scripts/persona_lint.py . --allow-no-deny   # 结构门
+python scripts/selftest.py .                       # 14 pass + 1 skipped
+```
+
+Blender 侧检查：
 
 ```bash
 blender -b file.blend --python scripts/asset_gate.py -- --json gate.json
 blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --support 1-4
 ```
 
-## 使用示例
+重建技能目录：
 
-```text
-用 blender-mentor 带我过一遍 M1 建模与拓扑
-帮我审这个走路循环：按评分表打分，给 P0/P1/P2 修改清单
-弹跳动画的形变包络帮我做成可验收的 spec
-这个 Blender 报错什么原因？先给我 L2 提示
+```bash
+python tools/build_skill.py --source <V5.4.0 六件套目录> --out <仓库父目录> --force
 ```
 
-## 版本与更新
-
-- 人设套件版本：**V5.4.0**；技能包发布版本：**v5.4.2**（详见 `CHANGELOG.md`）；
-- 修改 `references/` 后必须重跑 `persona_lint.py`；
-- 重新生成技能目录：`python tools/build_skill.py --source <V5.4.0 六件套目录> --out <仓库父目录> --force`（会保留 `.git`）。
-
-## License
+## 许可
 
 MIT，见 [LICENSE](LICENSE)。课程文档中的第三方参考书目仅作引用，版权归原作者。
+
+---
+
+如果这个技能帮你省了时间，点个 ⭐ 能让更多人找到它 · [反馈问题](https://github.com/Memory175/blender-mentor/issues) · [Release](https://github.com/Memory175/blender-mentor/releases)
 """
 
 CHANGELOG_MD = """# Changelog
+
+## V5.4.3 — 2026-10-20
+
+> 技能包发布版本；人设套件版本仍为 **V5.4.0**（六件套版本锚点不变）。
+
+### Changed
+- README 重写为转化优先结构：首屏价值主张、Quick Start、示例输出、Requirements、FAQ、CTA；
+- 新增 `docs/demo.svg` 示例会话图（问题 → 评分 → P0/P1/P2 → 机器验收）；
+- 明确“不是 Blender 插件、验收需本机 Blender”，补充 Requirements 与 FAQ；
+- 仓库结构与维护者命令收进 `<details>`，安装说明主路径化；
+- `package.json` / 插件清单版本升至 `5.4.3`。
 
 ## V5.4.2 — 2026-10-19
 
@@ -1189,7 +1323,7 @@ def write_claude_plugin(skill_dir, repo_slug):
         "name": "blender-mentor",
         "displayName": "Blender Mentor",
         "description": desc,
-        "version": "5.4.2",
+        "version": "5.4.3",
         "author": {"name": owner},
         "homepage": repo_url,
         "repository": repo_url,
@@ -1226,7 +1360,7 @@ def write_claude_plugin(skill_dir, repo_slug):
             "name": "blender-mentor",
             "source": "./plugins/blender-mentor",
             "description": desc,
-            "version": "5.4.2",
+            "version": "5.4.3",
         }],
     }
     write_text(os.path.join(skill_dir, ".claude-plugin", "marketplace.json"),
@@ -1244,7 +1378,7 @@ def write_dsh_plugin(skill_dir, repo_slug):
     owner = repo_slug.split("/")[0]
     repo_url = "https://github.com/%s" % repo_slug
     pkg_name = "blender-mentor"
-    version = "5.4.2"
+    version = "5.4.3"
     desc = ("Blender full-stack mentor AI Skill: teaching, 0-3 rubric grading, "
             "asset/animation acceptance (ESD/BIO).")
 

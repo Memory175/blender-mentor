@@ -1,5 +1,16 @@
 # Changelog
 
+## V5.4.3 — 2026-10-20
+
+> 技能包发布版本；人设套件版本仍为 **V5.4.0**（六件套版本锚点不变）。
+
+### Changed
+- README 重写为转化优先结构：首屏价值主张、Quick Start、示例输出、Requirements、FAQ、CTA；
+- 新增 `docs/demo.svg` 示例会话图（问题 → 评分 → P0/P1/P2 → 机器验收）；
+- 明确“不是 Blender 插件、验收需本机 Blender”，补充 Requirements 与 FAQ；
+- 仓库结构与维护者命令收进 `<details>`，安装说明主路径化；
+- `package.json` / 插件清单版本升至 `5.4.3`。
+
 ## V5.4.2 — 2026-10-19
 
 > 技能包发布版本；人设套件版本仍为 **V5.4.0**（六件套版本锚点不变）。
