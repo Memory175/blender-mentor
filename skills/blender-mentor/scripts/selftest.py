@@ -131,20 +131,24 @@ def main(argv=None):
         except Exception as exc:  # noqa: BLE001
             _check(checks, "engineering_script_compiles", False, str(exc))
         reg_dir = os.path.join(root, "tests", "engineering")
-        fixtures = os.path.join(reg_dir, "fixtures")
-        expected = os.path.join(reg_dir, "expected")
-        try:
-            fixtures_ok = os.path.isdir(fixtures) and any(
-                f.endswith(".blend") for f in os.listdir(fixtures))
-            expected_ok = os.path.isdir(expected) and any(
-                f.endswith(".json") for f in os.listdir(expected))
-            for f in os.listdir(expected) if expected_ok else []:
-                if f.endswith(".json"):
-                    json.load(open(os.path.join(expected, f), encoding="utf-8"))
-            _check(checks, "engineering_regression_assets", fixtures_ok and expected_ok,
-                   {"fixtures": os.path.isdir(fixtures), "expected": expected_ok})
-        except Exception as exc:  # noqa: BLE001
-            _check(checks, "engineering_regression_assets", False, str(exc))
+        if not os.path.isdir(reg_dir):
+            checks.append({"check": "engineering_regression_assets", "skip": True, "pass": None,
+                           "detail": "tests/engineering not shipped; regression is optional"})
+        else:
+            fixtures = os.path.join(reg_dir, "fixtures")
+            expected = os.path.join(reg_dir, "expected")
+            try:
+                fixtures_ok = os.path.isdir(fixtures) and any(
+                    f.endswith(".blend") for f in os.listdir(fixtures))
+                expected_ok = os.path.isdir(expected) and any(
+                    f.endswith(".json") for f in os.listdir(expected))
+                for f in os.listdir(expected) if expected_ok else []:
+                    if f.endswith(".json"):
+                        json.load(open(os.path.join(expected, f), encoding="utf-8"))
+                _check(checks, "engineering_regression_assets", fixtures_ok and expected_ok,
+                       {"fixtures": os.path.isdir(fixtures), "expected": expected_ok})
+            except Exception as exc:  # noqa: BLE001
+                _check(checks, "engineering_regression_assets", False, str(exc))
         cfg_path = os.path.join(ROOT, "assets", "esd_sample_config.template.json")
         try:
             cfg = json.load(open(cfg_path, encoding="utf-8"))

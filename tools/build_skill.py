@@ -368,7 +368,7 @@ No. Acceptance scripts run locally and print JSON/text; they do not upload files
 DSH, Claude Code, Claude.ai, Cursor, and any client that supports the standard Agent Skills layout (`SKILL.md` + resources).
 
 **What do the two version numbers mean?**
-The persona suite and the packaged skill release are versioned independently; both are currently **V5.5.0**.
+The persona suite is **V5.5.0**; the packaged skill release is **v5.5.1** (packaging fix).
 
 ## Development
 
@@ -567,7 +567,7 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 DSH、Claude Code、Claude.ai、Cursor，以及任何支持标准 Agent Skills 布局（`SKILL.md` + 资源目录）的客户端。
 
 **两个版本号是什么意思？**
-人设套件与打包后的技能发布版本独立编号；当前两者都是 **V5.5.0**。
+人设套件为 **V5.5.0**；打包后的技能发布版本为 **v5.5.1**（打包修复）。
 
 ## 开发与验证
 
@@ -600,6 +600,14 @@ MIT，见 [LICENSE](LICENSE)。课程文档中的第三方参考书目仅作引�
 """
 
 CHANGELOG_MD = """# Changelog
+
+## V5.5.1 — 2026-10-20
+
+> 打包修复；人设套件仍为 **V5.5.0**。
+
+### Fixed
+- 安装包/技能 zip 未携带 `tests/engineering` 时，`selftest` 不再判 fail：
+  `engineering_regression_assets` 改为 skip（回归测试仅随仓库分发）。
 
 ## V5.5.0 — 2026-10-20
 
@@ -1314,7 +1322,7 @@ def write_claude_plugin(skill_dir, repo_slug):
         "name": "blender-mentor",
         "displayName": "Blender Mentor",
         "description": desc,
-        "version": "5.5.0",
+        "version": "5.5.1",
         "author": {"name": owner},
         "homepage": repo_url,
         "repository": repo_url,
@@ -1351,7 +1359,7 @@ def write_claude_plugin(skill_dir, repo_slug):
             "name": "blender-mentor",
             "source": "./plugins/blender-mentor",
             "description": desc,
-            "version": "5.5.0",
+            "version": "5.5.1",
         }],
     }
     write_text(os.path.join(skill_dir, ".claude-plugin", "marketplace.json"),
@@ -1369,7 +1377,7 @@ def write_dsh_plugin(skill_dir, repo_slug):
     owner = repo_slug.split("/")[0]
     repo_url = "https://github.com/%s" % repo_slug
     pkg_name = "blender-mentor"
-    version = "5.5.0"
+    version = "5.5.1"
     desc = ("Blender full-stack mentor AI Skill: teaching, 0-3 rubric grading, "
             "asset/animation acceptance (ESD/BIO/ENG).")
 

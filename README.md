@@ -165,7 +165,7 @@ No. Acceptance scripts run locally and print JSON/text; they do not upload files
 DSH, Claude Code, Claude.ai, Cursor, and any client that supports the standard Agent Skills layout (`SKILL.md` + resources).
 
 **What do the two version numbers mean?**
-The persona suite and the packaged skill release are versioned independently; both are currently **V5.5.0**.
+The persona suite is **V5.5.0**; the packaged skill release is **v5.5.1** (packaging fix).
 
 ## Development
 

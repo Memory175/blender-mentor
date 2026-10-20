@@ -1,5 +1,13 @@
 # Changelog
 
+## V5.5.1 — 2026-10-20
+
+> 打包修复；人设套件仍为 **V5.5.0**。
+
+### Fixed
+- 安装包/技能 zip 未携带 `tests/engineering` 时，`selftest` 不再判 fail：
+  `engineering_regression_assets` 改为 skip（回归测试仅随仓库分发）。
+
 ## V5.5.0 — 2026-10-20
 
 > 人设套件升 **V5.5.0**：新增通用模块 **ENG-001 工业设计与可制造性**。

@@ -165,7 +165,7 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 DSH、Claude Code、Claude.ai、Cursor，以及任何支持标准 Agent Skills 布局（`SKILL.md` + 资源目录）的客户端。
 
 **两个版本号是什么意思？**
-人设套件与打包后的技能发布版本独立编号；当前两者都是 **V5.5.0**。
+人设套件为 **V5.5.0**；打包后的技能发布版本为 **v5.5.1**（打包修复）。
 
 ## 开发与验证
 
