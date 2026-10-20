@@ -1,0 +1,26 @@
+{
+  "schema": "eng-check/3",
+  "pull_direction": [0, 0, 1],
+  "print_direction": [0, 0, 1],
+  "mold_sides": [
+    {"name": "+Z", "pull": [0, 0, 1]},
+    {"name": "-Z", "pull": [0, 0, -1]}
+  ],
+  "side_actions": [],
+  "min_wall_mm": 1.5,
+  "draft_min_deg": 1.0,
+  "draft_min_face_area_mm2": 0.05,
+  "draft_undercut_area_pct": 0.5,
+  "draft_low_area_pct": 5.0,
+  "overhang_max_deg": 45.0,
+  "support_volume_max_mm3": 0,
+  "clearance_min_mm": 0.1,
+  "clearance_pairs": [],
+  "stability_margin_pct": 10.0,
+  "support_tol_mm": 0.5,
+  "wall_samples_per_object": 400,
+  "ignore": ["Table", "Ground", "Floor", "Backdrop", "Camera"],
+  "proxy_objects": [],
+  "intentional_contacts": [],
+  "max_objects": 100
+}

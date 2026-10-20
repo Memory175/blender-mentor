@@ -1,6 +1,6 @@
 {
-  "version": "1.1.0",
-  "suite_version": "V5.4.0",
+  "version": "1.2.0",
+  "suite_version": "V5.5.0",
   "always": [
     {
       "file": "references/main.md",
@@ -87,6 +87,42 @@
         "动作设计",
         "动作分析"
       ]
+    },
+    {
+      "id": "ENG-001",
+      "file": "references/module-engineering.md",
+      "reason": "工业设计与可制造性（力学/制造/人体工学/装配）",
+      "triggers": [
+        "可制造",
+        "制造",
+        "工程审查",
+        "壁厚",
+        "拔模",
+        "注塑",
+        "铸造",
+        "陶瓷",
+        "3D打印",
+        "3D 打印",
+        "打印",
+        "悬垂",
+        "装配",
+        "卡扣",
+        "螺丝",
+        "胶水",
+        "一体化",
+        "人体工学",
+        "握持",
+        "重心",
+        "支撑面",
+        "应力",
+        "干涉",
+        "碰撞",
+        "倒扣",
+        "DFM",
+        "CNC",
+        "钣金",
+        "可装配"
+      ]
     }
   ],
   "tools": [
@@ -117,6 +153,10 @@
     {
       "file": "scripts/render_probe.py",
       "when": "渲染探针（输出 //probe.png）"
+    },
+    {
+      "file": "scripts/engineering_check.py",
+      "when": "工程预检（稳定性/壁厚/拔模/悬垂/干涉）"
     }
   ],
   "policy": [

@@ -1,5 +1,20 @@
 # Changelog
 
+## V5.5.0 — 2026-10-20
+
+> 人设套件升 **V5.5.0**：新增通用模块 **ENG-001 工业设计与可制造性**。
+
+### Added
+- `references/module-engineering.md`（ENG-001 v1.0.0）：力学/制造/人体工学/装配；
+- `scripts/engineering_check.py`：稳定性、壁厚、分侧拔模、悬垂面积/支撑体积、干涉、间隙预检；
+- `scripts/engineering_regression.py` + `tests/engineering/`：3 个固定场景回归；
+- `assets/engineering_check.template.json`（eng-check/3 配置）；
+- 路由/加载计划/`persona_lint`/`selftest` 接入 ENG-001。
+
+### Changed
+- 人设套件版本 V5.5.0；`SKILL.md` 描述增加可制造性触发词；
+- `selftest` 扩展为 17 项（新增工程脚本编译与回归资产检查）。
+
 ## V5.4.5 — 2026-10-20
 
 > 技能包发布版本；人设套件版本仍为 **V5.4.0**（六件套版本锚点不变）。

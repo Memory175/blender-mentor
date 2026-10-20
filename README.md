@@ -75,8 +75,9 @@ Use blender-mentor to walk me through M1 modeling and topology.
 | **Mentor behavior** | L0–L3 level diagnosis; explain / coach / accept / firefight / review modes |
 | **D1–D4 delivery loop** | deliver → self-review → P0/P1/P2 fix list → explicit next-step question |
 | **0–3 rubric** | critical items, scoring anchors, and a self-review template |
+| **Engineering precheck (ENG-001)** | stability, wall thickness, draft, overhang/support, interference, clearance |
 | **M0–M6 curriculum** | modeling & topology → UV/materials/lighting/render → animation/rigging → physics/geometry nodes/pipeline |
-| **10 acceptance scripts** | asset gate, curve audit, render probe, ESD envelope, biomechanics, router, lint, self-test |
+| **12 executable tools** | 10 acceptance scripts + engineering precheck (stability/wall/draft/overhang/interference) + regression runner |
 | **Knowledge base** | 130 common misconceptions + 40 red lines |
 
 ## Requirements
@@ -91,7 +92,7 @@ Use blender-mentor to walk me through M1 modeling and topology.
 ```text
 SKILL.md       routing + D1–D4 delivery loop + machine-acceptance commands
 references/    6 persona documents, loaded on demand
-scripts/       10 executable acceptance tools
+scripts/       12 executable tools
 assets/        ESD templates, load plans, deny-word example
 ```
 
@@ -138,7 +139,7 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 ├── plugins/blender-mentor/      # Claude Code plugin wrapper (generated)
 ├── dsh/install.ps1 / install.sh # DSH one-line installers
 ├── references/                  # 6 persona documents, loaded on demand
-├── scripts/                     # 10 executable acceptance scripts
+├── scripts/                     # 12 executable tools
 ├── assets/                      # ESD templates, load plans, deny example
 ├── docs/                        # banner + example session image
 └── tools/build_skill.py         # maintainer build tool
@@ -163,15 +164,15 @@ No. Acceptance scripts run locally and print JSON/text; they do not upload files
 **Which clients are supported?**
 DSH, Claude Code, Claude.ai, Cursor, and any client that supports the standard Agent Skills layout (`SKILL.md` + resources).
 
-**Why do I see V5.4.0 and v5.4.5?**
-V5.4.0 is the persona-suite version (the six source documents). v5.4.4 is the packaged skill release; they are versioned independently.
+**What do the two version numbers mean?**
+The persona suite and the packaged skill release are versioned independently; both are currently **V5.5.0**.
 
 ## Development
 
 ```bash
 python -m compileall -q scripts tools
 python scripts/persona_lint.py . --allow-no-deny   # structure gate
-python scripts/selftest.py .                       # 14 pass + 1 skipped
+python scripts/selftest.py .                       # 17 pass + 1 skipped
 ```
 
 Blender-side checks:
@@ -184,7 +185,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 Rebuild the skill directory:
 
 ```bash
-python tools/build_skill.py --source <V5.4.0 six-file suite> --out <repo parent> --force
+python tools/build_skill.py --source <V5.5.0 suite> --out <repo parent> --force
 ```
 
 ## License

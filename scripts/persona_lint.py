@@ -29,6 +29,7 @@ FILES = [
     "references/toolbox_text.md",
     "references/module-esd.md",
     "references/module-biomechanics.md",
+    "references/module-engineering.md",
 ]
 ALIAS = {
     "main": FILES[0],
@@ -37,6 +38,7 @@ ALIAS = {
     "toolbox": FILES[3],
     "ESD-001": FILES[4],
     "BIO-001": FILES[5],
+    "ENG-001": FILES[6],
 }
 
 
@@ -105,15 +107,20 @@ def _check_versions(texts):
             problems.append("%s missing %s anchor" % (f, ver))
     esd = re.search(r"^\| 版本 \| ([\d.]+) \|", texts[FILES[4]], re.M)
     bio = re.search(r"- \*\*版本\*\*：v([\d.]+)", texts[FILES[5]])
+    eng = re.search(r"- \*\*版本\*\*：v([\d.]+)", texts[FILES[6]])
     reg_esd = re.search(r"`ESD-001`.*\| stable v([\d.]+) \|", main)
     reg_bio = re.search(r"`BIO-001`.*\| stable v([\d.]+) \|", main)
+    reg_eng = re.search(r"`ENG-001`.*\| stable v([\d.]+) \|", main)
     if not (esd and reg_esd and esd.group(1) == reg_esd.group(1)):
         problems.append("ESD-001 registry/module version mismatch")
     if not (bio and reg_bio and bio.group(1) == reg_bio.group(1)):
         problems.append("BIO-001 registry/module version mismatch")
+    if not (eng and reg_eng and eng.group(1) == reg_eng.group(1)):
+        problems.append("ENG-001 registry/module version mismatch")
     return {"pass": not problems, "suite": ver,
             "module_versions": {"ESD-001": esd.group(1) if esd else None,
-                                "BIO-001": bio.group(1) if bio else None},
+                                "BIO-001": bio.group(1) if bio else None,
+                                "ENG-001": eng.group(1) if eng else None},
             "problems": problems}
 
 

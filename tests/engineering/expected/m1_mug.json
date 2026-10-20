@@ -1,0 +1,37 @@
+{
+  "draft_by_side": {
+    "+Z": {
+      "checked_faces": 534,
+      "low_area_pct": 0.21,
+      "low_faces": 8,
+      "min_draft_deg": 0.97
+    },
+    "-Z": {
+      "checked_faces": 410,
+      "low_area_pct": 0.18,
+      "low_faces": 8,
+      "min_draft_deg": 0.97
+    }
+  },
+  "draft_low_area_pct": 3.66,
+  "draft_undercut_area_pct": 0.58,
+  "fails": 0,
+  "interference_pairs": [
+    [
+      "Saucer",
+      "Mug_Body",
+      64
+    ]
+  ],
+  "margin_mm": 65.786,
+  "overhang_area_mm2": 1081.39,
+  "overhang_bad_faces": 301,
+  "proxy_skipped": [
+    "Coffee_Surface"
+  ],
+  "stable": true,
+  "status": "warn",
+  "support_volume_mm3_est": 15017.2,
+  "wall_min_mm": 4.622,
+  "warns": 2
+}

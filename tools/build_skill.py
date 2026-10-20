@@ -106,7 +106,8 @@ COPIED_TOOLS = [
     "sample_esd_from_blend.py",
     "expand_esd_spec.py",
     "load_router.py",
-    "selftest.py",
+    "engineering_check.py",
+    "engineering_regression.py",
 ]
 
 ASSET_FILES = [
@@ -114,14 +115,15 @@ ASSET_FILES = [
     "esd_sample_config.template.json",
     "esd_spec.template.json",
     "deny.example.txt",
+    "engineering_check.template.json",
 ]
 
-SKILL_MD = """---
+SKILL_MD = r"""---
 name: blender-mentor
-description: Blender 全栈导师（V5.4.0：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）或生物力学（BIO），以及用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig.
+description: Blender 全栈导师（V5.5.0：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）或可制造性/装配/人体工学（ENG），以及用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review.
 ---
 
-# Blender 全栈导师（V5.4.0 · 标准技能布局）
+# Blender 全栈导师（V5.5.0 · 标准技能布局）
 
 角色一句话：把 Blender 任务当**可交付工程**来带——先诊断，再给原理/步骤/验证；交付必须自评 + 修改清单 + 明确询问。
 
@@ -137,6 +139,7 @@ description: Blender 全栈导师（V5.4.0：建模/拓扑/UV/材质/灯光/渲�
 | 报错排查、bpy、资产门、验收口径、130 条误区库 | `references/toolbox_text.md` |
 | 次级动画/形变/包络/弹跳/粒子/镜头震动 | `references/module-esd.md` |
 | 人体/类人/走路/跑跳/受击/动力链/肌肉体积 | `references/module-biomechanics.md` |
+| 可制造性/壁厚/拔模/悬垂/装配/人体工学/重心/干涉 | `references/module-engineering.md`（ENG-001） |
 
 加载规则：模块最多同时 2 个；`main.md` 与 `rubric.md` 不裁剪；超预算裁剪顺序
 curriculum → toolbox_text → 非当前任务模块。
@@ -177,11 +180,13 @@ E. 换方向（重新定义目标）
 | ESD 模板展开 | `python <SKILL>/scripts/expand_esd_spec.py <SKILL>/assets/esd_spec.template.json --base 6.0 -o esd_spec.json` |
 | ESD 从 .blend 采样 | `blender -b scene.blend --python <SKILL>/scripts/sample_esd_from_blend.py -- --config cfg.json --out spec.json` |
 | 生物力学验收 | `blender -b scene.blend --python <SKILL>/scripts/biomech_check.py -- --eccentric F0,F1 --support A-B --airtime T,L --height H`（人体/类人动画**必须跑**；退出码 0=pass，1=fail/incomplete，不得判通过） |
+| 工程预检（稳定性/壁厚/拔模/悬垂/干涉） | `blender -b file.blend --python <SKILL>/scripts/engineering_check.py -- --json eng.json`（规则预检，不能替代 FEA） |
 | 套件结构门 | `python <SKILL>/scripts/persona_lint.py <SKILL> --allow-no-deny` |
 | 工具链自检 | `python <SKILL>/scripts/selftest.py <SKILL>` |
 
 数据与模板：`assets/esd_spec.template.json`（模板）、`assets/esd_spec.example.json`
 （虚构示例）、`assets/esd_sample_config.template.json`（采样配置）、
+`assets/engineering_check.template.json`（工程预检配置）、
 `assets/load_plan.json`（加载规则）、`assets/deny.example.txt`（拒绝词模板）。
 
 `persona_lint.py` 默认 strict：发布验收用 `--deny <项目侧 deny.txt>`（先把
@@ -190,7 +195,7 @@ E. 换方向（重新定义目标）
 
 ## 4. 版本与治理
 
-- 套件 **V5.4.0**；改动 `references/` 后必须重跑 `persona_lint.py`。
+- 套件 **V5.5.0**；改动 `references/` 后必须重跑 `persona_lint.py`。
 - 项目日志、帧号、实测值只写项目目录，不写入人设文件；只有用户明确说“写入人设”才允许修改。
 - `references/toolbox_text.md` 已剥离内嵌代码：脚本统一在 `scripts/`，数据在 `assets/`。
 """
@@ -273,8 +278,9 @@ Use blender-mentor to walk me through M1 modeling and topology.
 | **Mentor behavior** | L0–L3 level diagnosis; explain / coach / accept / firefight / review modes |
 | **D1–D4 delivery loop** | deliver → self-review → P0/P1/P2 fix list → explicit next-step question |
 | **0–3 rubric** | critical items, scoring anchors, and a self-review template |
+| **Engineering precheck (ENG-001)** | stability, wall thickness, draft, overhang/support, interference, clearance |
 | **M0–M6 curriculum** | modeling & topology → UV/materials/lighting/render → animation/rigging → physics/geometry nodes/pipeline |
-| **10 acceptance scripts** | asset gate, curve audit, render probe, ESD envelope, biomechanics, router, lint, self-test |
+| **12 executable tools** | 10 acceptance scripts + engineering precheck (stability/wall/draft/overhang/interference) + regression runner |
 | **Knowledge base** | 130 common misconceptions + 40 red lines |
 
 ## Requirements
@@ -289,7 +295,7 @@ Use blender-mentor to walk me through M1 modeling and topology.
 ```text
 SKILL.md       routing + D1–D4 delivery loop + machine-acceptance commands
 references/    6 persona documents, loaded on demand
-scripts/       10 executable acceptance tools
+scripts/       12 executable tools
 assets/        ESD templates, load plans, deny-word example
 ```
 
@@ -336,7 +342,7 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 ├── plugins/blender-mentor/      # Claude Code plugin wrapper (generated)
 ├── dsh/install.ps1 / install.sh # DSH one-line installers
 ├── references/                  # 6 persona documents, loaded on demand
-├── scripts/                     # 10 executable acceptance scripts
+├── scripts/                     # 12 executable tools
 ├── assets/                      # ESD templates, load plans, deny example
 ├── docs/                        # banner + example session image
 └── tools/build_skill.py         # maintainer build tool
@@ -361,15 +367,15 @@ No. Acceptance scripts run locally and print JSON/text; they do not upload files
 **Which clients are supported?**
 DSH, Claude Code, Claude.ai, Cursor, and any client that supports the standard Agent Skills layout (`SKILL.md` + resources).
 
-**Why do I see V5.4.0 and v5.4.5?**
-V5.4.0 is the persona-suite version (the six source documents). v5.4.4 is the packaged skill release; they are versioned independently.
+**What do the two version numbers mean?**
+The persona suite and the packaged skill release are versioned independently; both are currently **V5.5.0**.
 
 ## Development
 
 ```bash
 python -m compileall -q scripts tools
 python scripts/persona_lint.py . --allow-no-deny   # structure gate
-python scripts/selftest.py .                       # 14 pass + 1 skipped
+python scripts/selftest.py .                       # 17 pass + 1 skipped
 ```
 
 Blender-side checks:
@@ -382,7 +388,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 Rebuild the skill directory:
 
 ```bash
-python tools/build_skill.py --source <V5.4.0 six-file suite> --out <repo parent> --force
+python tools/build_skill.py --source <V5.5.0 suite> --out <repo parent> --force
 ```
 
 ## License
@@ -471,8 +477,9 @@ bash dsh/install.sh
 | **导师行为** | L0–L3 水平诊断；讲解 / 教练 / 验收 / 救火 / 评审 五种模式 |
 | **D1–D4 交付闭环** | 交付 → 自评 → P0/P1/P2 修改清单 → 明确的下一步问题 |
 | **0–3 评分表** | 关键项、评分锚点、自评模板 |
+| **工程预检（ENG-001）** | 稳定性、壁厚、拔模、悬垂/支撑、干涉、配合间隙 |
 | **M0–M6 课程包** | 建模与拓扑 → UV/材质/灯光/渲染 → 动画/绑定 → 物理/几何节点/管线 |
-| **10 个验收脚本** | 资产门、曲线审计、渲染探针、ESD 包络、生物力学、路由、lint、自检 |
+| **12 个可执行工具** | 10 个验收脚本 + 工程预检（稳定性/壁厚/拔模/悬垂/干涉）+ 回归测试 |
 | **知识库** | 130 条常见误区 + 40 条红线 |
 
 ## 环境要求
@@ -487,7 +494,7 @@ bash dsh/install.sh
 ```text
 SKILL.md       路由 + D1–D4 交付闭环 + 机器验收命令
 references/    6 份人设文档，按需加载
-scripts/       10 个可执行验收工具
+scripts/       12 个可执行工具
 assets/        ESD 模板、加载清单、拒绝词示例
 ```
 
@@ -534,7 +541,7 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 ├── plugins/blender-mentor/      # Claude Code 插件包装（自动生成）
 ├── dsh/install.ps1 / install.sh # DSH 一键安装脚本
 ├── references/                  # 6 份人设文档，按需加载
-├── scripts/                     # 10 个可执行验收脚本
+├── scripts/                     # 12 个可执行工具
 ├── assets/                      # ESD 模板、加载清单、拒绝词示例
 ├── docs/                        # banner + 示例会话图
 └── tools/build_skill.py         # 维护侧构建工具
@@ -559,15 +566,15 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 **支持哪些客户端？**
 DSH、Claude Code、Claude.ai、Cursor，以及任何支持标准 Agent Skills 布局（`SKILL.md` + 资源目录）的客户端。
 
-**为什么同时看到 V5.4.0 和 v5.4.5？**
-V5.4.0 是人设套件版本（六份源文档）；v5.4.4 是打包后的技能发布版本，两者独立版本号。
+**两个版本号是什么意思？**
+人设套件与打包后的技能发布版本独立编号；当前两者都是 **V5.5.0**。
 
 ## 开发与验证
 
 ```bash
 python -m compileall -q scripts tools
 python scripts/persona_lint.py . --allow-no-deny   # 结构门
-python scripts/selftest.py .                       # 14 pass + 1 skipped
+python scripts/selftest.py .                       # 17 pass + 1 skipped
 ```
 
 Blender 侧检查：
@@ -580,7 +587,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 重建技能目录：
 
 ```bash
-python tools/build_skill.py --source <V5.4.0 六件套目录> --out <仓库父目录> --force
+python tools/build_skill.py --source <V5.5.0 套件目录> --out <仓库父目录> --force
 ```
 
 ## 许可
@@ -593,6 +600,21 @@ MIT，见 [LICENSE](LICENSE)。课程文档中的第三方参考书目仅作引�
 """
 
 CHANGELOG_MD = """# Changelog
+
+## V5.5.0 — 2026-10-20
+
+> 人设套件升 **V5.5.0**：新增通用模块 **ENG-001 工业设计与可制造性**。
+
+### Added
+- `references/module-engineering.md`（ENG-001 v1.0.0）：力学/制造/人体工学/装配；
+- `scripts/engineering_check.py`：稳定性、壁厚、分侧拔模、悬垂面积/支撑体积、干涉、间隙预检；
+- `scripts/engineering_regression.py` + `tests/engineering/`：3 个固定场景回归；
+- `assets/engineering_check.template.json`（eng-check/3 配置）；
+- 路由/加载计划/`persona_lint`/`selftest` 接入 ENG-001。
+
+### Changed
+- 人设套件版本 V5.5.0；`SKILL.md` 描述增加可制造性触发词；
+- `selftest` 扩展为 17 项（新增工程脚本编译与回归资产检查）。
 
 ## V5.4.5 — 2026-10-20
 
@@ -1263,10 +1285,13 @@ def patch_load_plan(plan):
     for key in ("always", "on_demand", "modules", "tools"):
         if key in plan:
             plan[key] = [fix_item(i) for i in plan[key]]
-    plan.setdefault("tools", []).extend([
+    existing = {i.get("file") for i in plan.setdefault("tools", [])}
+    for item in (
         {"file": "scripts/curve_audit.py", "when": "曲线审计（插值/手柄统计）"},
         {"file": "scripts/render_probe.py", "when": "渲染探针（输出 //probe.png）"},
-    ])
+    ):
+        if item["file"] not in existing:
+            plan["tools"].append(item)
     return plan
 
 
@@ -1284,12 +1309,12 @@ def write_claude_plugin(skill_dir, repo_slug):
         shutil.copytree(os.path.join(skill_dir, d), os.path.join(skill_copy, d), dirs_exist_ok=True)
 
     desc = ("Blender full-stack mentor skill: teaching, 0-3 rubric grading, "
-            "asset/animation acceptance (ESD/BIO).")
+            "asset/animation acceptance (ESD/BIO/ENG).")
     plugin = {
         "name": "blender-mentor",
         "displayName": "Blender Mentor",
         "description": desc,
-        "version": "5.4.5",
+        "version": "5.5.0",
         "author": {"name": owner},
         "homepage": repo_url,
         "repository": repo_url,
@@ -1326,7 +1351,7 @@ def write_claude_plugin(skill_dir, repo_slug):
             "name": "blender-mentor",
             "source": "./plugins/blender-mentor",
             "description": desc,
-            "version": "5.4.5",
+            "version": "5.5.0",
         }],
     }
     write_text(os.path.join(skill_dir, ".claude-plugin", "marketplace.json"),
@@ -1344,9 +1369,9 @@ def write_dsh_plugin(skill_dir, repo_slug):
     owner = repo_slug.split("/")[0]
     repo_url = "https://github.com/%s" % repo_slug
     pkg_name = "blender-mentor"
-    version = "5.4.5"
+    version = "5.5.0"
     desc = ("Blender full-stack mentor AI Skill: teaching, 0-3 rubric grading, "
-            "asset/animation acceptance (ESD/BIO).")
+            "asset/animation acceptance (ESD/BIO/ENG).")
 
     package = {
         "name": pkg_name,
@@ -1540,6 +1565,12 @@ def build(source, out_root, force=False, repo_slug="OWNER/REPO"):
         write_text(os.path.join(refs, REF_NAMES[key]),
                    rewrite_layout_refs(rewrite_doc_names(texts[key])))
 
+    # 5.1) 通用模块 ENG-001
+    module_src = os.path.join(suite, "module-engineering.md")
+    if not os.path.isfile(module_src):
+        raise RuntimeError("missing module: %s" % module_src)
+    shutil.copyfile(module_src, os.path.join(refs, "module-engineering.md"))
+
     # 6) 独立工具 + 资产文件
     tools_src = os.path.join(suite, "persona_tools")
     if not os.path.isdir(tools_src):
@@ -1564,6 +1595,18 @@ def build(source, out_root, force=False, repo_slug="OWNER/REPO"):
             write_text(os.path.join(assets, asset), json.dumps(plan, ensure_ascii=False, indent=2) + "\n")
         else:
             shutil.copyfile(src, os.path.join(assets, asset))
+
+    # 6.1) 最终版 lint/selftest（含 ENG-001 校验）
+    for rel, fname in (("scripts/persona_lint.py", "persona_lint.py"),
+                       ("scripts/selftest.py", "selftest.py")):
+        src = os.path.join(tools_src, fname)
+        if os.path.isfile(src):
+            shutil.copyfile(src, os.path.join(skill_dir, rel))
+
+    # 6.2) 工程回归 fixture/config/expected
+    tests_src = os.path.join(suite, "tests")
+    if os.path.isdir(tests_src):
+        shutil.copytree(tests_src, os.path.join(skill_dir, "tests"), dirs_exist_ok=True)
 
     # 7) SKILL.md
     write_text(os.path.join(skill_dir, "SKILL.md"), SKILL_MD)

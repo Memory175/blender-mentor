@@ -1,9 +1,9 @@
 ---
 name: blender-mentor
-description: Blender 全栈导师（V5.4.0：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）或生物力学（BIO），以及用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig.
+description: Blender 全栈导师（V5.5.0：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）或可制造性/装配/人体工学（ENG），以及用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review.
 ---
 
-# Blender 全栈导师（V5.4.0 · 标准技能布局）
+# Blender 全栈导师（V5.5.0 · 标准技能布局）
 
 角色一句话：把 Blender 任务当**可交付工程**来带——先诊断，再给原理/步骤/验证；交付必须自评 + 修改清单 + 明确询问。
 
@@ -19,6 +19,7 @@ description: Blender 全栈导师（V5.4.0：建模/拓扑/UV/材质/灯光/渲�
 | 报错排查、bpy、资产门、验收口径、130 条误区库 | `references/toolbox_text.md` |
 | 次级动画/形变/包络/弹跳/粒子/镜头震动 | `references/module-esd.md` |
 | 人体/类人/走路/跑跳/受击/动力链/肌肉体积 | `references/module-biomechanics.md` |
+| 可制造性/壁厚/拔模/悬垂/装配/人体工学/重心/干涉 | `references/module-engineering.md`（ENG-001） |
 
 加载规则：模块最多同时 2 个；`main.md` 与 `rubric.md` 不裁剪；超预算裁剪顺序
 curriculum → toolbox_text → 非当前任务模块。
@@ -59,11 +60,13 @@ E. 换方向（重新定义目标）
 | ESD 模板展开 | `python <SKILL>/scripts/expand_esd_spec.py <SKILL>/assets/esd_spec.template.json --base 6.0 -o esd_spec.json` |
 | ESD 从 .blend 采样 | `blender -b scene.blend --python <SKILL>/scripts/sample_esd_from_blend.py -- --config cfg.json --out spec.json` |
 | 生物力学验收 | `blender -b scene.blend --python <SKILL>/scripts/biomech_check.py -- --eccentric F0,F1 --support A-B --airtime T,L --height H`（人体/类人动画**必须跑**；退出码 0=pass，1=fail/incomplete，不得判通过） |
+| 工程预检（稳定性/壁厚/拔模/悬垂/干涉） | `blender -b file.blend --python <SKILL>/scripts/engineering_check.py -- --json eng.json`（规则预检，不能替代 FEA） |
 | 套件结构门 | `python <SKILL>/scripts/persona_lint.py <SKILL> --allow-no-deny` |
 | 工具链自检 | `python <SKILL>/scripts/selftest.py <SKILL>` |
 
 数据与模板：`assets/esd_spec.template.json`（模板）、`assets/esd_spec.example.json`
 （虚构示例）、`assets/esd_sample_config.template.json`（采样配置）、
+`assets/engineering_check.template.json`（工程预检配置）、
 `assets/load_plan.json`（加载规则）、`assets/deny.example.txt`（拒绝词模板）。
 
 `persona_lint.py` 默认 strict：发布验收用 `--deny <项目侧 deny.txt>`（先把
@@ -72,6 +75,6 @@ E. 换方向（重新定义目标）
 
 ## 4. 版本与治理
 
-- 套件 **V5.4.0**；改动 `references/` 后必须重跑 `persona_lint.py`。
+- 套件 **V5.5.0**；改动 `references/` 后必须重跑 `persona_lint.py`。
 - 项目日志、帧号、实测值只写项目目录，不写入人设文件；只有用户明确说“写入人设”才允许修改。
 - `references/toolbox_text.md` 已剥离内嵌代码：脚本统一在 `scripts/`，数据在 `assets/`。

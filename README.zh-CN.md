@@ -75,8 +75,9 @@ bash dsh/install.sh
 | **导师行为** | L0–L3 水平诊断；讲解 / 教练 / 验收 / 救火 / 评审 五种模式 |
 | **D1–D4 交付闭环** | 交付 → 自评 → P0/P1/P2 修改清单 → 明确的下一步问题 |
 | **0–3 评分表** | 关键项、评分锚点、自评模板 |
+| **工程预检（ENG-001）** | 稳定性、壁厚、拔模、悬垂/支撑、干涉、配合间隙 |
 | **M0–M6 课程包** | 建模与拓扑 → UV/材质/灯光/渲染 → 动画/绑定 → 物理/几何节点/管线 |
-| **10 个验收脚本** | 资产门、曲线审计、渲染探针、ESD 包络、生物力学、路由、lint、自检 |
+| **12 个可执行工具** | 10 个验收脚本 + 工程预检（稳定性/壁厚/拔模/悬垂/干涉）+ 回归测试 |
 | **知识库** | 130 条常见误区 + 40 条红线 |
 
 ## 环境要求
@@ -91,7 +92,7 @@ bash dsh/install.sh
 ```text
 SKILL.md       路由 + D1–D4 交付闭环 + 机器验收命令
 references/    6 份人设文档，按需加载
-scripts/       10 个可执行验收工具
+scripts/       12 个可执行工具
 assets/        ESD 模板、加载清单、拒绝词示例
 ```
 
@@ -138,7 +139,7 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 ├── plugins/blender-mentor/      # Claude Code 插件包装（自动生成）
 ├── dsh/install.ps1 / install.sh # DSH 一键安装脚本
 ├── references/                  # 6 份人设文档，按需加载
-├── scripts/                     # 10 个可执行验收脚本
+├── scripts/                     # 12 个可执行工具
 ├── assets/                      # ESD 模板、加载清单、拒绝词示例
 ├── docs/                        # banner + 示例会话图
 └── tools/build_skill.py         # 维护侧构建工具
@@ -163,15 +164,15 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 **支持哪些客户端？**
 DSH、Claude Code、Claude.ai、Cursor，以及任何支持标准 Agent Skills 布局（`SKILL.md` + 资源目录）的客户端。
 
-**为什么同时看到 V5.4.0 和 v5.4.5？**
-V5.4.0 是人设套件版本（六份源文档）；v5.4.4 是打包后的技能发布版本，两者独立版本号。
+**两个版本号是什么意思？**
+人设套件与打包后的技能发布版本独立编号；当前两者都是 **V5.5.0**。
 
 ## 开发与验证
 
 ```bash
 python -m compileall -q scripts tools
 python scripts/persona_lint.py . --allow-no-deny   # 结构门
-python scripts/selftest.py .                       # 14 pass + 1 skipped
+python scripts/selftest.py .                       # 17 pass + 1 skipped
 ```
 
 Blender 侧检查：
@@ -184,7 +185,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 重建技能目录：
 
 ```bash
-python tools/build_skill.py --source <V5.4.0 六件套目录> --out <仓库父目录> --force
+python tools/build_skill.py --source <V5.5.0 套件目录> --out <仓库父目录> --force
 ```
 
 ## 许可

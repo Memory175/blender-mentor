@@ -120,6 +120,31 @@ def main(argv=None):
         _check(checks, "router_running_loads_bio",
                any("module-biomechanics" in f["file"] for f in r6["files"]),
                [f["file"] for f in r6["files"]])
+        r7 = router["route"]("这个马克杯能注塑吗？壁厚和拔模帮我审一下")
+        _check(checks, "router_engineering_task",
+               any("module-engineering" in f["file"] for f in r7["files"]),
+               [f["file"] for f in r7["files"]])
+        eng_path = os.path.join(TOOLS, "engineering_check.py")
+        try:
+            compile(open(eng_path, encoding="utf-8").read(), eng_path, "exec")
+            _check(checks, "engineering_script_compiles", True)
+        except Exception as exc:  # noqa: BLE001
+            _check(checks, "engineering_script_compiles", False, str(exc))
+        reg_dir = os.path.join(root, "tests", "engineering")
+        fixtures = os.path.join(reg_dir, "fixtures")
+        expected = os.path.join(reg_dir, "expected")
+        try:
+            fixtures_ok = os.path.isdir(fixtures) and any(
+                f.endswith(".blend") for f in os.listdir(fixtures))
+            expected_ok = os.path.isdir(expected) and any(
+                f.endswith(".json") for f in os.listdir(expected))
+            for f in os.listdir(expected) if expected_ok else []:
+                if f.endswith(".json"):
+                    json.load(open(os.path.join(expected, f), encoding="utf-8"))
+            _check(checks, "engineering_regression_assets", fixtures_ok and expected_ok,
+                   {"fixtures": os.path.isdir(fixtures), "expected": expected_ok})
+        except Exception as exc:  # noqa: BLE001
+            _check(checks, "engineering_regression_assets", False, str(exc))
         cfg_path = os.path.join(ROOT, "assets", "esd_sample_config.template.json")
         try:
             cfg = json.load(open(cfg_path, encoding="utf-8"))
