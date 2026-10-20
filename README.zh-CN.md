@@ -11,9 +11,31 @@
 [![license](https://img.shields.io/github/license/Memory175/blender-mentor?color=3fb950)](https://github.com/Memory175/blender-mentor/blob/main/LICENSE)
 [![Blender](https://img.shields.io/badge/Blender-4.2%20LTS%20%7C%205.x-orange)](https://www.blender.org/download/)
 
+## 实际效果
+
+```text
+你   › 帮我审这个走路循环，按评分表打分并给 P0/P1/P2 修改清单。
+
+导师 › L2 · Review 模式 · 评分 2.1 / 3 — 关键项：脚底滑动
+       P0  锁定 1 / 13 / 25 帧接触点；补脚跟滚动。
+       P1  髋部 Y 位移减少 18%；清理肩部反向旋转。
+       P2  蹬地阶段加脚趾弯曲；重新核对 12 帧步频。
+       验收  asset_gate PASS · curve_audit 3 warnings · render_probe PASS
+```
+
 ![示例会话：提问、评分、P0/P1/P2 修改清单、机器验收](docs/demo.svg)
 
 > **这不是 Blender 插件。** 技能给 AI 客户端装上导师的“工作手册”；打开 `.blend` 和跑验收脚本仍然需要你本机安装 Blender 4.2 LTS / 5.x。
+
+## 评分速览
+
+| 分数 | 含义 | 走路循环示例 |
+|---|---|---|
+| **0** | 关键项一票否决 | 脚底滑动 → 0 分，无论其他项多好都不通过 |
+| **2** | 达标、可交付 | 接触点锁定、无穿帮 |
+| **3** | 生产级 | 接触点锁定 + 脚跟滚动 + 步频可复用 |
+
+完整评分锚点与自评模板：[`references/rubric.md`](references/rubric.md)。
 
 ## 快速开始
 
@@ -45,24 +67,6 @@ bash dsh/install.sh
 用 blender-mentor 带我过 M1 建模与拓扑。
 ```
 
-## 实际效果
-
-输入：
-
-```text
-帮我审这个走路循环，按评分表打分并给 P0/P1/P2 修改清单。
-```
-
-会得到（示例，非真实工程数据）：
-
-- **定位：** L2 · Review 模式
-- **评分：** 2.1 / 3 · 关键项：脚底滑动
-- **P0：** 锁定 1 / 13 / 25 帧接触点；补脚跟滚动。
-- **P1：** 髋部 Y 位移减少 18%；清理肩部反向旋转。
-- **P2：** 蹬地阶段加脚趾弯曲；重新核对 12 帧步频。
-- **机器验收：** `asset_gate` PASS · `curve_audit` 3 个 warning · `render_probe` PASS
-- **下一步问题：** “先修 P0，还是我直接生成修正后的关键帧？”
-
 ## 包含什么
 
 | 组成 | 作用 |
@@ -82,8 +86,6 @@ bash dsh/install.sh
 | Claude Code / DSH / Claude.ai / Cursor | 加载技能 |
 | Python 3 | `selftest.py`、`persona_lint.py`、`load_router.py` |
 
-只做教学、点评和规划时不需要装 Blender；要检查 `.blend`、跑渲染探针和机器验收时，才需要本机 Blender。
-
 ## 工作原理
 
 ```text
@@ -99,27 +101,11 @@ assets/        ESD 模板、加载清单、拒绝词示例
 4. 文件不出本机；验收工具不会上传任何内容。
 
 <details>
-<summary><strong>安装方式（全部客户端）</strong></summary>
+<summary><strong>高级安装方式</strong></summary>
 
-### DSH（本机）
+### Claude.ai
 
-Windows 一行命令：
-
-```powershell
-git clone --depth 1 https://github.com/Memory175/blender-mentor.git "$env:TEMP\blender-mentor-src"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\blender-mentor-src\dsh\install.ps1"; Remove-Item -Recurse -Force "$env:TEMP\blender-mentor-src"
-```
-
-Linux / macOS / WSL：
-
-```bash
-tmp="$(mktemp -d)"; git clone --depth 1 https://github.com/Memory175/blender-mentor.git "$tmp/bm" && bash "$tmp/bm/dsh/install.sh"; rm -rf "$tmp"
-```
-
-备选——从 latest Release 下载安装脚本：
-
-```powershell
-irm https://github.com/Memory175/blender-mentor/releases/latest/download/dsh-install.ps1 -OutFile "$env:TEMP\dsh-install.ps1"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\dsh-install.ps1"
-```
+把技能目录（`SKILL.md` + `references/`、`scripts/`、`assets/`）打成 zip，上传到 Skills 库。
 
 ### DSH 插件市场
 
@@ -129,22 +115,9 @@ irm https://github.com/Memory175/blender-mentor/releases/latest/download/dsh-ins
 dsh plugin --profile web add github:Memory175/blender-mentor
 ```
 
-### Claude Code
+### 下载安装脚本
 
-```text
-/plugin marketplace add Memory175/blender-mentor
-/plugin install blender-mentor@blender-mentor-marketplace
-```
-
-或把仓库复制到 `~/.claude/skills/blender-mentor/`（用户级）/ `.claude/skills/blender-mentor/`（项目级）。
-
-### Claude.ai
-
-把技能目录（`SKILL.md` + `references/`、`scripts/`、`assets/`）打成 zip，上传到 Skills 库。
-
-### Cursor
-
-用 Cursor 打开仓库，在对话里引用 `@SKILL.md` / `@references/main.md`；想常驻可加一条指向 `SKILL.md` 的项目规则。
+`dsh-install.ps1` / `dsh-install.sh` 已附在 [latest release](https://github.com/Memory175/blender-mentor/releases/latest)；不想 clone 时可直接下载运行。
 
 </details>
 
@@ -190,8 +163,8 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 **支持哪些客户端？**
 DSH、Claude Code、Claude.ai、Cursor，以及任何支持标准 Agent Skills 布局（`SKILL.md` + 资源目录）的客户端。
 
-**为什么同时看到 V5.4.0 和 v5.4.3？**
-V5.4.0 是人设套件版本（六份源文档）；v5.4.3 是打包后的技能发布版本，两者独立版本号。
+**为什么同时看到 V5.4.0 和 v5.4.4？**
+V5.4.0 是人设套件版本（六份源文档）；v5.4.4 是打包后的技能发布版本，两者独立版本号。
 
 ## 开发与验证
 

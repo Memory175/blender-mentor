@@ -11,9 +11,31 @@ It diagnoses your level, teaches a structured lesson, grades your work with a 0�
 [![license](https://img.shields.io/github/license/Memory175/blender-mentor?color=3fb950)](https://github.com/Memory175/blender-mentor/blob/main/LICENSE)
 [![Blender](https://img.shields.io/badge/Blender-4.2%20LTS%20%7C%205.x-orange)](https://www.blender.org/download/)
 
+## What it looks like
+
+```text
+you    › Review this walk cycle. Grade it with the rubric and give me a P0/P1/P2 fix list.
+
+mentor › L2 · Review mode · score 2.1 / 3 — critical: foot sliding
+         P0  Lock contact frames 1 / 13 / 25; add heel roll.
+         P1  Reduce hip Y translation 18%; clean shoulder counter-rotation.
+         P2  Add toe flex on push-off; re-check the 12-frame cadence.
+         acceptance  asset_gate PASS · curve_audit 3 warnings · render_probe PASS
+```
+
 ![Example session: prompt, rubric score, P0/P1/P2 fixes, machine acceptance](docs/demo.svg)
 
 > **Not a Blender add-on.** The skill gives your AI agent the mentor's playbook. You still need Blender 4.2 LTS / 5.x installed to open `.blend` files and run acceptance checks.
+
+## Rubric at a glance
+
+| Score | Meaning | Walk-cycle example |
+|---|---|---|
+| **0** | A critical item vetoes the delivery | foot sliding → 0, not deliverable regardless of the other items |
+| **2** | Shippable | contacts locked, no interpenetration |
+| **3** | Production-ready | contacts locked + heel roll + reusable cadence |
+
+Full scoring anchors and self-review template: [`references/rubric.md`](references/rubric.md).
 
 ## Quick start
 
@@ -45,24 +67,6 @@ Then open a new agent session and try:
 Use blender-mentor to walk me through M1 modeling and topology.
 ```
 
-## See it in action
-
-Prompt:
-
-```text
-Review this walk cycle. Grade it with the rubric and give me a P0/P1/P2 fix list.
-```
-
-What comes back (illustrative):
-
-- **Placement:** L2 · Review mode
-- **Score:** 2.1 / 3 · critical item: foot sliding
-- **P0:** Lock contact frames 1 / 13 / 25; add heel roll.
-- **P1:** Reduce hip Y translation 18%; clean shoulder counter-rotation.
-- **P2:** Add toe flex on push-off; re-check the 12-frame cadence.
-- **Acceptance:** `asset_gate` PASS · `curve_audit` 3 warnings · `render_probe` PASS
-- **Next question:** "Fix P0 first, or should I generate the corrected keyframes?"
-
 ## What you get
 
 | Component | What it does |
@@ -82,8 +86,6 @@ What comes back (illustrative):
 | Claude Code / DSH / Claude.ai / Cursor | Loading the skill |
 | Python 3 | `selftest.py`, `persona_lint.py`, `load_router.py` |
 
-Teaching and critique work without Blender installed. File inspection, render probes, and machine acceptance require a local Blender.
-
 ## How it works
 
 ```text
@@ -99,27 +101,11 @@ assets/        ESD templates, load plans, deny-word example
 4. Your files stay local; the acceptance tools do not upload anything.
 
 <details>
-<summary><strong>Installation — all clients</strong></summary>
+<summary><strong>Advanced installation</strong></summary>
 
-### DSH (local)
+### Claude.ai
 
-Windows one-liner:
-
-```powershell
-git clone --depth 1 https://github.com/Memory175/blender-mentor.git "$env:TEMP\blender-mentor-src"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\blender-mentor-src\dsh\install.ps1"; Remove-Item -Recurse -Force "$env:TEMP\blender-mentor-src"
-```
-
-Linux / macOS / WSL:
-
-```bash
-tmp="$(mktemp -d)"; git clone --depth 1 https://github.com/Memory175/blender-mentor.git "$tmp/bm" && bash "$tmp/bm/dsh/install.sh"; rm -rf "$tmp"
-```
-
-Alternative — download the installer from the latest Release:
-
-```powershell
-irm https://github.com/Memory175/blender-mentor/releases/latest/download/dsh-install.ps1 -OutFile "$env:TEMP\dsh-install.ps1"; powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\dsh-install.ps1"
-```
+Zip the skill folder (`SKILL.md` + `references/`, `scripts/`, `assets/`) and add it to your Skills library.
 
 ### DSH plugin market
 
@@ -129,22 +115,9 @@ This repository is also a DSH skill plugin: `package.json` declares `dsh.bundle.
 dsh plugin --profile web add github:Memory175/blender-mentor
 ```
 
-### Claude Code
+### Downloadable installers
 
-```text
-/plugin marketplace add Memory175/blender-mentor
-/plugin install blender-mentor@blender-mentor-marketplace
-```
-
-Or copy the repo into `~/.claude/skills/blender-mentor/` (user level) / `.claude/skills/blender-mentor/` (project level).
-
-### Claude.ai
-
-Zip the skill folder (`SKILL.md` + `references/`, `scripts/`, `assets/`) and add it to your Skills library.
-
-### Cursor
-
-Open the repo and reference `@SKILL.md` / `@references/main.md` in chat. For always-on behavior, add a project rule that points at `SKILL.md`.
+`dsh-install.ps1` and `dsh-install.sh` are attached to the [latest release](https://github.com/Memory175/blender-mentor/releases/latest); download and run them if you prefer not to clone.
 
 </details>
 
@@ -190,8 +163,8 @@ No. Acceptance scripts run locally and print JSON/text; they do not upload files
 **Which clients are supported?**
 DSH, Claude Code, Claude.ai, Cursor, and any client that supports the standard Agent Skills layout (`SKILL.md` + resources).
 
-**Why do I see V5.4.0 and v5.4.3?**
-V5.4.0 is the persona-suite version (the six source documents). v5.4.3 is the packaged skill release; they are versioned independently.
+**Why do I see V5.4.0 and v5.4.4?**
+V5.4.0 is the persona-suite version (the six source documents). v5.4.4 is the packaged skill release; they are versioned independently.
 
 ## Development
 
