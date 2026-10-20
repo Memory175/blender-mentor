@@ -1,5 +1,12 @@
 # Changelog
 
+## V5.9.1 — 2026-10-20
+
+> 模板补丁；人设套件升 **V5.9.1**。
+
+### Fixed
+- `assets/modules/_template.json`：data 示例增加 `source_id` + `verification`，新模块不再漏掉来源治理字段。
+
 ## V5.9.0 — 2026-10-20
 
 > 模块来源治理落地；人设套件升 **V5.9.0**。

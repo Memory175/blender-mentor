@@ -21,7 +21,8 @@
       "value": 0,
       "unit": "replace-me",
       "scope": "replace-me",
-      "source": "replace-me: file/section or standard",
+      "source_id": "replace-me: source ID in assets/source_registry.json",
+      "verification": "pending",
       "confidence": "low"
     }
   ],
