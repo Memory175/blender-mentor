@@ -74,6 +74,39 @@ def main():
     r = preflight.evaluate(root, "今天天气怎么样")
     cases.append(("no_module_block", r["decision"] == "block" and not r["selected"]))
 
+    # interior modeling: dedicated INT module, layout + style
+    r = preflight.evaluate(root, "室内建模：现代风格公寓，客厅卧室布局")
+    cases.append(("interior_gap_block", r["decision"] == "block"
+                  and "INT-001" in r.get("forced_gap_hints", [])
+                  and any(x["id"] == "modern" for x in r.get("styles", []))
+                  and any(x["id"] == "apartment" for x in r.get("layouts", []))))
+
+    g = module_gap.evaluate(root, "室内建模：现代风格公寓，客厅卧室布局")
+    cases.append(("interior_gap_prompt", g["action"] == "fill_module"
+                  and g["gap"]["id"] == "INT-001"
+                  and "INT-001" in g["prompt"]
+                  and "styles" in g["prompt"] and "layouts" in g["prompt"]))
+
+    with tempfile.TemporaryDirectory(prefix="mod_int_") as tmp:
+        mod = _fixture("INT-001", ["室内", "内饰"], "living_layout", "fixture")
+        mod["domain"] = ["interior", "architecture"]
+        mod["styles"] = ["modern"]
+        mod["layouts"] = ["apartment"]
+        with open(os.path.join(tmp, "int.json"), "w", encoding="utf-8") as fh:
+            json.dump(mod, fh, ensure_ascii=False)
+        r = preflight.evaluate(root, "现代风格公寓室内设计", modules_dir=tmp)
+        cases.append(("interior_style_layout_proceed", r["decision"] == "proceed"
+                      and any(m["id"] == "INT-001" for m in r["selected"])))
+        r = preflight.evaluate(root, "中式风格公寓室内设计", modules_dir=tmp)
+        cases.append(("interior_style_mismatch_ask", r["decision"] == "ask"
+                      and any(x["requested"] == "chinese" for x in r.get("style_mismatch", []))))
+        r = preflight.evaluate(root, "现代风格别墅室内设计", modules_dir=tmp)
+        cases.append(("interior_layout_mismatch_ask", r["decision"] == "ask"
+                      and any(x["requested"] == "villa" for x in r.get("layout_mismatch", []))))
+        r = preflight.evaluate(root, "室内设计，帮我布置一下", modules_dir=tmp)
+        cases.append(("interior_missing_style_ask", r["decision"] == "ask"
+                      and "建筑风格" in " ".join(r.get("questions", []))))
+
     with tempfile.TemporaryDirectory(prefix="mod_gov_") as tmp:
         for name, obj in (("a.json", _fixture("AAA-001", ["壁厚"], "min_wall_mm", 1.5)),
                           ("b.json", _fixture("BBB-001", ["壁厚"], "min_wall_mm", 2.0))):

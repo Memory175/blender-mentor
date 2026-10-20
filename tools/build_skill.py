@@ -129,15 +129,16 @@ ASSET_FILES = [
     "module_registry.json",
     "module_gap_hints.json",
     "source_registry.template.json",
+    "style_taxonomy.json",
     "source_registry.json",
 ]
 
 SKILL_MD =  r"""---
 name: blender-mentor
-description: Blender 全栈导师（V5.9.2：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）或可制造性/装配/人体工学（ENG），以及用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review.
+description: Blender 全栈导师（V5.10.0：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）或可制造性/装配/人体工学（ENG），以及用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review.
 ---
 
-# Blender 全栈导师（V5.9.2 · 标准技能布局）
+# Blender 全栈导师（V5.10.0 · 标准技能布局）
 
 角色一句话：把 Blender 任务当**可交付工程**来带——先诊断，再给原理/步骤/验证；交付必须自评 + 修改清单 + 明确询问。
 
@@ -259,6 +260,16 @@ python "<SKILL>/scripts/source_refresh.py" --json .source_refresh.json
 
 详见 `references/model-qa.md`（通用检查表、反模式、交付前 10 问）。
 
+### 0.5 内饰/室内建模：独立模块 + 布局 + 风格
+
+**内饰/室内建模必须新增独立 `INT-*` 模块**，不能借用 ENG-001 / BIO-001 / ESD-001，也不能按普通建模 `proceed_core` 放行。
+
+- `preflight` 命中 `室内/内饰/室内设计/软装/家具布置` → `block`，建议 `INT-001`；用 `module_gap.py` 生成写作 Prompt；
+- 必须先问清 **layout（空间类型/布局）** 与 **style（建筑风格）**；没给就 `ask`；
+- 模块必须声明 `styles` 与 `layouts`，值来自 `assets/style_taxonomy.json`；
+- 已有 `INT-*` 模块不覆盖当前风格/布局时，必须提示“扩展模块或新建风格/布局变体”，不能静默套用旧模块；
+- 布局要单独考虑：功能分区、动线、家具尺度、通道净空、门窗关系。
+
 ## 1. 路由规则（先读对文件，不要全读）
 
 | 用户意图 | 读这个 |
@@ -273,6 +284,7 @@ python "<SKILL>/scripts/source_refresh.py" --json .source_refresh.json
 | 模块格式/预审/冲突/新增模块 | `references/module-format.md` + `assets/module_registry.json` |
 | 写新模块 / 让 AI 查资料填表 / 单层小房子模块 | `references/module-authoring.md` |
 | 建模/交付前的通用质量门、反模式、10 问 | `references/model-qa.md` |
+| 内饰/室内建模、布局、建筑风格 | `references/module-authoring.md` + `assets/style_taxonomy.json` |
 
 加载规则：模块最多同时 2 个；`main.md` 与 `rubric.md` 不裁剪；超预算裁剪顺序
 curriculum → toolbox_text → 非当前任务模块。
@@ -338,7 +350,7 @@ E. 换方向（重新定义目标）
 
 ## 4. 版本与治理
 
-- 套件 **V5.9.2**；改动 `references/` 后必须重跑 `persona_lint.py`。
+- 套件 **V5.10.0**；改动 `references/` 后必须重跑 `persona_lint.py`。
 - 项目日志、帧号、实测值只写项目目录，不写入人设文件；只有用户明确说“写入人设”才允许修改。
 - `references/toolbox_text.md` 已剥离内嵌代码：脚本统一在 `scripts/`，数据在 `assets/`。
 """
@@ -425,6 +437,7 @@ Use blender-mentor to walk me through M1 modeling and topology.
 | **M0–M6 curriculum** | modeling & topology → UV/materials/lighting/render → animation/rigging → physics/geometry nodes/pipeline |
 | **22 executable tools** | 6 `.blend` acceptance scripts + engineering precheck + module governance (preflight/lint/conflict/claim audit) + source governance (audit/refresh) + regression/routing tools |
 | **Delivery QA gate** | floors/coordinates, mesh/UV, camera/export, professional-boundary checks |
+| **Interior rule** | interior modeling requires a dedicated `INT-*` module with `styles`/`layouts`; style/layout mismatches are surfaced |
 | **Knowledge base** | 130 common misconceptions + 40 red lines |
 
 ## Requirements
@@ -518,7 +531,7 @@ New modules, or modules that declare a `source_id`, reference `assets/source_reg
 DSH, Claude Code, Claude.ai, Cursor, and any client that supports the standard Agent Skills layout (`SKILL.md` + resources).
 
 **What do the two version numbers mean?**
-The persona suite is **V5.9.2**; the packaged skill release is **v5.9.2**.
+The persona suite is **V5.10.0**; the packaged skill release is **v5.10.0**.
 
 ## Development
 
@@ -538,7 +551,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 Rebuild the skill directory:
 
 ```bash
-python tools/build_skill.py --source <V5.9.2 suite> --out <repo parent> --force
+python tools/build_skill.py --source <V5.10.0 suite> --out <repo parent> --force
 ```
 
 ## License
@@ -632,6 +645,7 @@ bash dsh/install.sh
 | **M0–M6 课程包** | 建模与拓扑 → UV/材质/灯光/渲染 → 动画/绑定 → 物理/几何节点/管线 |
 | **22 个可执行工具** | 6 个 `.blend` 验收脚本 + 工程预检 + 模块治理（预审/lint/冲突/引用审计）+ 来源治理（审计/查询）+ 回归/路由工具 |
 | **交付质量门** | 楼层/坐标、mesh/UV、相机/导出、专业边界检查 |
+| **内饰规则** | 室内建模必须独立 `INT-*` 模块并声明 `styles`/`layouts`；风格/布局不匹配会提示 |
 | **知识库** | 130 条常见误区 + 40 条红线 |
 
 ## 环境要求
@@ -725,7 +739,7 @@ dsh plugin --profile web add github:OWNER/REPO
 DSH、Claude Code、Claude.ai、Cursor，以及任何支持标准 Agent Skills 布局（`SKILL.md` + 资源目录）的客户端。
 
 **两个版本号是什么意思？**
-人设套件为 **V5.9.2**；打包后的技能发布版本为 **v5.9.2**。
+人设套件为 **V5.10.0**；打包后的技能发布版本为 **v5.10.0**。
 
 ## 开发与验证
 
@@ -745,7 +759,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 重建技能目录：
 
 ```bash
-python tools/build_skill.py --source <V5.9.2 套件目录> --out <仓库父目录> --force
+python tools/build_skill.py --source <V5.10.0 套件目录> --out <仓库父目录> --force
 ```
 
 ## 许可
@@ -759,6 +773,23 @@ MIT，见 [LICENSE](LICENSE)。课程文档中的第三方参考书目仅作引�
 
 
 CHANGELOG_MD =  r"""# Changelog
+
+## V5.10.0 — 2026-10-20
+
+> 内饰/室内建模硬规则；人设套件升 **V5.10.0**。
+
+### Added
+- `assets/style_taxonomy.json`：12 种建筑风格 + 7 种空间布局的稳定 ID/别名；
+- `assets/module_gap_hints.json`：新增 `INT-001`（force），内饰不再按普通建模放行；
+- `preflight`：内饰命中强制 block；已有 INT 模块时核对 `styles`/`layouts`，不匹配返回 ask；
+- `module_gap`：INT 提示 Prompt 包含推断风格/布局，要求模块声明 styles/layouts；
+- `module.schema` / `_template`：增加 `styles`、`layouts`；
+- `module_lint`：INT-* 必须有非空 styles/layouts；
+- `SKILL.md §0.5`、`module-format`、`module-authoring §6.6`：内饰模块规则。
+
+### Changed
+- `module_selftest` 扩到 18 项（内饰 block / prompt / style/layout proceed / mismatch ask）；
+- 版本 V5.10.0；模块版本不变（ENG 1.1.0 / BIO 1.1.0 / ESD 1.1.9）。
 
 ## V5.9.2 — 2026-10-20
 
@@ -1610,7 +1641,7 @@ def write_claude_plugin(skill_dir, repo_slug):
         "name": "blender-mentor",
         "displayName": "Blender Mentor",
         "description": desc,
-        "version": "5.9.2",
+        "version": "5.10.0",
         "author": {"name": owner},
         "homepage": repo_url,
         "repository": repo_url,
@@ -1647,7 +1678,7 @@ def write_claude_plugin(skill_dir, repo_slug):
             "name": "blender-mentor",
             "source": "./plugins/blender-mentor",
             "description": desc,
-            "version": "5.9.2",
+            "version": "5.10.0",
         }],
     }
     write_text(os.path.join(skill_dir, ".claude-plugin", "marketplace.json"),
@@ -1665,7 +1696,7 @@ def write_dsh_plugin(skill_dir, repo_slug):
     owner = repo_slug.split("/")[0]
     repo_url = "https://github.com/%s" % repo_slug
     pkg_name = "blender-mentor"
-    version = "5.9.2"
+    version = "5.10.0"
     desc = ("Blender full-stack mentor AI Skill: teaching, 0-3 rubric grading, "
             "asset/animation acceptance (ESD/BIO/ENG).")
 

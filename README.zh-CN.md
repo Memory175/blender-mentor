@@ -79,6 +79,7 @@ bash dsh/install.sh
 | **M0–M6 课程包** | 建模与拓扑 → UV/材质/灯光/渲染 → 动画/绑定 → 物理/几何节点/管线 |
 | **22 个可执行工具** | 6 个 `.blend` 验收脚本 + 工程预检 + 模块治理（预审/lint/冲突/引用审计）+ 来源治理（审计/查询）+ 回归/路由工具 |
 | **交付质量门** | 楼层/坐标、mesh/UV、相机/导出、专业边界检查 |
+| **内饰规则** | 室内建模必须独立 `INT-*` 模块并声明 `styles`/`layouts`；风格/布局不匹配会提示 |
 | **知识库** | 130 条常见误区 + 40 条红线 |
 
 ## 环境要求
@@ -172,7 +173,7 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 DSH、Claude Code、Claude.ai、Cursor，以及任何支持标准 Agent Skills 布局（`SKILL.md` + 资源目录）的客户端。
 
 **两个版本号是什么意思？**
-人设套件为 **V5.9.2**；打包后的技能发布版本为 **v5.9.2**。
+人设套件为 **V5.10.0**；打包后的技能发布版本为 **v5.10.0**。
 
 ## 开发与验证
 
@@ -192,7 +193,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 重建技能目录：
 
 ```bash
-python tools/build_skill.py --source <V5.9.2 套件目录> --out <仓库父目录> --force
+python tools/build_skill.py --source <V5.10.0 套件目录> --out <仓库父目录> --force
 ```
 
 ## 许可

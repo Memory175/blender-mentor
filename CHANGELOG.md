@@ -1,5 +1,22 @@
 # Changelog
 
+## V5.10.0 — 2026-10-20
+
+> 内饰/室内建模硬规则；人设套件升 **V5.10.0**。
+
+### Added
+- `assets/style_taxonomy.json`：12 种建筑风格 + 7 种空间布局的稳定 ID/别名；
+- `assets/module_gap_hints.json`：新增 `INT-001`（force），内饰不再按普通建模放行；
+- `preflight`：内饰命中强制 block；已有 INT 模块时核对 `styles`/`layouts`，不匹配返回 ask；
+- `module_gap`：INT 提示 Prompt 包含推断风格/布局，要求模块声明 styles/layouts；
+- `module.schema` / `_template`：增加 `styles`、`layouts`；
+- `module_lint`：INT-* 必须有非空 styles/layouts；
+- `SKILL.md §0.5`、`module-format`、`module-authoring §6.6`：内饰模块规则。
+
+### Changed
+- `module_selftest` 扩到 18 项（内饰 block / prompt / style/layout proceed / mismatch ask）；
+- 版本 V5.10.0；模块版本不变（ENG 1.1.0 / BIO 1.1.0 / ESD 1.1.9）。
+
 ## V5.9.2 — 2026-10-20
 
 > 通用建模/交付质量门；人设套件升 **V5.9.2**。

@@ -139,6 +139,11 @@ def validate_module(mod, root=None):
             problems.append("%s.%s: missing unit" % (mid, k))
         if not d.get("source") and not d.get("source_id") and not d.get("assumption"):
             problems.append("%s.%s: needs source/source_id or assumption=true" % (mid, k))
+    if mid.startswith("INT-"):
+        if not isinstance(m.get("styles"), list) or not m.get("styles"):
+            problems.append("%s: INT module needs non-empty styles[]" % mid)
+        if not isinstance(m.get("layouts"), list) or not m.get("layouts"):
+            problems.append("%s: INT module needs non-empty layouts[]" % mid)
         if d.get("confidence") not in (None, "high", "medium", "low"):
             problems.append("%s.%s: bad confidence" % (mid, k))
     if len(data_keys) != len(mod.get("data", [])):
@@ -256,3 +261,27 @@ def coverage_for(selected, task):
         for d in m.get("data", []):
             available[d.get("key")] = {"module": m.get("id"), **d}
     return matched, required, available
+
+
+def load_style_taxonomy(root):
+    path = os.path.join(root, "assets", "style_taxonomy.json")
+    if not os.path.isfile(path):
+        return {"styles": [], "layouts": []}
+    try:
+        with open(path, encoding="utf-8") as fh:
+            data = json.load(fh)
+    except Exception:  # noqa: BLE001
+        return {"styles": [], "layouts": []}
+    return {"styles": data.get("styles", []), "layouts": data.get("layouts", [])}
+
+
+def detect_style_layout(root, task):
+    """Return detected style/layout items from the task text."""
+    taxonomy = load_style_taxonomy(root)
+    result = {"styles": [], "layouts": []}
+    for kind in ("styles", "layouts"):
+        for item in taxonomy.get(kind, []):
+            hits = [kw for kw in item.get("keywords", []) if keyword_hit(kw, task)]
+            if hits:
+                result[kind].append({"id": item.get("id"), "name": item.get("name"), "hits": hits})
+    return result

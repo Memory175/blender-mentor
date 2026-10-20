@@ -1,0 +1,26 @@
+{
+  "schema": "mentor-style-taxonomy/1",
+  "styles": [
+    {"id": "modern", "name": "现代/当代", "keywords": ["现代", "当代", "modern", "contemporary"]},
+    {"id": "minimal", "name": "极简", "keywords": ["极简", "极简主义", "minimal", "minimalist"]},
+    {"id": "nordic", "name": "北欧", "keywords": ["北欧", "nordic", "scandinavian"]},
+    {"id": "japanese", "name": "日式/侘寂", "keywords": ["日式", "和风", "侘寂", "japanese", "wabi-sabi", "wabi sabi"]},
+    {"id": "chinese", "name": "中式/新中式", "keywords": ["中式", "新中式", "chinese", "new chinese"]},
+    {"id": "industrial", "name": "工业/LOFT", "keywords": ["工业", "工业风", "loft", "industrial"]},
+    {"id": "american", "name": "美式", "keywords": ["美式", "american"]},
+    {"id": "french", "name": "法式", "keywords": ["法式", "french"]},
+    {"id": "mediterranean", "name": "地中海", "keywords": ["地中海", "mediterranean"]},
+    {"id": "rustic", "name": "原木/自然", "keywords": ["原木", "自然风", "rustic", "natural wood"]},
+    {"id": "cream", "name": "奶油风", "keywords": ["奶油", "奶油风", "cream"]},
+    {"id": "luxury", "name": "轻奢", "keywords": ["轻奢", "luxury", "light luxury"]}
+  ],
+  "layouts": [
+    {"id": "apartment", "name": "公寓/平层", "keywords": ["公寓", "平层", "apartment", "flat"]},
+    {"id": "villa", "name": "别墅/独栋", "keywords": ["别墅", "独栋", "villa", "detached house"]},
+    {"id": "studio", "name": "单间/开间", "keywords": ["单间", "开间", "studio"]},
+    {"id": "office", "name": "办公", "keywords": ["办公", "办公室", "office"]},
+    {"id": "retail", "name": "商业/零售", "keywords": ["商业", "零售", "店铺", "retail", "shop"]},
+    {"id": "restaurant", "name": "餐饮", "keywords": ["餐厅", "餐饮", "restaurant", "cafe"]},
+    {"id": "hotel", "name": "酒店/民宿", "keywords": ["酒店", "民宿", "hotel", "bnb"]}
+  ]
+}

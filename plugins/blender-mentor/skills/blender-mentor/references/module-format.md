@@ -36,6 +36,8 @@ scripts/module_conflict.py         # 冲突巡查
 | `status` | `experimental / stable / deprecated` |
 | `kind` | `reference`（只有数据）/ `procedure`（只有流程）/ `hybrid` |
 | `domain` | 领域标签，用于冲突判断 |
+| `styles` | 建筑风格 ID 列表；`INT-*` 必填，值取自 `assets/style_taxonomy.json` |
+| `layouts` | 空间类型/布局 ID 列表；`INT-*` 必填，如 apartment/villa/office |
 | `intent.include` | 命中词；空则模块永远不会被选中 |
 | `intent.exclude` | 排除词，优先级高于 include |
 | `coverage` | **能力 → 数据键**映射：任务提到哪些词时，必须有哪些数据 |

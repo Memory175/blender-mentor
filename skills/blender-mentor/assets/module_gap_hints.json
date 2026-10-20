@@ -5,8 +5,24 @@
       "id": "ARC-001",
       "name": "单层住宅（外建）",
       "kind": "hybrid",
-      "domain": ["architecture", "residential", "construction"],
-      "keywords": ["房子", "住宅", "别墅", "单层", "建筑", "小屋", "民居", "house", "home", "residential", "building"],
+      "domain": [
+        "architecture",
+        "residential",
+        "construction"
+      ],
+      "keywords": [
+        "房子",
+        "住宅",
+        "别墅",
+        "单层",
+        "建筑",
+        "小屋",
+        "民居",
+        "house",
+        "home",
+        "residential",
+        "building"
+      ],
       "knowledge": [
         "场地与规划：退线、占地率、限高、朝向、排水",
         "平面与空间：房间面积、净高、门洞、走廊、采光、通风",
@@ -22,9 +38,67 @@
         "Allen & Iano, Fundamentals of Building Construction",
         "ASHRAE/IECC 或当地能耗标准（按地区）"
       ],
-      "related": ["ENG-001"],
-      "questions": ["国家/省/市（jurisdiction）", "气候区", "结构类型", "占地/建筑面积与房间需求", "是否扩展室内精装"],
+      "related": [
+        "ENG-001"
+      ],
+      "questions": [
+        "国家/省/市（jurisdiction）",
+        "气候区",
+        "结构类型",
+        "占地/建筑面积与房间需求",
+        "是否扩展室内精装"
+      ],
       "why": "当前模块包没有建筑设计/住宅模块；ENG-001 只覆盖材料厚度、干涉与装配，不能替代建筑规范、结构与场地设计。"
+    },
+    {
+      "id": "INT-001",
+      "name": "室内设计/内饰（含布局与风格）",
+      "kind": "hybrid",
+      "domain": [
+        "interior",
+        "architecture",
+        "furniture",
+        "finishes"
+      ],
+      "keywords": [
+        "内饰",
+        "室内建模",
+        "室内设计",
+        "室内空间",
+        "室内布置",
+        "软装",
+        "家具布置",
+        "interior modeling",
+        "interior design",
+        "furnishing"
+      ],
+      "force": true,
+      "knowledge": [
+        "空间布局：功能分区、动线、家具尺度、收纳、通道净空、门窗关系",
+        "风格体系：现代/极简/北欧/日式/中式/工业/美式/法式/奶油/轻奢等的造型、材料、色彩与照明语汇",
+        "界面与构造：墙面/地面/吊顶/踢脚/收口/防水/隔声",
+        "设备与安全：电气/给排水/暖通接口、消防/无障碍（需专业复核）",
+        "规范与交付：当地住宅/商业室内规范、材料环保、施工图与 Blender 表达"
+      ],
+      "sources": [
+        "项目所在地室内设计/建筑规范（jurisdiction + edition）",
+        "室内设计工具书/教材（空间、材料、照明、人体工学）",
+        "风格史/案例集（写清风格来源与地域）",
+        "材料/家具/照明标准（按需）"
+      ],
+      "related": [
+        "ENG-001",
+        "BIO-001",
+        "ARC-001"
+      ],
+      "questions": [
+        "项目类型与所在地（公寓/别墅/办公/商业等）",
+        "空间类型与布局需求（几室几厅/功能分区/动线）",
+        "建筑风格（现代/极简/北欧/日式/中式/工业/美式/法式/奶油/轻奢等）",
+        "是否含水电/暖通/消防/无障碍",
+        "家具/软装/材料预算与交付深度"
+      ],
+      "why": "当前模块包没有室内设计/内饰模块；ENG/BIO/ESD 不能替代室内规范、布局动线、风格体系、材料构造与家具尺度。内饰必须独立模块，并且模块必须声明支持的 layouts 与 styles。"
     }
   ]
 }

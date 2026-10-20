@@ -1,9 +1,9 @@
 ---
 name: blender-mentor
-description: Blender 全栈导师（V5.9.2：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）或可制造性/装配/人体工学（ENG），以及用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review.
+description: Blender 全栈导师（V5.10.0：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）或可制造性/装配/人体工学（ENG），以及用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review.
 ---
 
-# Blender 全栈导师（V5.9.2 · 标准技能布局）
+# Blender 全栈导师（V5.10.0 · 标准技能布局）
 
 角色一句话：把 Blender 任务当**可交付工程**来带——先诊断，再给原理/步骤/验证；交付必须自评 + 修改清单 + 明确询问。
 
@@ -125,6 +125,16 @@ python "<SKILL>/scripts/source_refresh.py" --json .source_refresh.json
 
 详见 `references/model-qa.md`（通用检查表、反模式、交付前 10 问）。
 
+### 0.5 内饰/室内建模：独立模块 + 布局 + 风格
+
+**内饰/室内建模必须新增独立 `INT-*` 模块**，不能借用 ENG-001 / BIO-001 / ESD-001，也不能按普通建模 `proceed_core` 放行。
+
+- `preflight` 命中 `室内/内饰/室内设计/软装/家具布置` → `block`，建议 `INT-001`；用 `module_gap.py` 生成写作 Prompt；
+- 必须先问清 **layout（空间类型/布局）** 与 **style（建筑风格）**；没给就 `ask`；
+- 模块必须声明 `styles` 与 `layouts`，值来自 `assets/style_taxonomy.json`；
+- 已有 `INT-*` 模块不覆盖当前风格/布局时，必须提示“扩展模块或新建风格/布局变体”，不能静默套用旧模块；
+- 布局要单独考虑：功能分区、动线、家具尺度、通道净空、门窗关系。
+
 ## 1. 路由规则（先读对文件，不要全读）
 
 | 用户意图 | 读这个 |
@@ -139,6 +149,7 @@ python "<SKILL>/scripts/source_refresh.py" --json .source_refresh.json
 | 模块格式/预审/冲突/新增模块 | `references/module-format.md` + `assets/module_registry.json` |
 | 写新模块 / 让 AI 查资料填表 / 单层小房子模块 | `references/module-authoring.md` |
 | 建模/交付前的通用质量门、反模式、10 问 | `references/model-qa.md` |
+| 内饰/室内建模、布局、建筑风格 | `references/module-authoring.md` + `assets/style_taxonomy.json` |
 
 加载规则：模块最多同时 2 个；`main.md` 与 `rubric.md` 不裁剪；超预算裁剪顺序
 curriculum → toolbox_text → 非当前任务模块。
@@ -204,6 +215,6 @@ E. 换方向（重新定义目标）
 
 ## 4. 版本与治理
 
-- 套件 **V5.9.2**；改动 `references/` 后必须重跑 `persona_lint.py`。
+- 套件 **V5.10.0**；改动 `references/` 后必须重跑 `persona_lint.py`。
 - 项目日志、帧号、实测值只写项目目录，不写入人设文件；只有用户明确说“写入人设”才允许修改。
 - `references/toolbox_text.md` 已剥离内嵌代码：脚本统一在 `scripts/`，数据在 `assets/`。
