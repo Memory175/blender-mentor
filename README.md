@@ -77,7 +77,7 @@ Use blender-mentor to walk me through M1 modeling and topology.
 | **0–3 rubric** | critical items, scoring anchors, and a self-review template |
 | **Engineering precheck (ENG-001)** | stability, wall thickness, draft, overhang/support, interference, clearance |
 | **M0–M6 curriculum** | modeling & topology → UV/materials/lighting/render → animation/rigging → physics/geometry nodes/pipeline |
-| **22 executable tools** | 6 `.blend` acceptance scripts + engineering precheck + module governance (preflight/lint/conflict/claim audit) + source governance (audit/refresh) + regression/routing tools |
+| **23 executable tools** | 6 `.blend` acceptance scripts + engineering precheck + module governance (preflight/lint/conflict/claim audit/self-audit index) + source governance (audit/refresh) + regression/routing tools |
 | **Delivery QA gate** | floors/coordinates, mesh/UV, camera/export, professional-boundary checks |
 | **INT-001 (experimental)** | Chinese-style two-bedroom apartment interior; declares `styles`/`layouts`; sources pending |
 | **Interior rule** | interior modeling requires a dedicated `INT-*` module with `styles`/`layouts`; style/layout mismatches are surfaced |
@@ -96,7 +96,7 @@ Use blender-mentor to walk me through M1 modeling and topology.
 ```text
 SKILL.md       routing + D1–D4 delivery loop + machine-acceptance commands
 references/    11 reference files (7 persona docs + module format + authoring guide + model QA + INT module), loaded on demand
-scripts/       22 executable tools
+scripts/       23 executable tools
 assets/        ESD templates, load plans, deny-word example, source registry template
 ```
 
@@ -145,7 +145,7 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 ├── plugins/blender-mentor/      # Claude Code plugin wrapper (generated)
 ├── dsh/install.ps1 / install.sh # DSH one-line installers
 ├── references/                  # 11 reference files (7 persona docs + module format + authoring guide + model QA + INT module)
-├── scripts/                     # 22 executable tools
+├── scripts/                     # 23 executable tools
 ├── assets/                      # ESD templates, load plans, deny example
 ├── docs/                        # banner + example session image
 └── tools/build_skill.py         # maintainer build tool
@@ -174,7 +174,7 @@ New modules, or modules that declare a `source_id`, reference `assets/source_reg
 DSH, Claude Code, Claude.ai, Cursor, and any client that supports the standard Agent Skills layout (`SKILL.md` + resources).
 
 **What do the two version numbers mean?**
-The persona suite is **V5.11.3**; the packaged skill release is **v5.11.3**.
+The persona suite is **V5.12.0**; the packaged skill release is **v5.12.0**.
 
 ## Development
 
@@ -194,7 +194,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 Rebuild the skill directory:
 
 ```bash
-python tools/build_skill.py --source <V5.11.3 suite> --out <repo parent> --force
+python tools/build_skill.py --source <V5.12.0 suite> --out <repo parent> --force
 ```
 
 ## License

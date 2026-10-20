@@ -17,6 +17,7 @@
 
 输出：PERSONA_LINT {json}；exit 0=pass，1=fail，2=参数错误。
 """
+import glob
 import json
 import os
 import re
@@ -44,12 +45,25 @@ ALIAS = {
 }
 
 
+def _module_refs(root):
+    """自动发现 module-*.md；新增模块不需要再手改 FILES。"""
+    out = []
+    for path in sorted(glob.glob(os.path.join(root, "references", "module-*.md"))):
+        name = os.path.basename(path)
+        if name in ("module-format.md", "module-authoring.md"):
+            continue
+        out.append("references/" + name)
+    return out
+
+
 def _read(root):
     texts, missing = {}, []
-    for f in FILES:
+    files = list(FILES) + [f for f in _module_refs(root) if f not in FILES]
+    for f in files:
         path = os.path.join(root, f)
         if not os.path.isfile(path):
-            missing.append(f)
+            if f in FILES:
+                missing.append(f)
             continue
         with open(path, encoding="utf-8") as fh:
             texts[f] = fh.read()
@@ -190,6 +204,24 @@ def _check_py_blocks(texts):
     return {"pass": not errors, "blocks": len(blocks), "errors": errors}
 
 
+def _check_self_audit(root):
+    """动态模块索引：新模块自动发现，不依赖手写 module 清单。"""
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "self_audit.py")
+    if not os.path.isfile(path):
+        return {"pass": False, "error": "self_audit.py missing"}
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("p_self_audit", path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    try:
+        data = mod.audit(root, write=False, sync=False)
+    except Exception as exc:  # noqa: BLE001
+        return {"pass": False, "error": str(exc)}
+    fails = [i for i in data.get("issues", []) if i.get("severity") == "fail"]
+    return {"pass": not fails, "modules": data.get("summary", {}).get("modules", 0),
+            "issues": len(fails), "failures": fails[:10]}
+
+
 _PLACEHOLDER_RE = re.compile(r"PLACEHOLDER|REPLACE_ME|CHANGEME|<[^>]+>", re.I)
 
 
@@ -236,6 +268,7 @@ def lint(root=".", deny_path=None, strict=True):
     checks.append(dict({"check": "weights"}, **_check_weights(texts)))
     checks.append(dict({"check": "counts"}, **_check_counts(texts)))
     checks.append(dict({"check": "toolbox_python_blocks"}, **_check_py_blocks(texts)))
+    checks.append(dict({"check": "self_audit"}, **_check_self_audit(root)))
     checks.append(dict({"check": "deny_scan"}, **_check_deny(texts, deny_path, strict)))
     return {"status": "pass" if all(c["pass"] for c in checks) else "fail",
             "checks": checks}

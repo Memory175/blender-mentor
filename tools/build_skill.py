@@ -114,6 +114,7 @@ COPIED_TOOLS = [
     "module_selftest.py",
     "audit_claims.py",
     "module_gap.py",
+    "self_audit.py",
     "source_audit.py",
     "source_refresh.py",
     "source_selftest.py",
@@ -135,10 +136,10 @@ ASSET_FILES = [
 
 SKILL_MD =  r"""---
 name: blender-mentor
-description: Blender 全栈导师（V5.11.3：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG/INT 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）、可制造性/装配/人体工学（ENG），以及室内/内饰建模（INT-001：中式/新中式、两室两厅公寓、布局与建筑风格），还有用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review, interior design, Chinese-style interior, two-bedroom apartment layout.
+description: Blender 全栈导师（V5.12.0：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG/INT 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）、可制造性/装配/人体工学（ENG），以及室内/内饰建模（INT-001：中式/新中式、两室两厅公寓、布局与建筑风格），还有用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review, interior design, Chinese-style interior, two-bedroom apartment layout.
 ---
 
-# Blender 全栈导师（V5.11.3 · 标准技能布局）
+# Blender 全栈导师（V5.12.0 · 标准技能布局）
 
 角色一句话：把 Blender 任务当**可交付工程**来带——先诊断，再给原理/步骤/验证；交付必须自评 + 修改清单 + 明确询问。
 
@@ -269,6 +270,17 @@ python "<SKILL>/scripts/source_refresh.py" --json .source_refresh.json
 - 模块必须声明 `styles` 与 `layouts`，值来自 `assets/style_taxonomy.json`；
 - 已有 `INT-*` 模块不覆盖当前风格/布局时，必须提示“扩展模块或新建风格/布局变体”，不能静默套用旧模块；
 - 布局要单独考虑：功能分区、动线、家具尺度、通道净空、门窗关系。
+
+### 0.6 发布/上传授权（硬规则）
+
+默认**不打包、不 commit/push、不打 tag、不生成 GitHub Release、不上传附件**。
+
+只有用户明确说“打包 / 发布 / 上传 GitHub / 推上去”才执行发布动作；否则：
+
+1. 只在本地修改与验证；
+2. 完成后只给建议：**建议上传 / 建议暂缓上传**，并说明理由；
+3. 不把“本地通过”自动升级成“已发布”；
+4. 不自动创建 zip、release、tag 或远程写操作。
 
 ## 1. 路由规则（先读对文件，不要全读）
 
@@ -435,7 +447,7 @@ Use blender-mentor to walk me through M1 modeling and topology.
 | **0–3 rubric** | critical items, scoring anchors, and a self-review template |
 | **Engineering precheck (ENG-001)** | stability, wall thickness, draft, overhang/support, interference, clearance |
 | **M0–M6 curriculum** | modeling & topology → UV/materials/lighting/render → animation/rigging → physics/geometry nodes/pipeline |
-| **22 executable tools** | 6 `.blend` acceptance scripts + engineering precheck + module governance (preflight/lint/conflict/claim audit) + source governance (audit/refresh) + regression/routing tools |
+| **23 executable tools** | 6 `.blend` acceptance scripts + engineering precheck + module governance (preflight/lint/conflict/claim audit/self-audit index) + source governance (audit/refresh) + regression/routing tools |
 | **Delivery QA gate** | floors/coordinates, mesh/UV, camera/export, professional-boundary checks |
 | **INT-001 (experimental)** | Chinese-style two-bedroom apartment interior; declares `styles`/`layouts`; sources pending |
 | **Interior rule** | interior modeling requires a dedicated `INT-*` module with `styles`/`layouts`; style/layout mismatches are surfaced |
@@ -454,7 +466,7 @@ Use blender-mentor to walk me through M1 modeling and topology.
 ```text
 SKILL.md       routing + D1–D4 delivery loop + machine-acceptance commands
 references/    11 reference files (7 persona docs + module format + authoring guide + model QA + INT module), loaded on demand
-scripts/       22 executable tools
+scripts/       23 executable tools
 assets/        ESD templates, load plans, deny-word example, source registry template
 ```
 
@@ -503,7 +515,7 @@ dsh plugin --profile web add github:OWNER/REPO
 ├── plugins/blender-mentor/      # Claude Code plugin wrapper (generated)
 ├── dsh/install.ps1 / install.sh # DSH one-line installers
 ├── references/                  # 11 reference files (7 persona docs + module format + authoring guide + model QA + INT module)
-├── scripts/                     # 22 executable tools
+├── scripts/                     # 23 executable tools
 ├── assets/                      # ESD templates, load plans, deny example
 ├── docs/                        # banner + example session image
 └── tools/build_skill.py         # maintainer build tool
@@ -532,7 +544,7 @@ New modules, or modules that declare a `source_id`, reference `assets/source_reg
 DSH, Claude Code, Claude.ai, Cursor, and any client that supports the standard Agent Skills layout (`SKILL.md` + resources).
 
 **What do the two version numbers mean?**
-The persona suite is **V5.11.3**; the packaged skill release is **v5.11.3**.
+The persona suite is **V5.12.0**; the packaged skill release is **v5.12.0**.
 
 ## Development
 
@@ -552,7 +564,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 Rebuild the skill directory:
 
 ```bash
-python tools/build_skill.py --source <V5.11.3 suite> --out <repo parent> --force
+python tools/build_skill.py --source <V5.12.0 suite> --out <repo parent> --force
 ```
 
 ## License
@@ -644,7 +656,7 @@ bash dsh/install.sh
 | **0–3 评分表** | 关键项、评分锚点、自评模板 |
 | **工程预检（ENG-001）** | 稳定性、壁厚、拔模、悬垂/支撑、干涉、配合间隙 |
 | **M0–M6 课程包** | 建模与拓扑 → UV/材质/灯光/渲染 → 动画/绑定 → 物理/几何节点/管线 |
-| **22 个可执行工具** | 6 个 `.blend` 验收脚本 + 工程预检 + 模块治理（预审/lint/冲突/引用审计）+ 来源治理（审计/查询）+ 回归/路由工具 |
+| **23 个可执行工具** | 6 个 `.blend` 验收脚本 + 工程预检 + 模块治理（预审/lint/冲突/引用审计/自审查索引）+ 来源治理（审计/查询）+ 回归/路由工具 |
 | **交付质量门** | 楼层/坐标、mesh/UV、相机/导出、专业边界检查 |
 | **INT-001（experimental）** | 中式两室两厅公寓内饰；声明 `styles`/`layouts`；来源 pending |
 | **内饰规则** | 室内建模必须独立 `INT-*` 模块并声明 `styles`/`layouts`；风格/布局不匹配会提示 |
@@ -663,7 +675,7 @@ bash dsh/install.sh
 ```text
 SKILL.md       路由 + D1–D4 交付闭环 + 机器验收命令
 references/    11 个参考文件（7 份人设文档 + 模块格式 + 写作说明 + 建模质量门 + INT 模块），按需加载
-scripts/       22 个可执行工具
+scripts/       23 个可执行工具
 assets/        ESD 模板、加载清单、拒绝词示例、来源注册表模板
 ```
 
@@ -712,7 +724,7 @@ dsh plugin --profile web add github:OWNER/REPO
 ├── plugins/blender-mentor/      # Claude Code 插件包装（自动生成）
 ├── dsh/install.ps1 / install.sh # DSH 一键安装脚本
 ├── references/                  # 11 个参考文件（7 份人设文档 + 模块格式 + 写作说明 + 建模质量门 + INT 模块）
-├── scripts/                     # 22 个可执行工具
+├── scripts/                     # 23 个可执行工具
 ├── assets/                      # ESD 模板、加载清单、拒绝词示例
 ├── docs/                        # banner + 示例会话图
 └── tools/build_skill.py         # 维护侧构建工具
@@ -741,7 +753,7 @@ dsh plugin --profile web add github:OWNER/REPO
 DSH、Claude Code、Claude.ai、Cursor，以及任何支持标准 Agent Skills 布局（`SKILL.md` + 资源目录）的客户端。
 
 **两个版本号是什么意思？**
-人设套件为 **V5.11.3**；打包后的技能发布版本为 **v5.11.3**。
+人设套件为 **V5.12.0**；打包后的技能发布版本为 **v5.12.0**。
 
 ## 开发与验证
 
@@ -761,7 +773,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 重建技能目录：
 
 ```bash
-python tools/build_skill.py --source <V5.11.3 套件目录> --out <仓库父目录> --force
+python tools/build_skill.py --source <V5.12.0 套件目录> --out <仓库父目录> --force
 ```
 
 ## 许可
@@ -775,6 +787,22 @@ MIT，见 [LICENSE](LICENSE)。课程文档中的第三方参考书目仅作引�
 
 
 CHANGELOG_MD =  r"""# Changelog
+
+## V5.12.0 — 2026-10-20
+
+> 自审查索引 + 发布授权；套件升 **V5.12.0**。
+
+### Added
+- `scripts/self_audit.py`：自动扫描 `assets/modules/*.json` + `references/module-*.md`，写 `assets/self_audit_index.json`；
+- `--sync` 自动补 `module_registry.json` 与 `load_plan.json`，新增模块不再手写索引；
+- `persona_lint` 增加 `self_audit` 检查；
+- `build_skill` 构建时自动跑 self_audit（write/sync），失败则构建失败；
+- `SKILL.md §0.6` / `main.md §11.4`：默认不打包、不上传；只有用户明确说“发布/上传”才执行。
+
+### Changed
+- README 工具数 22 → 23；参考文件 11；
+- `module_selftest` 24 项，`selftest` 27 项；
+- 现有模块版本不变（INT-001 0.1.2）。
 
 ## V5.11.3 — 2026-10-20
 
@@ -1699,7 +1727,7 @@ def write_claude_plugin(skill_dir, repo_slug):
         "name": "blender-mentor",
         "displayName": "Blender Mentor",
         "description": desc,
-        "version": "5.11.3",
+        "version": "5.12.0",
         "author": {"name": owner},
         "homepage": repo_url,
         "repository": repo_url,
@@ -1736,7 +1764,7 @@ def write_claude_plugin(skill_dir, repo_slug):
             "name": "blender-mentor",
             "source": "./plugins/blender-mentor",
             "description": desc,
-            "version": "5.11.3",
+            "version": "5.12.0",
         }],
     }
     write_text(os.path.join(skill_dir, ".claude-plugin", "marketplace.json"),
@@ -1754,7 +1782,7 @@ def write_dsh_plugin(skill_dir, repo_slug):
     owner = repo_slug.split("/")[0]
     repo_url = "https://github.com/%s" % repo_slug
     pkg_name = "blender-mentor"
-    version = "5.11.3"
+    version = "5.12.0"
     desc = ("Blender full-stack mentor AI Skill: teaching, 0-3 rubric grading, "
             "asset/animation acceptance (ESD/BIO/ENG).")
 
@@ -1853,6 +1881,9 @@ def run_built_selfchecks(out_dir):
 
     details = {}
     scripts = os.path.join(out_dir, "scripts")
+    audit_mod = load("p_self_audit", os.path.join(scripts, "self_audit.py"))
+    audit_res = audit_mod.audit(out_dir, write=True, sync=True)
+    details["self_audit"] = audit_res.get("summary", {})
     lint_mod = load("p_lint", os.path.join(scripts, "persona_lint.py"))
     lint_res = lint_mod.lint(out_dir, None, strict=False)
     details["lint"] = lint_res["status"]
@@ -1870,7 +1901,8 @@ def run_built_selfchecks(out_dir):
     text = buf.getvalue().strip()
     details["selftest_rc"] = rc
     details["selftest_last"] = text.splitlines()[-1][:400] if text else ""
-    ok = details["lint"] == "pass" and rc == 0
+    ok = (details["lint"] == "pass" and rc == 0
+          and details.get("self_audit", {}).get("fail", 1) == 0)
     return ok, details
 
 

@@ -1,0 +1,87 @@
+{
+  "schema": "mentor-self-audit/1",
+  "generated_at": "2026-10-20T17:40:43+08:00",
+  "root": ".",
+  "modules": [
+    {
+      "id": "BIO-001",
+      "version": "1.1.0",
+      "status": "stable",
+      "json": "assets/modules/BIO-001.json",
+      "json_sha256": "b169e9a12f26422636d227bd8a599537360e68b36aab75658c3855bab4eacb1d",
+      "styles": [],
+      "layouts": [],
+      "reference": "references/module-biomechanics.md",
+      "reference_present": true,
+      "doc_version": "1.1.0",
+      "registry_present": true,
+      "registry_version": "1.1.0",
+      "registry_hash_match": true,
+      "load_plan_present": true,
+      "main_table_present": true
+    },
+    {
+      "id": "ENG-001",
+      "version": "1.1.0",
+      "status": "stable",
+      "json": "assets/modules/ENG-001.json",
+      "json_sha256": "5d06b7ae1d839736769b130a9583c3af6aebfbcd09fd2cdcba416efac1a14b0c",
+      "styles": [],
+      "layouts": [],
+      "reference": "references/module-engineering.md",
+      "reference_present": true,
+      "doc_version": "1.1.0",
+      "registry_present": true,
+      "registry_version": "1.1.0",
+      "registry_hash_match": true,
+      "load_plan_present": true,
+      "main_table_present": true
+    },
+    {
+      "id": "ESD-001",
+      "version": "1.1.9",
+      "status": "stable",
+      "json": "assets/modules/ESD-001.json",
+      "json_sha256": "efddb299e18c2a242bf3abc1bd05657dec68dcbf424f9b251e457e16b7431cab",
+      "styles": [],
+      "layouts": [],
+      "reference": "references/module-esd.md",
+      "reference_present": true,
+      "doc_version": "1.1.9",
+      "registry_present": true,
+      "registry_version": "1.1.9",
+      "registry_hash_match": true,
+      "load_plan_present": true,
+      "main_table_present": true
+    },
+    {
+      "id": "INT-001",
+      "version": "0.1.2",
+      "status": "experimental",
+      "json": "assets/modules/INT-001.json",
+      "json_sha256": "7de9af52daa0a132f5fa10fa7bd21a030b4836d236ed66ac26f1045a09d946e4",
+      "styles": [
+        "chinese"
+      ],
+      "layouts": [
+        "apartment"
+      ],
+      "reference": "references/module-int-001.md",
+      "reference_present": true,
+      "doc_version": "0.1.2",
+      "registry_present": true,
+      "registry_version": "0.1.2",
+      "registry_hash_match": true,
+      "load_plan_present": true,
+      "main_table_present": true
+    }
+  ],
+  "orphan_references": [],
+  "issues": [],
+  "summary": {
+    "modules": 4,
+    "issues": 0,
+    "fail": 0,
+    "warn": 0
+  }
+}

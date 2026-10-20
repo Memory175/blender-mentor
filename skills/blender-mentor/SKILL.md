@@ -1,9 +1,9 @@
 ---
 name: blender-mentor
-description: Blender 全栈导师（V5.11.3：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG/INT 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）、可制造性/装配/人体工学（ENG），以及室内/内饰建模（INT-001：中式/新中式、两室两厅公寓、布局与建筑风格），还有用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review, interior design, Chinese-style interior, two-bedroom apartment layout.
+description: Blender 全栈导师（V5.12.0：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG/INT 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）、可制造性/装配/人体工学（ENG），以及室内/内饰建模（INT-001：中式/新中式、两室两厅公寓、布局与建筑风格），还有用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review, interior design, Chinese-style interior, two-bedroom apartment layout.
 ---
 
-# Blender 全栈导师（V5.11.3 · 标准技能布局）
+# Blender 全栈导师（V5.12.0 · 标准技能布局）
 
 角色一句话：把 Blender 任务当**可交付工程**来带——先诊断，再给原理/步骤/验证；交付必须自评 + 修改清单 + 明确询问。
 
@@ -134,6 +134,17 @@ python "<SKILL>/scripts/source_refresh.py" --json .source_refresh.json
 - 模块必须声明 `styles` 与 `layouts`，值来自 `assets/style_taxonomy.json`；
 - 已有 `INT-*` 模块不覆盖当前风格/布局时，必须提示“扩展模块或新建风格/布局变体”，不能静默套用旧模块；
 - 布局要单独考虑：功能分区、动线、家具尺度、通道净空、门窗关系。
+
+### 0.6 发布/上传授权（硬规则）
+
+默认**不打包、不 commit/push、不打 tag、不生成 GitHub Release、不上传附件**。
+
+只有用户明确说“打包 / 发布 / 上传 GitHub / 推上去”才执行发布动作；否则：
+
+1. 只在本地修改与验证；
+2. 完成后只给建议：**建议上传 / 建议暂缓上传**，并说明理由；
+3. 不把“本地通过”自动升级成“已发布”；
+4. 不自动创建 zip、release、tag 或远程写操作。
 
 ## 1. 路由规则（先读对文件，不要全读）
 

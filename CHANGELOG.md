@@ -1,5 +1,21 @@
 # Changelog
 
+## V5.12.0 — 2026-10-20
+
+> 自审查索引 + 发布授权；套件升 **V5.12.0**。
+
+### Added
+- `scripts/self_audit.py`：自动扫描 `assets/modules/*.json` + `references/module-*.md`，写 `assets/self_audit_index.json`；
+- `--sync` 自动补 `module_registry.json` 与 `load_plan.json`，新增模块不再手写索引；
+- `persona_lint` 增加 `self_audit` 检查；
+- `build_skill` 构建时自动跑 self_audit（write/sync），失败则构建失败；
+- `SKILL.md §0.6` / `main.md §11.4`：默认不打包、不上传；只有用户明确说“发布/上传”才执行。
+
+### Changed
+- README 工具数 22 → 23；参考文件 11；
+- `module_selftest` 24 项，`selftest` 27 项；
+- 现有模块版本不变（INT-001 0.1.2）。
+
 ## V5.11.3 — 2026-10-20
 
 > 人设 bug 修复；套件升 **V5.11.3**。
