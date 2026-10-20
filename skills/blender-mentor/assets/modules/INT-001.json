@@ -1,7 +1,7 @@
 {
   "schema": "mentor-module/1",
   "id": "INT-001",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "status": "experimental",
   "kind": "hybrid",
   "domain": [
@@ -438,6 +438,11 @@
       "version": "0.1.1",
       "date": "2026-10-20",
       "note": "来源表补 URL/出版方/可靠性分级；新增 SRC-CODE-HB-HEIGHT；层高数据改引湖北文件；状态仍 pending。"
+    },
+    {
+      "version": "0.1.2",
+      "date": "2026-10-20",
+      "note": "收编项目级 open questions（OQ-001..007），含 priority/why/default；数据不变。"
     }
   ],
   "style_layout_independence": {
@@ -462,6 +467,57 @@
     {
       "domain": "energy",
       "notice": "能耗、保温、气密性、暖通负荷需当地专业复核；本模块不判定 pass。"
+    }
+  ],
+  "open_questions": [
+    {
+      "id": "OQ-001",
+      "priority": "blocker",
+      "question": "项目所在地（国家/省/市）是什么？",
+      "why": "jurisdiction 为 pending，当前所有尺寸只能是全国通用下限参考或地方文件摘录，不能判定当地合规。锁定后才能补检当地现行规范 edition + 条款号。",
+      "default_if_unanswered": "jurisdiction 保持 pending；所有规范条目降级为“参考”，交付说明必须写“需当地专业复核”。"
+    },
+    {
+      "id": "OQ-002",
+      "priority": "high",
+      "question": "两室两厅的具体面积、开间/进深、层高、门窗位置与朝向？",
+      "why": "LAY-APT-* 的下限参考不能替代户型实测；层高 3.0 m 与常见 2.7–2.8 m 净高会直接影响吊顶、格栅高度与家具比例。",
+      "default_if_unanswered": "按“起居室短边 ≥3.6 m、双人卧室短边 ≥3.3 m、层高 ≥3.0 m”建示意壳体，并在 open_questions 保留实测复尺项。"
+    },
+    {
+      "id": "OQ-003",
+      "priority": "high",
+      "question": "中式子风格倾向：传统中式 / 新中式 / 明式倾向 / 清式倾向？",
+      "why": "styles[] 只声明 chinese，但子风格的造型、材料、色彩权重不同；不能共用同一套造型/材料数据。",
+      "default_if_unanswered": "以“新中式”为默认建模基线：米白/浅棕基底 + 深木点缀 + 简化格栅 + 三层光。"
+    },
+    {
+      "id": "OQ-004",
+      "priority": "medium",
+      "question": "家庭结构与次卧用途（长期居住/偶尔居住/书房/儿童房）？",
+      "why": "次卧用途决定单人床/双人床、书桌/衣柜的取舍，也影响私区走廊宽度与门位。",
+      "default_if_unanswered": "次卧按“单人卧室 + 书桌”建模，家具按可移动设置。"
+    },
+    {
+      "id": "OQ-005",
+      "priority": "medium",
+      "question": "厨房与卫生间是否已有固定管井/排水点位？灶台、水槽、马桶、淋浴的定位是否锁定？",
+      "why": "用户声明不需要水电暖通消防覆盖，但资产级建模仍需避让管井与固定点位；否则家具与门洞可能冲突。",
+      "default_if_unanswered": "仅建示意管井空物体，不建管线；厨房/卫生间按最小功能布局建模，标注“点位待现场复核”。"
+    },
+    {
+      "id": "OQ-006",
+      "priority": "medium",
+      "question": "Blender 交付的最终用途：渲染图/动画/实时引擎/GLB 导入？",
+      "why": "不同用途对单位、材质复杂度、LOD、三角面数要求不同；1 BU = 1 m 是通用起点，但导出引擎可能需要 Apply Scalings。",
+      "default_if_unanswered": "按通用 Blender 渲染资产处理：1 BU = 1 m，Scale 应用为 (1,1,1)，材质用 Principled BSDF，保留分层灯光。"
+    },
+    {
+      "id": "OQ-007",
+      "priority": "low",
+      "question": "预算档位与材料替代策略（实木 vs 木饰面，天然石材 vs 岩板，竹藤 vs 仿藤）？",
+      "why": "中式风格的材料表现高度依赖表面质感；预算会影响是建“实木厚板”还是“木饰面薄板 + 收口条”。",
+      "default_if_unanswered": "按“中档可控预算”建模：木饰面 + 局部实木构件 + 岩板替代天然石 + 仿藤/竹编贴图。"
     }
   ]
 }

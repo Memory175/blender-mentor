@@ -1,5 +1,18 @@
 # Changelog
 
+## V5.11.2 — 2026-10-20
+
+> INT-001 收编 open questions；人设套件升 **V5.11.2**。
+
+### Added
+- INT-001 `open_questions`：OQ-001..007，含 priority / why / default_if_unanswered；
+- `references/module-int-001.md §7` 改为项目输入清单表；
+- 模块版本 0.1.1 → **0.1.2**（仅文档/问题清单，data 不变）。
+
+### Changed
+- 模块 registry hash 更新；
+- 其它模块版本不变；`source_audit` 仍 warn。
+
 ## V5.11.1 — 2026-10-20
 
 > INT-001 来源表补全；人设套件升 **V5.11.1**。
