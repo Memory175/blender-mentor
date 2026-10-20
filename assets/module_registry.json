@@ -1,6 +1,6 @@
 {
   "schema": "mentor-registry/1",
-  "suite": "V5.8.1",
+  "suite": "V5.8.2",
   "modules": [
     {
       "id": "ENG-001",

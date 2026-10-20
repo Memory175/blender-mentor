@@ -1,5 +1,23 @@
 # Changelog
 
+## V5.8.2 — 2026-10-20
+
+> 来源治理 fail-closed 修复；人设套件升 **V5.8.2**。
+
+### Fixed
+- `preflight`：`source_audit` 返回 `error` 时也进入 `ask`，不再 fail-open；
+- `source_audit`：有 `source_id` 但 registry 缺失/不可读 → `fail`，不再 `skipped`；
+- `source_refresh`：无 registry → `skipped`（exit 0），不再报错；`--json` 也写 skipped；
+- `source_refresh`：DOI 分支提前，不再依赖 `check_url`；
+- `source_refresh`：重定向目标必须仍在 allowlist 内；
+- `module_gap` Prompt 要求 `source_id` + `assets/source_registry.json`；
+- `module.schema.json` / `module_lint` 支持 `source_id`；
+- `module-format.md` 明确 source_id（新）与 source（legacy）；
+- `source_selftest` 扩展到 **11** 项（缺 registry / DOI / 重定向 / source_id lint / preflight error）。
+
+### Changed
+- README/README.zh-CN 明确现有 ENG/BIO/ESD 为 legacy；README 工具分类改为 6 个 `.blend` 验收脚本。
+
 ## V5.8.1 — 2026-10-20
 
 > 文档补丁；人设套件升 **V5.8.1**。

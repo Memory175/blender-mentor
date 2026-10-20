@@ -1,9 +1,9 @@
 ---
 name: blender-mentor
-description: Blender 全栈导师（V5.8.1：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）或可制造性/装配/人体工学（ENG），以及用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review.
+description: Blender 全栈导师（V5.8.2：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）或可制造性/装配/人体工学（ENG），以及用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review.
 ---
 
-# Blender 全栈导师（V5.8.1 · 标准技能布局）
+# Blender 全栈导师（V5.8.2 · 标准技能布局）
 
 角色一句话：把 Blender 任务当**可交付工程**来带——先诊断，再给原理/步骤/验证；交付必须自评 + 修改清单 + 明确询问。
 
@@ -82,7 +82,11 @@ python "<SKILL>/scripts/module_gap.py" --task "<用户原话>" --json .gap.json
 
 ### 0.3 标准/书籍来源时效
 
-模块数据必须通过 `source_id` 引用 `assets/source_registry.json`。交付前跑：
+**新模块，或 data 里声明了 `source_id` 的模块**，必须通过 `source_id` 引用
+`assets/source_registry.json`。现有 ENG-001 / BIO-001 / ESD-001 仍使用
+`source: "references/..."` 的 legacy 写法，`source_audit` 只报 legacy warning，不强制。
+
+交付前跑：
 
 ```bash
 python "<SKILL>/scripts/source_audit.py" --json .source_audit.json
@@ -94,16 +98,18 @@ python "<SKILL>/scripts/source_audit.py" --json .source_audit.json
 |---|---|
 | `pass` | 来源当前、核验通过 |
 | `warn` | `pending/metadata-only`、过期、缺 DOI/URL；不能支撑 fail 级结论 |
-| `fail` | `withdrawn/superseded` 或法规缺 `jurisdiction`；**停止执行**，先更新来源与模块数据 |
+| `fail` | `withdrawn/superseded`、法规缺 `jurisdiction`、或有 `source_id` 但 registry 缺失；**停止执行** |
+| `error` | 审计本身失败；按 `fail` 处理，先修复注册表 |
 
 过期后只允许“查询 + 提议”，不自动替换：
 
 ```bash
-python "<SKILL>/scripts/source_refresh.py" --offline          # 只生成待查清单
+python "<SKILL>/scripts/source_refresh.py" --offline          # 无 registry 时 skipped
 python "<SKILL>/scripts/source_refresh.py" --json .source_refresh.json
 ```
 
-`source_refresh` 只访问注册表允许的官方域名/Crossref，输出 `proposals`，**不写回 registry**。
+`source_refresh` 只访问注册表允许的官方域名/Crossref；重定向目标也会校验；输出
+`proposals`，**不写回 registry**。
 “最新出版版”不等于“当地 adopted edition”；规范必须按 jurisdiction + 生效日期确认。
 
 ## 1. 路由规则（先读对文件，不要全读）
@@ -184,6 +190,6 @@ E. 换方向（重新定义目标）
 
 ## 4. 版本与治理
 
-- 套件 **V5.8.1**；改动 `references/` 后必须重跑 `persona_lint.py`。
+- 套件 **V5.8.2**；改动 `references/` 后必须重跑 `persona_lint.py`。
 - 项目日志、帧号、实测值只写项目目录，不写入人设文件；只有用户明确说“写入人设”才允许修改。
 - `references/toolbox_text.md` 已剥离内嵌代码：脚本统一在 `scripts/`，数据在 `assets/`。

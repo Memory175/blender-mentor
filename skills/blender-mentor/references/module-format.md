@@ -39,7 +39,7 @@ scripts/module_conflict.py         # 冲突巡查
 | `intent.include` | 命中词；空则模块永远不会被选中 |
 | `intent.exclude` | 排除词，优先级高于 include |
 | `coverage` | **能力 → 数据键**映射：任务提到哪些词时，必须有哪些数据 |
-| `data` | 数值/区间；每项必须有 `source` 或 `assumption: true` |
+| `data` | 数值/区间；每项必须有 `source_id`（新模块）或 `source`（legacy），或 `assumption: true` |
 | `rules` | 可执行检查；`evidence` 指向 `data.<key>` |
 | `unknown_policy` | 缺数据时：`block` / `ask` / `proceed_with_label` |
 | `requires` | 依赖模块 ID |
@@ -54,10 +54,15 @@ scripts/module_conflict.py         # 冲突巡查
   "value": 1.5,
   "unit": "mm",
   "scope": "injection",
-  "source": "references/module-engineering.md §3.1",
+  "source_id": "ENG-REF-3.1",
+  "verification": "page-checked",
   "confidence": "high"
 }
 ```
+
+> 现有 ENG-001 / BIO-001 / ESD-001 仍用 `source: "references/..."` 的旧写法，属
+> **legacy**：`source_audit` 只报 legacy warning，不强制；新模块应使用
+> `source_id` + `assets/source_registry.json`。
 
 无来源时必须显式：
 
@@ -165,7 +170,7 @@ python scripts/load_router.py --task "..." --preflight .preflight.json
 ```text
 1. cp assets/modules/_template.json assets/modules/NEW-001.json
 2. 填 id/version/domain/intent/coverage/data/rules
-3. 每个数值写 source 或 assumption
+3. 每个数值写 source_id（新模块）或 source（legacy）/assumption
 4. python scripts/module_lint.py
 5. python scripts/module_conflict.py
 6. 加测试：模块命中 / 缺数据 / 冲突 至少各 1 例
@@ -177,7 +182,7 @@ python scripts/load_router.py --task "..." --preflight .preflight.json
 `module_lint` 会检查：
 
 - 必填字段、ID/semver/status/kind/policy 合法性；
-- data 有 `source` 或 `assumption`；
+- data 有 `source_id`（新）或 `source`（legacy）或 `assumption`；
 - coverage 引用的 data key 存在；
 - rules 的 evidence 指向存在的数据；
 - references 文件存在且提到模块 ID；

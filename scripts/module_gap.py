@@ -72,13 +72,14 @@ def build_prompt(task, hint, why):
 建议重点：{sources}
 
 第三步：输出 4 个部分：
-A. {mid}.json — 严格按 schema/id/version/status/kind/domain/intent/coverage/data/rules/assumptions/unknown_policy/references 字段
+A. {mid}.json — 严格按 schema/id/version/status/kind/domain/intent/coverage/data/rules/assumptions/unknown_policy/references 字段；每个 data 加 source_id
 B. module-{slug}.md — 按 references/module-authoring.md 第 1.4 节结构
-C. 来源表：source_type / citation / verification（page-checked | metadata-only | pending）
+C. 来源表 + assets/source_registry.json：每条的 id/type/title/edition/status/verification/checked_at/next_check_due/check_url
 D. open_questions：没有可靠来源、或需要我确认的内容
 
 硬规则：
-- 每个 data 值必须有 source，或 assumption:true；没有来源就放 open_questions。
+- 每个 data 值必须有 source_id，且 source_id 必须出现在 assets/source_registry.json；没有来源就放 open_questions。
+- 没有可靠来源时不要编造，标 pending；status=withdrawn/superseded 或法规缺 jurisdiction 不得写成 current。
 - coverage 里的 data_keys 必须存在于 data。
 - 结构/防火/无障碍/能耗：只能提示“需当地专业/工程师复核”，不能判 pass。
 - 不要编造书名、版次、页码、ISBN、DOI、条款号；不确定就标 pending。

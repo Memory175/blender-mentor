@@ -77,7 +77,7 @@ bash dsh/install.sh
 | **0–3 评分表** | 关键项、评分锚点、自评模板 |
 | **工程预检（ENG-001）** | 稳定性、壁厚、拔模、悬垂/支撑、干涉、配合间隙 |
 | **M0–M6 课程包** | 建模与拓扑 → UV/材质/灯光/渲染 → 动画/绑定 → 物理/几何节点/管线 |
-| **22 个可执行工具** | 10 个验收脚本 + 工程预检 + 模块治理（预审/lint/冲突/引用审计）+ 来源治理（审计/查询）+ 回归测试 |
+| **22 个可执行工具** | 6 个 `.blend` 验收脚本 + 工程预检 + 模块治理（预审/lint/冲突/引用审计）+ 来源治理（审计/查询）+ 回归/路由工具 |
 | **知识库** | 130 条常见误区 + 40 条红线 |
 
 ## 环境要求
@@ -165,13 +165,13 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 不会。验收脚本在本机运行，输出 JSON/文本，不上传文件。
 
 **怎么保证标准/书籍是最新的？**
-模块数据通过 `source_id` 引用 `assets/source_registry.json`。`source_audit.py` 检查 TTL、`withdrawn`/`superseded`、缺 jurisdiction；`source_refresh.py` 查官方目录/Crossref，但只提议、不自动替换。“最新出版版”不等于“当地 adopted edition”：规范必须绑定 jurisdiction 和生效版次。
+新模块，或声明了 `source_id` 的模块，通过 `source_id` 引用 `assets/source_registry.json`。`source_audit.py` 检查 TTL、`withdrawn`/`superseded`、缺 jurisdiction；`source_refresh.py` 查官方目录/Crossref，但只提议、不自动替换。现有 ENG/BIO/ESD 仍用 `source: "references/..."`（legacy），只报 legacy warning，不强制失败。“最新出版版”不等于“当地 adopted edition”：规范必须绑定 jurisdiction 和生效版次。
 
 **支持哪些客户端？**
 DSH、Claude Code、Claude.ai、Cursor，以及任何支持标准 Agent Skills 布局（`SKILL.md` + 资源目录）的客户端。
 
 **两个版本号是什么意思？**
-人设套件为 **V5.8.1**；打包后的技能发布版本为 **v5.8.1**。
+人设套件为 **V5.8.2**；打包后的技能发布版本为 **v5.8.2**。
 
 ## 开发与验证
 
@@ -191,7 +191,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 重建技能目录：
 
 ```bash
-python tools/build_skill.py --source <V5.8.1 套件目录> --out <仓库父目录> --force
+python tools/build_skill.py --source <V5.8.2 套件目录> --out <仓库父目录> --force
 ```
 
 ## 许可

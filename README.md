@@ -77,7 +77,7 @@ Use blender-mentor to walk me through M1 modeling and topology.
 | **0–3 rubric** | critical items, scoring anchors, and a self-review template |
 | **Engineering precheck (ENG-001)** | stability, wall thickness, draft, overhang/support, interference, clearance |
 | **M0–M6 curriculum** | modeling & topology → UV/materials/lighting/render → animation/rigging → physics/geometry nodes/pipeline |
-| **22 executable tools** | 10 acceptance scripts + engineering precheck + module governance (preflight/lint/conflict/claim audit) + source governance (audit/refresh) + regression runner |
+| **22 executable tools** | 6 `.blend` acceptance scripts + engineering precheck + module governance (preflight/lint/conflict/claim audit) + source governance (audit/refresh) + regression/routing tools |
 | **Knowledge base** | 130 common misconceptions + 40 red lines |
 
 ## Requirements
@@ -165,13 +165,13 @@ No. It writes and runs bpy/headless scripts and reviews the artifacts you provid
 No. Acceptance scripts run locally and print JSON/text; they do not upload files.
 
 **How do you keep standards/books current?**
-Modules cite a `source_id` in `assets/source_registry.json`. `source_audit.py` checks TTL, `withdrawn`/`superseded`, and missing jurisdiction; `source_refresh.py` queries official catalogs/Crossref but only proposes changes. “Latest published” is not “locally adopted”: codes stay tied to jurisdiction and effective edition.
+New modules, or modules that declare a `source_id`, reference `assets/source_registry.json`. `source_audit.py` checks TTL, `withdrawn`/`superseded`, and missing jurisdiction; `source_refresh.py` queries official catalogs/Crossref but only proposes changes. The shipped ENG/BIO/ESD modules still use `source: "references/..."` (legacy) and are reported as legacy, not hard-failed. “Latest published” is not “locally adopted”: codes stay tied to jurisdiction and effective edition.
 
 **Which clients are supported?**
 DSH, Claude Code, Claude.ai, Cursor, and any client that supports the standard Agent Skills layout (`SKILL.md` + resources).
 
 **What do the two version numbers mean?**
-The persona suite is **V5.8.1**; the packaged skill release is **v5.8.1**.
+The persona suite is **V5.8.2**; the packaged skill release is **v5.8.2**.
 
 ## Development
 
@@ -191,7 +191,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 Rebuild the skill directory:
 
 ```bash
-python tools/build_skill.py --source <V5.8.1 suite> --out <repo parent> --force
+python tools/build_skill.py --source <V5.8.2 suite> --out <repo parent> --force
 ```
 
 ## License

@@ -133,10 +133,10 @@ ASSET_FILES = [
 
 SKILL_MD =  r"""---
 name: blender-mentor
-description: Blender 全栈导师（V5.8.1：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）或可制造性/装配/人体工学（ENG），以及用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review.
+description: Blender 全栈导师（V5.8.2：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）或可制造性/装配/人体工学（ENG），以及用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review.
 ---
 
-# Blender 全栈导师（V5.8.1 · 标准技能布局）
+# Blender 全栈导师（V5.8.2 · 标准技能布局）
 
 角色一句话：把 Blender 任务当**可交付工程**来带——先诊断，再给原理/步骤/验证；交付必须自评 + 修改清单 + 明确询问。
 
@@ -215,7 +215,11 @@ python "<SKILL>/scripts/module_gap.py" --task "<用户原话>" --json .gap.json
 
 ### 0.3 标准/书籍来源时效
 
-模块数据必须通过 `source_id` 引用 `assets/source_registry.json`。交付前跑：
+**新模块，或 data 里声明了 `source_id` 的模块**，必须通过 `source_id` 引用
+`assets/source_registry.json`。现有 ENG-001 / BIO-001 / ESD-001 仍使用
+`source: "references/..."` 的 legacy 写法，`source_audit` 只报 legacy warning，不强制。
+
+交付前跑：
 
 ```bash
 python "<SKILL>/scripts/source_audit.py" --json .source_audit.json
@@ -227,16 +231,18 @@ python "<SKILL>/scripts/source_audit.py" --json .source_audit.json
 |---|---|
 | `pass` | 来源当前、核验通过 |
 | `warn` | `pending/metadata-only`、过期、缺 DOI/URL；不能支撑 fail 级结论 |
-| `fail` | `withdrawn/superseded` 或法规缺 `jurisdiction`；**停止执行**，先更新来源与模块数据 |
+| `fail` | `withdrawn/superseded`、法规缺 `jurisdiction`、或有 `source_id` 但 registry 缺失；**停止执行** |
+| `error` | 审计本身失败；按 `fail` 处理，先修复注册表 |
 
 过期后只允许“查询 + 提议”，不自动替换：
 
 ```bash
-python "<SKILL>/scripts/source_refresh.py" --offline          # 只生成待查清单
+python "<SKILL>/scripts/source_refresh.py" --offline          # 无 registry 时 skipped
 python "<SKILL>/scripts/source_refresh.py" --json .source_refresh.json
 ```
 
-`source_refresh` 只访问注册表允许的官方域名/Crossref，输出 `proposals`，**不写回 registry**。
+`source_refresh` 只访问注册表允许的官方域名/Crossref；重定向目标也会校验；输出
+`proposals`，**不写回 registry**。
 “最新出版版”不等于“当地 adopted edition”；规范必须按 jurisdiction + 生效日期确认。
 
 ## 1. 路由规则（先读对文件，不要全读）
@@ -317,7 +323,7 @@ E. 换方向（重新定义目标）
 
 ## 4. 版本与治理
 
-- 套件 **V5.8.1**；改动 `references/` 后必须重跑 `persona_lint.py`。
+- 套件 **V5.8.2**；改动 `references/` 后必须重跑 `persona_lint.py`。
 - 项目日志、帧号、实测值只写项目目录，不写入人设文件；只有用户明确说“写入人设”才允许修改。
 - `references/toolbox_text.md` 已剥离内嵌代码：脚本统一在 `scripts/`，数据在 `assets/`。
 """
@@ -402,7 +408,7 @@ Use blender-mentor to walk me through M1 modeling and topology.
 | **0–3 rubric** | critical items, scoring anchors, and a self-review template |
 | **Engineering precheck (ENG-001)** | stability, wall thickness, draft, overhang/support, interference, clearance |
 | **M0–M6 curriculum** | modeling & topology → UV/materials/lighting/render → animation/rigging → physics/geometry nodes/pipeline |
-| **22 executable tools** | 10 acceptance scripts + engineering precheck + module governance (preflight/lint/conflict/claim audit) + source governance (audit/refresh) + regression runner |
+| **22 executable tools** | 6 `.blend` acceptance scripts + engineering precheck + module governance (preflight/lint/conflict/claim audit) + source governance (audit/refresh) + regression/routing tools |
 | **Knowledge base** | 130 common misconceptions + 40 red lines |
 
 ## Requirements
@@ -490,13 +496,13 @@ No. It writes and runs bpy/headless scripts and reviews the artifacts you provid
 No. Acceptance scripts run locally and print JSON/text; they do not upload files.
 
 **How do you keep standards/books current?**
-Modules cite a `source_id` in `assets/source_registry.json`. `source_audit.py` checks TTL, `withdrawn`/`superseded`, and missing jurisdiction; `source_refresh.py` queries official catalogs/Crossref but only proposes changes. “Latest published” is not “locally adopted”: codes stay tied to jurisdiction and effective edition.
+New modules, or modules that declare a `source_id`, reference `assets/source_registry.json`. `source_audit.py` checks TTL, `withdrawn`/`superseded`, and missing jurisdiction; `source_refresh.py` queries official catalogs/Crossref but only proposes changes. The shipped ENG/BIO/ESD modules still use `source: "references/..."` (legacy) and are reported as legacy, not hard-failed. “Latest published” is not “locally adopted”: codes stay tied to jurisdiction and effective edition.
 
 **Which clients are supported?**
 DSH, Claude Code, Claude.ai, Cursor, and any client that supports the standard Agent Skills layout (`SKILL.md` + resources).
 
 **What do the two version numbers mean?**
-The persona suite is **V5.8.1**; the packaged skill release is **v5.8.1**.
+The persona suite is **V5.8.2**; the packaged skill release is **v5.8.2**.
 
 ## Development
 
@@ -516,7 +522,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 Rebuild the skill directory:
 
 ```bash
-python tools/build_skill.py --source <V5.8.1 suite> --out <repo parent> --force
+python tools/build_skill.py --source <V5.8.2 suite> --out <repo parent> --force
 ```
 
 ## License
@@ -608,7 +614,7 @@ bash dsh/install.sh
 | **0–3 评分表** | 关键项、评分锚点、自评模板 |
 | **工程预检（ENG-001）** | 稳定性、壁厚、拔模、悬垂/支撑、干涉、配合间隙 |
 | **M0–M6 课程包** | 建模与拓扑 → UV/材质/灯光/渲染 → 动画/绑定 → 物理/几何节点/管线 |
-| **22 个可执行工具** | 10 个验收脚本 + 工程预检 + 模块治理（预审/lint/冲突/引用审计）+ 来源治理（审计/查询）+ 回归测试 |
+| **22 个可执行工具** | 6 个 `.blend` 验收脚本 + 工程预检 + 模块治理（预审/lint/冲突/引用审计）+ 来源治理（审计/查询）+ 回归/路由工具 |
 | **知识库** | 130 条常见误区 + 40 条红线 |
 
 ## 环境要求
@@ -696,13 +702,13 @@ dsh plugin --profile web add github:OWNER/REPO
 不会。验收脚本在本机运行，输出 JSON/文本，不上传文件。
 
 **怎么保证标准/书籍是最新的？**
-模块数据通过 `source_id` 引用 `assets/source_registry.json`。`source_audit.py` 检查 TTL、`withdrawn`/`superseded`、缺 jurisdiction；`source_refresh.py` 查官方目录/Crossref，但只提议、不自动替换。“最新出版版”不等于“当地 adopted edition”：规范必须绑定 jurisdiction 和生效版次。
+新模块，或声明了 `source_id` 的模块，通过 `source_id` 引用 `assets/source_registry.json`。`source_audit.py` 检查 TTL、`withdrawn`/`superseded`、缺 jurisdiction；`source_refresh.py` 查官方目录/Crossref，但只提议、不自动替换。现有 ENG/BIO/ESD 仍用 `source: "references/..."`（legacy），只报 legacy warning，不强制失败。“最新出版版”不等于“当地 adopted edition”：规范必须绑定 jurisdiction 和生效版次。
 
 **支持哪些客户端？**
 DSH、Claude Code、Claude.ai、Cursor，以及任何支持标准 Agent Skills 布局（`SKILL.md` + 资源目录）的客户端。
 
 **两个版本号是什么意思？**
-人设套件为 **V5.8.1**；打包后的技能发布版本为 **v5.8.1**。
+人设套件为 **V5.8.2**；打包后的技能发布版本为 **v5.8.2**。
 
 ## 开发与验证
 
@@ -722,7 +728,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 重建技能目录：
 
 ```bash
-python tools/build_skill.py --source <V5.8.1 套件目录> --out <仓库父目录> --force
+python tools/build_skill.py --source <V5.8.2 套件目录> --out <仓库父目录> --force
 ```
 
 ## 许可
@@ -736,6 +742,24 @@ MIT，见 [LICENSE](LICENSE)。课程文档中的第三方参考书目仅作引�
 
 
 CHANGELOG_MD =  r"""# Changelog
+
+## V5.8.2 — 2026-10-20
+
+> 来源治理 fail-closed 修复；人设套件升 **V5.8.2**。
+
+### Fixed
+- `preflight`：`source_audit` 返回 `error` 时也进入 `ask`，不再 fail-open；
+- `source_audit`：有 `source_id` 但 registry 缺失/不可读 → `fail`，不再 `skipped`；
+- `source_refresh`：无 registry → `skipped`（exit 0），不再报错；`--json` 也写 skipped；
+- `source_refresh`：DOI 分支提前，不再依赖 `check_url`；
+- `source_refresh`：重定向目标必须仍在 allowlist 内；
+- `module_gap` Prompt 要求 `source_id` + `assets/source_registry.json`；
+- `module.schema.json` / `module_lint` 支持 `source_id`；
+- `module-format.md` 明确 source_id（新）与 source（legacy）；
+- `source_selftest` 扩展到 **11** 项（缺 registry / DOI / 重定向 / source_id lint / preflight error）。
+
+### Changed
+- README/README.zh-CN 明确现有 ENG/BIO/ESD 为 legacy；README 工具分类改为 6 个 `.blend` 验收脚本。
 
 ## V5.8.1 — 2026-10-20
 
@@ -1535,7 +1559,7 @@ def write_claude_plugin(skill_dir, repo_slug):
         "name": "blender-mentor",
         "displayName": "Blender Mentor",
         "description": desc,
-        "version": "5.8.1",
+        "version": "5.8.2",
         "author": {"name": owner},
         "homepage": repo_url,
         "repository": repo_url,
@@ -1572,7 +1596,7 @@ def write_claude_plugin(skill_dir, repo_slug):
             "name": "blender-mentor",
             "source": "./plugins/blender-mentor",
             "description": desc,
-            "version": "5.8.1",
+            "version": "5.8.2",
         }],
     }
     write_text(os.path.join(skill_dir, ".claude-plugin", "marketplace.json"),
@@ -1590,7 +1614,7 @@ def write_dsh_plugin(skill_dir, repo_slug):
     owner = repo_slug.split("/")[0]
     repo_url = "https://github.com/%s" % repo_slug
     pkg_name = "blender-mentor"
-    version = "5.8.1"
+    version = "5.8.2"
     desc = ("Blender full-stack mentor AI Skill: teaching, 0-3 rubric grading, "
             "asset/animation acceptance (ESD/BIO/ENG).")
 

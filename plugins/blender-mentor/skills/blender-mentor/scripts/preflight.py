@@ -95,9 +95,12 @@ def evaluate(root, task, modules_dir=None, registry_path=None, max_modules=2):
     elif relevant:
         decision = "ask"
         questions.append("检测到模块冲突。请选择：修改哪个模块 / 新增 override 模块 / 以哪个为准 / 放弃该项检查。")
-    elif source_result and source_result.get("status") == "fail":
+    elif source_result and source_result.get("status") in ("fail", "error"):
         decision = "ask"
-        questions.append("模块来源审计失败（withdrawn/superseded 或法规缺 jurisdiction）。请先更新来源注册表与模块数据，再执行。")
+        if source_result.get("status") == "error":
+            questions.append("来源审计执行失败（注册表损坏/读取异常）。为安全起见先停止，请修复来源数据后重试。")
+        else:
+            questions.append("模块来源审计失败（withdrawn/superseded 或法规缺 jurisdiction）。请先更新来源注册表与模块数据，再执行。")
     elif missing or unmapped:
         policies = [m.get("unknown_policy", "ask") for m in selected]
         decision = "block" if "block" in policies else "ask"

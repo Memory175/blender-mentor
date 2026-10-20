@@ -137,8 +137,8 @@ def validate_module(mod, root=None):
             problems.append("%s.%s: missing value" % (mid, k))
         if not d.get("unit"):
             problems.append("%s.%s: missing unit" % (mid, k))
-        if not d.get("source") and not d.get("assumption"):
-            problems.append("%s.%s: needs source or assumption=true" % (mid, k))
+        if not d.get("source") and not d.get("source_id") and not d.get("assumption"):
+            problems.append("%s.%s: needs source/source_id or assumption=true" % (mid, k))
         if d.get("confidence") not in (None, "high", "medium", "low"):
             problems.append("%s.%s: bad confidence" % (mid, k))
     if len(data_keys) != len(mod.get("data", [])):

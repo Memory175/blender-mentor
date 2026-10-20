@@ -45,10 +45,18 @@
           "unit": {"type": "string"},
           "scope": {"type": "string"},
           "source": {"type": "string"},
+          "source_id": {"type": "string"},
+          "source_type": {"enum": ["book", "code", "standard", "paper", "web", "draft"]},
+          "citation": {"type": "string"},
+          "verification": {"enum": ["page-checked", "metadata-only", "pending"]},
           "assumption": {"type": "boolean"},
           "confidence": {"enum": ["high", "medium", "low"]}
         },
-        "anyOf": [{"required": ["source"]}, {"required": ["assumption"], "properties": {"assumption": {"const": true}}}]
+        "anyOf": [
+          {"required": ["source"]},
+          {"required": ["source_id"]},
+          {"required": ["assumption"], "properties": {"assumption": {"const": true}}}
+        ]
       }
     },
     "rules": {

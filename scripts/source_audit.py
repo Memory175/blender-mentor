@@ -7,7 +7,8 @@
 - 法规 type=code 缺 jurisdiction → fail；
 - verification=pending/metadata-only → warn；
 - next_check_due 过期 → warn；
-- 旧模块没有 source_id → legacy（默认 warn，--strict-legacy 才 fail）。
+- 旧模块没有 source_id → legacy（默认 warn，--strict-legacy 才 fail）；
+- 有 source_id 但 source registry 缺失/不可读 → fail（不能因为文件缺失就跳过）。
 
 用法：
     python scripts/source_audit.py [--root .] [--json out.json]
@@ -46,27 +47,17 @@ def load_source_registry(root, path=None):
 
 
 def audit(root, source_path=None, modules_dir=None, today=None, strict_legacy=False, only_ids=None):
-    sources, probs = load_source_registry(root, source_path)
-    if sources is None:
-        return {"status": "skipped", "reason": probs[0] if probs else "no source registry",
-                "sources": 0, "problems": [], "legacy": []}
     today = today or datetime.date.today()
-    by_id = {}
-    problems, warnings, legacy = [], [], []
-    for s in sources.get("sources", []):
-        sid = s.get("id")
-        if not sid:
-            problems.append("source missing id")
-        elif sid in by_id:
-            problems.append("duplicate source id: %s" % sid)
-        by_id[sid] = s
     mod_reg, mod_probs = mg.load_registry(root) if not modules_dir else (None, [])
     modules, load_probs = mg.load_modules(root, modules_dir, mod_reg)
-    problems.extend(mod_probs + load_probs)
+    base_probs = list(mod_probs) + list(load_probs)
+    if only_ids:
+        modules = [m for m in modules if m.get("id") in only_ids]
+
     used = set()
+    legacy = []
+    entries = []
     for mod in modules:
-        if only_ids and mod.get("id") not in only_ids:
-            continue
         mid = mod.get("id", "?")
         for d in mod.get("data", []):
             sid = d.get("source_id")
@@ -74,29 +65,56 @@ def audit(root, source_path=None, modules_dir=None, today=None, strict_legacy=Fa
                 legacy.append("%s.%s: missing source_id" % (mid, d.get("key", "?")))
                 continue
             used.add(sid)
-            src = by_id.get(sid)
-            if not src:
-                problems.append("%s.%s: unknown source_id %s" % (mid, d.get("key"), sid))
-                continue
-            status = src.get("status")
-            if status in ("withdrawn", "superseded"):
-                problems.append("%s.%s: source %s is %s" % (mid, d.get("key"), sid, status))
-            if status in ("pending", "unknown"):
-                warnings.append("%s.%s: source %s status=%s" % (mid, d.get("key"), sid, status))
-            if src.get("verification") != "page-checked":
-                warnings.append("%s.%s: source %s verification=%s" % (
-                    mid, d.get("key"), sid, src.get("verification")))
-            if src.get("type") == "code" and not src.get("jurisdiction"):
-                problems.append("source %s: code missing jurisdiction" % sid)
-            if src.get("type") == "paper" and not src.get("doi"):
-                warnings.append("source %s: paper missing DOI" % sid)
-            due = _date(src.get("next_check_due"))
-            if due and due < today:
-                warnings.append("source %s: overdue since %s" % (sid, due))
-            if not _date(src.get("checked_at")):
-                warnings.append("source %s: missing/invalid checked_at" % sid)
-            if not src.get("check_url"):
-                warnings.append("source %s: missing check_url" % sid)
+            entries.append((mid, d.get("key", "?"), sid))
+
+    sources, probs = load_source_registry(root, source_path)
+    if sources is None:
+        if used:
+            problems = base_probs + [
+                "source registry missing/unreadable but %d data entries use source_id (%s)"
+                % (len(used), ", ".join(sorted(used)))]
+            return {"status": "fail", "reason": probs[0] if probs else "no source registry",
+                    "sources": 0, "used_sources": sorted(used),
+                    "problems": list(dict.fromkeys(problems)), "warnings": [],
+                    "legacy": list(dict.fromkeys(legacy)), "checked_at": today.isoformat()}
+        return {"status": "skipped", "reason": probs[0] if probs else "no source registry",
+                "sources": 0, "problems": base_probs, "warnings": [], "legacy": legacy}
+
+    by_id = {}
+    problems, warnings = list(base_probs), []
+    for s in sources.get("sources", []):
+        sid = s.get("id")
+        if not sid:
+            problems.append("source missing id")
+        elif sid in by_id:
+            problems.append("duplicate source id: %s" % sid)
+        by_id[sid] = s
+
+    for mid, key, sid in entries:
+        src = by_id.get(sid)
+        if not src:
+            problems.append("%s.%s: unknown source_id %s" % (mid, key, sid))
+            continue
+        status = src.get("status")
+        if status in ("withdrawn", "superseded"):
+            problems.append("%s.%s: source %s is %s" % (mid, key, sid, status))
+        if status in ("pending", "unknown"):
+            warnings.append("%s.%s: source %s status=%s" % (mid, key, sid, status))
+        if src.get("verification") != "page-checked":
+            warnings.append("%s.%s: source %s verification=%s" % (
+                mid, key, sid, src.get("verification")))
+        if src.get("type") == "code" and not src.get("jurisdiction"):
+            problems.append("source %s: code missing jurisdiction" % sid)
+        if src.get("type") == "paper" and not src.get("doi"):
+            warnings.append("source %s: paper missing DOI" % sid)
+        due = _date(src.get("next_check_due"))
+        if due and due < today:
+            warnings.append("source %s: overdue since %s" % (sid, due))
+        if not _date(src.get("checked_at")):
+            warnings.append("source %s: missing/invalid checked_at" % sid)
+        if not src.get("check_url"):
+            warnings.append("source %s: missing check_url" % sid)
+
     if strict_legacy:
         problems.extend(legacy)
     problems = list(dict.fromkeys(problems))
