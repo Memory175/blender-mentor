@@ -1,0 +1,683 @@
+{
+  "schema": "acceptance-profiles/1",
+  "version": "1.0.0",
+  "policy": "primary profile decides checks; profile selects checks, never thresholds; coverage must be 100% before 0 FAIL is valid.",
+  "profiles": [
+    {
+      "id": "INT-INTERIOR",
+      "name": "建筑室内/内饰验收",
+      "triggers": [
+        "建筑室内",
+        "室内设计",
+        "室内建模",
+        "内饰",
+        "室内",
+        "户型",
+        "平面布置",
+        "门洞",
+        "家具布置",
+        "软装",
+        "装修",
+        "大平层",
+        "公寓",
+        "样板间",
+        "建筑内饰"
+      ],
+      "checks": [
+        {
+          "id": "axis_grid",
+          "layer": "L0",
+          "severity": "BLOCKER",
+          "tool": "layout_check.py",
+          "coverage": "rooms"
+        },
+        {
+          "id": "topology",
+          "layer": "L1",
+          "severity": "BLOCKER",
+          "tool": "asset_gate.py",
+          "coverage": "mesh_objects"
+        },
+        {
+          "id": "door_keepout",
+          "layer": "L3",
+          "severity": "BLOCKER",
+          "tool": "layout_check.py",
+          "coverage": "doors"
+        },
+        {
+          "id": "bath_door_clear",
+          "layer": "L3",
+          "severity": "BLOCKER",
+          "tool": "layout_check.py",
+          "coverage": "bath_doors"
+        },
+        {
+          "id": "fixed_collision",
+          "layer": "L2",
+          "severity": "BLOCKER",
+          "tool": "layout_check.py",
+          "coverage": "fixed_groups"
+        },
+        {
+          "id": "movable_collision",
+          "layer": "L2",
+          "severity": "BLOCKER",
+          "tool": "layout_check.py",
+          "coverage": "movable_groups"
+        },
+        {
+          "id": "chair_orientation",
+          "layer": "L3",
+          "severity": "MAJOR",
+          "tool": "layout_check.py",
+          "coverage": "chairs"
+        },
+        {
+          "id": "kitchen_aisle",
+          "layer": "L3",
+          "severity": "MAJOR",
+          "tool": "layout_check.py",
+          "coverage": "kitchen_aisles"
+        },
+        {
+          "id": "camera_clip",
+          "layer": "L4",
+          "severity": "MAJOR",
+          "tool": "render_probe.py",
+          "coverage": "cameras"
+        },
+        {
+          "id": "material_missing",
+          "layer": "L4",
+          "severity": "WARN",
+          "tool": "asset_gate.py",
+          "coverage": "materials"
+        }
+      ],
+      "not_applicable": [
+        "draft_angle",
+        "wall_thickness_dfm",
+        "weight_paint",
+        "rig_controls"
+      ],
+      "notes": "0.75 m 是资产级建模阈值，不是当地规范净距；AABB/门洞 keep-out 不替代精确碰撞与门扇轨迹。"
+    },
+    {
+      "id": "ARCH-EXTERIOR",
+      "name": "建筑外观/体量验收",
+      "triggers": [
+        "建筑外观",
+        "建筑体量",
+        "立面",
+        "总图",
+        "屋顶",
+        "楼梯",
+        "栏杆",
+        "场地",
+        "建筑",
+        "外立面"
+      ],
+      "checks": [
+        {
+          "id": "unit_scale",
+          "layer": "L0",
+          "severity": "BLOCKER",
+          "tool": "asset_gate.py",
+          "coverage": "scene"
+        },
+        {
+          "id": "massing",
+          "layer": "L2",
+          "severity": "BLOCKER",
+          "tool": "asset_gate.py",
+          "coverage": "floors"
+        },
+        {
+          "id": "openings",
+          "layer": "L2",
+          "severity": "BLOCKER",
+          "tool": "asset_gate.py",
+          "coverage": "openings"
+        },
+        {
+          "id": "stairs",
+          "layer": "L3",
+          "severity": "MAJOR",
+          "tool": "asset_gate.py",
+          "coverage": "stairs"
+        },
+        {
+          "id": "railings",
+          "layer": "L3",
+          "severity": "MAJOR",
+          "tool": "asset_gate.py",
+          "coverage": "railings"
+        },
+        {
+          "id": "roof",
+          "layer": "L2",
+          "severity": "MAJOR",
+          "tool": "asset_gate.py",
+          "coverage": "roof"
+        },
+        {
+          "id": "topology",
+          "layer": "L1",
+          "severity": "BLOCKER",
+          "tool": "asset_gate.py",
+          "coverage": "mesh_objects"
+        },
+        {
+          "id": "camera_clip",
+          "layer": "L4",
+          "severity": "MAJOR",
+          "tool": "render_probe.py",
+          "coverage": "cameras"
+        }
+      ],
+      "not_applicable": [
+        "door_keepout",
+        "chair_orientation",
+        "draft_angle",
+        "weight_paint"
+      ],
+      "notes": "不替代结构、消防、疏散、无障碍与当地规范审图。"
+    },
+    {
+      "id": "PROD-HARD",
+      "name": "工业设计/硬表面验收",
+      "triggers": [
+        "工业设计",
+        "产品设计",
+        "硬表面",
+        "可制造",
+        "DFM",
+        "壁厚",
+        "拔模",
+        "注塑",
+        "CNC",
+        "钣金",
+        "装配",
+        "干涉",
+        "重心",
+        "产品",
+        "工业产品"
+      ],
+      "checks": [
+        {
+          "id": "unit_scale",
+          "layer": "L0",
+          "severity": "BLOCKER",
+          "tool": "engineering_check.py",
+          "coverage": "scene"
+        },
+        {
+          "id": "topology",
+          "layer": "L1",
+          "severity": "BLOCKER",
+          "tool": "asset_gate.py",
+          "coverage": "mesh_objects"
+        },
+        {
+          "id": "wall_thickness",
+          "layer": "L2",
+          "severity": "BLOCKER",
+          "tool": "engineering_check.py",
+          "coverage": "shells"
+        },
+        {
+          "id": "draft_angle",
+          "layer": "L2",
+          "severity": "BLOCKER",
+          "tool": "engineering_check.py",
+          "coverage": "molded_faces"
+        },
+        {
+          "id": "overhang_support",
+          "layer": "L2",
+          "severity": "MAJOR",
+          "tool": "engineering_check.py",
+          "coverage": "overhangs"
+        },
+        {
+          "id": "interference",
+          "layer": "L3",
+          "severity": "BLOCKER",
+          "tool": "engineering_check.py",
+          "coverage": "assembly_pairs"
+        },
+        {
+          "id": "center_of_mass",
+          "layer": "L3",
+          "severity": "MAJOR",
+          "tool": "engineering_check.py",
+          "coverage": "assembly"
+        },
+        {
+          "id": "material_missing",
+          "layer": "L4",
+          "severity": "WARN",
+          "tool": "asset_gate.py",
+          "coverage": "materials"
+        }
+      ],
+      "not_applicable": [
+        "door_keepout",
+        "chair_orientation",
+        "kitchen_aisle",
+        "bath_door_clear"
+      ],
+      "notes": "规则预检不能替代 FEA / 模流 / 强度与安全认证。"
+    },
+    {
+      "id": "CHAR-RIG",
+      "name": "角色/绑定/动画验收",
+      "triggers": [
+        "角色",
+        "绑定",
+        "骨骼",
+        "权重",
+        "蒙皮",
+        "走路",
+        "跑步",
+        "循环动画",
+        "角色动画",
+        "rigging",
+        "skinning"
+      ],
+      "checks": [
+        {
+          "id": "unit_scale",
+          "layer": "L0",
+          "severity": "BLOCKER",
+          "tool": "asset_gate.py",
+          "coverage": "scene"
+        },
+        {
+          "id": "topology",
+          "layer": "L1",
+          "severity": "BLOCKER",
+          "tool": "asset_gate.py",
+          "coverage": "mesh_objects"
+        },
+        {
+          "id": "weights",
+          "layer": "L2",
+          "severity": "BLOCKER",
+          "tool": "asset_gate.py",
+          "coverage": "deform_meshes"
+        },
+        {
+          "id": "controls_constraints",
+          "layer": "L2",
+          "severity": "BLOCKER",
+          "tool": "asset_gate.py",
+          "coverage": "rig"
+        },
+        {
+          "id": "cycle_contacts",
+          "layer": "L3",
+          "severity": "BLOCKER",
+          "tool": "curve_audit.py",
+          "coverage": "cycles"
+        },
+        {
+          "id": "deformation",
+          "layer": "L3",
+          "severity": "MAJOR",
+          "tool": "asset_gate.py",
+          "coverage": "deform_frames"
+        },
+        {
+          "id": "camera_clip",
+          "layer": "L4",
+          "severity": "WARN",
+          "tool": "render_probe.py",
+          "coverage": "cameras"
+        }
+      ],
+      "not_applicable": [
+        "door_keepout",
+        "draft_angle",
+        "wall_thickness",
+        "kitchen_aisle"
+      ],
+      "notes": "人体/类人动画追加 BIO CHECK；机械/风格化角色须显式声明非写实。"
+    },
+    {
+      "id": "ANIM-FX",
+      "name": "次级动画/特效验收",
+      "triggers": [
+        "次级动画",
+        "特效",
+        "粒子",
+        "形变",
+        "弹跳",
+        "镜头震动",
+        "包络",
+        "simulation"
+      ],
+      "checks": [
+        {
+          "id": "scene_scale",
+          "layer": "L0",
+          "severity": "BLOCKER",
+          "tool": "asset_gate.py",
+          "coverage": "scene"
+        },
+        {
+          "id": "timing_contact",
+          "layer": "L3",
+          "severity": "BLOCKER",
+          "tool": "curve_audit.py",
+          "coverage": "events"
+        },
+        {
+          "id": "envelope_power_law",
+          "layer": "L3",
+          "severity": "BLOCKER",
+          "tool": "envelope_check.py",
+          "coverage": "envelopes"
+        },
+        {
+          "id": "simulation_stability",
+          "layer": "L2",
+          "severity": "MAJOR",
+          "tool": "asset_gate.py",
+          "coverage": "simulations"
+        },
+        {
+          "id": "render_probe",
+          "layer": "L4",
+          "severity": "MAJOR",
+          "tool": "render_probe.py",
+          "coverage": "cameras"
+        },
+        {
+          "id": "topology",
+          "layer": "L1",
+          "severity": "WARN",
+          "tool": "asset_gate.py",
+          "coverage": "mesh_objects"
+        }
+      ],
+      "not_applicable": [
+        "door_keepout",
+        "draft_angle",
+        "wall_thickness",
+        "chair_orientation"
+      ],
+      "notes": "ESD 模块负责包络数据；本 profile 只负责验收项选择。"
+    },
+    {
+      "id": "ENV-SCENE",
+      "name": "环境/场景/道具验收",
+      "triggers": [
+        "环境",
+        "场景",
+        "道具",
+        "地形",
+        "植被",
+        "城市",
+        "kitbash",
+        "布景"
+      ],
+      "checks": [
+        {
+          "id": "unit_scale",
+          "layer": "L0",
+          "severity": "BLOCKER",
+          "tool": "asset_gate.py",
+          "coverage": "scene"
+        },
+        {
+          "id": "topology",
+          "layer": "L1",
+          "severity": "MAJOR",
+          "tool": "asset_gate.py",
+          "coverage": "mesh_objects"
+        },
+        {
+          "id": "distribution",
+          "layer": "L2",
+          "severity": "MAJOR",
+          "tool": "asset_gate.py",
+          "coverage": "instances"
+        },
+        {
+          "id": "collision",
+          "layer": "L2",
+          "severity": "MAJOR",
+          "tool": "asset_gate.py",
+          "coverage": "collision_pairs"
+        },
+        {
+          "id": "composition",
+          "layer": "L4",
+          "severity": "MAJOR",
+          "tool": "render_probe.py",
+          "coverage": "cameras"
+        },
+        {
+          "id": "camera_clip",
+          "layer": "L4",
+          "severity": "MAJOR",
+          "tool": "render_probe.py",
+          "coverage": "cameras"
+        }
+      ],
+      "not_applicable": [
+        "door_keepout",
+        "draft_angle",
+        "wall_thickness",
+        "rig_controls"
+      ],
+      "notes": "场景级检查不能替代镜头构图/美术方向评审。"
+    },
+    {
+      "id": "REALTIME-ASSET",
+      "name": "实时/游戏资产验收",
+      "triggers": [
+        "游戏",
+        "实时",
+        "引擎",
+        "UE",
+        "Unity",
+        "LOD",
+        "texel",
+        "烘焙",
+        "游戏资产"
+      ],
+      "checks": [
+        {
+          "id": "unit_scale",
+          "layer": "L0",
+          "severity": "BLOCKER",
+          "tool": "asset_gate.py",
+          "coverage": "scene"
+        },
+        {
+          "id": "topology",
+          "layer": "L1",
+          "severity": "BLOCKER",
+          "tool": "asset_gate.py",
+          "coverage": "mesh_objects"
+        },
+        {
+          "id": "uv",
+          "layer": "L2",
+          "severity": "BLOCKER",
+          "tool": "asset_gate.py",
+          "coverage": "uv_meshes"
+        },
+        {
+          "id": "texel_density",
+          "layer": "L2",
+          "severity": "MAJOR",
+          "tool": "asset_gate.py",
+          "coverage": "uv_meshes"
+        },
+        {
+          "id": "lod",
+          "layer": "L2",
+          "severity": "MAJOR",
+          "tool": "asset_gate.py",
+          "coverage": "lods"
+        },
+        {
+          "id": "collision_export",
+          "layer": "L3",
+          "severity": "BLOCKER",
+          "tool": "asset_gate.py",
+          "coverage": "exports"
+        },
+        {
+          "id": "export_integrity",
+          "layer": "L5",
+          "severity": "BLOCKER",
+          "tool": "asset_gate.py",
+          "coverage": "exports"
+        }
+      ],
+      "not_applicable": [
+        "door_keepout",
+        "draft_angle",
+        "wall_thickness",
+        "chair_orientation"
+      ],
+      "notes": "导出后必须在目标引擎中抽检材质/碰撞/LOD，不以 Blender 视图为最终证据。"
+    }
+  ],
+  "overlay_profiles": [
+    {
+      "id": "LOOKDEV",
+      "name": "材质/灯光/出图覆盖",
+      "triggers": [
+        "出图",
+        "渲染",
+        "灯光",
+        "材质",
+        "lookdev",
+        "最终图",
+        "布光"
+      ],
+      "checks": [
+        {
+          "id": "material_complete",
+          "layer": "L4",
+          "severity": "MAJOR",
+          "tool": "asset_gate.py",
+          "coverage": "materials"
+        },
+        {
+          "id": "lighting_exposure",
+          "layer": "L4",
+          "severity": "MAJOR",
+          "tool": "render_probe.py",
+          "coverage": "cameras"
+        },
+        {
+          "id": "camera_no_clip",
+          "layer": "L4",
+          "severity": "BLOCKER",
+          "tool": "render_probe.py",
+          "coverage": "cameras"
+        },
+        {
+          "id": "render_views",
+          "layer": "L4",
+          "severity": "MAJOR",
+          "tool": "render_probe.py",
+          "coverage": "views"
+        }
+      ],
+      "not_applicable": []
+    },
+    {
+      "id": "DELIVERY",
+      "name": "交付覆盖",
+      "triggers": [
+        "交付",
+        "打包",
+        "导出",
+        "文件",
+        "manifest",
+        "release"
+      ],
+      "checks": [
+        {
+          "id": "file_set",
+          "layer": "L5",
+          "severity": "BLOCKER",
+          "tool": "asset_gate.py",
+          "coverage": "deliverables"
+        },
+        {
+          "id": "manifest",
+          "layer": "L5",
+          "severity": "MAJOR",
+          "tool": "asset_gate.py",
+          "coverage": "deliverables"
+        },
+        {
+          "id": "README_scope",
+          "layer": "L5",
+          "severity": "MAJOR",
+          "tool": "manual",
+          "coverage": "documentation"
+        },
+        {
+          "id": "reproduction",
+          "layer": "L5",
+          "severity": "MAJOR",
+          "tool": "manual",
+          "coverage": "scripts"
+        }
+      ],
+      "not_applicable": []
+    }
+  ],
+  "module_profile_map": {
+    "INT-001": "INT-INTERIOR",
+    "INT-002": "INT-INTERIOR",
+    "ENG-001": "PROD-HARD",
+    "BIO-001": "CHAR-RIG",
+    "ESD-001": "ANIM-FX"
+  },
+  "generic": {
+    "id": "GENERIC",
+    "name": "通用验收",
+    "checks": [
+      {
+        "id": "unit_scale",
+        "layer": "L0",
+        "severity": "BLOCKER",
+        "tool": "asset_gate.py",
+        "coverage": "scene"
+      },
+      {
+        "id": "topology",
+        "layer": "L1",
+        "severity": "BLOCKER",
+        "tool": "asset_gate.py",
+        "coverage": "mesh_objects"
+      },
+      {
+        "id": "camera_clip",
+        "layer": "L4",
+        "severity": "MAJOR",
+        "tool": "render_probe.py",
+        "coverage": "cameras"
+      },
+      {
+        "id": "export_integrity",
+        "layer": "L5",
+        "severity": "MAJOR",
+        "tool": "asset_gate.py",
+        "coverage": "exports"
+      }
+    ],
+    "not_applicable": []
+  }
+}

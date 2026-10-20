@@ -1,0 +1,317 @@
+{
+  "schema": "mentor-module/1",
+  "id": "INT-002",
+  "title": "现代轻奢大平层室内设计",
+  "version": "0.1.0",
+  "status": "experimental",
+  "kind": "hybrid",
+  "domain": [
+    "interior",
+    "architecture",
+    "furniture",
+    "modern",
+    "luxury"
+  ],
+  "jurisdiction": "pending",
+  "jurisdiction_note": "用户未提供项目所在地与实测尺寸；本模块只描述从用户平面图归纳的空间程序与风格基线，不构成当地合规判定。结构、消防、无障碍、能耗均需当地专业复核。",
+  "styles": [
+    "modern",
+    "luxury"
+  ],
+  "layouts": [
+    "apartment"
+  ],
+  "delivery_depth": "Blender asset-level modeling",
+  "intent": {
+    "include": [
+      "现代轻奢",
+      "轻奢大平层",
+      "现代大平层",
+      "大平层",
+      "平层大宅",
+      "电梯平层",
+      "老人房",
+      "书房",
+      "衣帽间",
+      "双阳台",
+      "modern luxury",
+      "large flat",
+      "penthouse"
+    ],
+    "exclude": [
+      "中式",
+      "新中式",
+      "chinese"
+    ]
+  },
+  "coverage": [
+    {
+      "keywords": [
+        "现代轻奢",
+        "轻奢",
+        "modern luxury",
+        "luxury"
+      ],
+      "data_keys": [
+        "sty_lux_color_base",
+        "sty_lux_color_accent",
+        "sty_lux_material_pref",
+        "sty_lux_light_cct",
+        "sty_lux_form_language"
+      ]
+    },
+    {
+      "keywords": [
+        "大平层",
+        "平层大宅",
+        "电梯平层",
+        "large flat",
+        "penthouse",
+        "老人房",
+        "书房",
+        "衣帽间"
+      ],
+      "data_keys": [
+        "lay_flat_room_program",
+        "lay_flat_public_private",
+        "lay_flat_circulation",
+        "lay_flat_service_core",
+        "lay_flat_furniture_core",
+        "lay_flat_balcony"
+      ]
+    }
+  ],
+  "data": [
+    {
+      "key": "sty_lux_color_base",
+      "value": [
+        "暖灰",
+        "米白",
+        "浅石材色",
+        "深木色"
+      ],
+      "unit": "category",
+      "scope": "style",
+      "assumption": true,
+      "verification": "pending-plan",
+      "confidence": "low",
+      "notes": "从用户平面图与常见现代轻奢做法归纳；不是实测材料样板。"
+    },
+    {
+      "key": "sty_lux_color_accent",
+      "value": [
+        "黑钛",
+        "黄铜",
+        "深胡桃木"
+      ],
+      "unit": "category",
+      "scope": "style",
+      "assumption": true,
+      "verification": "pending-plan",
+      "confidence": "low",
+      "notes": "小面积金属/深木点缀；需按实物样板确认。"
+    },
+    {
+      "key": "sty_lux_material_pref",
+      "value": [
+        "大理石/岩板",
+        "木饰面",
+        "金属收边",
+        "玻璃",
+        "皮革/织物"
+      ],
+      "unit": "category",
+      "scope": "style",
+      "assumption": true,
+      "verification": "pending-plan",
+      "confidence": "low",
+      "notes": "资产级材质倾向；不替代材料表与防火/环保要求。"
+    },
+    {
+      "key": "sty_lux_light_cct",
+      "value": "3000–3500 K 主光；2700–3000 K 辅助/重点",
+      "unit": "K",
+      "scope": "style",
+      "assumption": true,
+      "verification": "pending-plan",
+      "confidence": "low",
+      "notes": "按图面暖中性光感归纳；色温需按项目照明设计复核。"
+    },
+    {
+      "key": "sty_lux_form_language",
+      "value": [
+        "大面积石材",
+        "通高木饰面",
+        "金属收边",
+        "低饱和软装",
+        "无主灯/线性灯"
+      ],
+      "unit": "category",
+      "scope": "style",
+      "assumption": true,
+      "verification": "pending-plan",
+      "confidence": "low",
+      "notes": "造型语言为资产级倾向，不是唯一做法。"
+    },
+    {
+      "key": "lay_flat_room_program",
+      "value": [
+        "玄关",
+        "客厅",
+        "餐厅",
+        "厨房",
+        "老人房",
+        "书房",
+        "衣帽间",
+        "过厅",
+        "卫生间×2",
+        "休闲阳台",
+        "设备阳台",
+        "电梯厅",
+        "楼梯间"
+      ],
+      "unit": "category",
+      "scope": "layout",
+      "assumption": true,
+      "verification": "pending-plan",
+      "confidence": "low",
+      "notes": "从用户提供的平面图读取；房间数量/标签需现场复核。"
+    },
+    {
+      "key": "lay_flat_public_private",
+      "value": "公共区（玄关—客餐厅—厨房）与私密区（老人房—衣帽间—书房）分开；过厅作为公共到私密的缓冲。",
+      "unit": "text",
+      "scope": "layout",
+      "assumption": true,
+      "verification": "pending-plan",
+      "confidence": "low",
+      "notes": "布局原则，不是规范条文。"
+    },
+    {
+      "key": "lay_flat_circulation",
+      "value": "入户→玄关→客厅/餐厅；过厅分流到老人房、衣帽间、书房、双卫；服务动线连接厨房、设备阳台、电梯/楼梯。",
+      "unit": "text",
+      "scope": "layout",
+      "assumption": true,
+      "verification": "pending-plan",
+      "confidence": "low",
+      "notes": "按图面门洞关系归纳；门洞位置需实测。"
+    },
+    {
+      "key": "lay_flat_service_core",
+      "value": "厨房、双卫、设备阳台、电梯厅/楼梯间形成服务核；不穿过老人房/书房。",
+      "unit": "text",
+      "scope": "layout",
+      "assumption": true,
+      "verification": "pending-plan",
+      "confidence": "low",
+      "notes": "服务核分区原则；管井/排水点位未锁定。"
+    },
+    {
+      "key": "lay_flat_furniture_core",
+      "value": [
+        "双人床 1.8×2.0 m（示意）",
+        "餐桌 1.8×0.9 m（示意）",
+        "书桌 1.4×0.6 m（示意）",
+        "衣帽间通道 ≥0.8 m（示意）"
+      ],
+      "unit": "text",
+      "scope": "layout",
+      "assumption": true,
+      "verification": "pending-plan",
+      "confidence": "low",
+      "notes": "仅作为资产比例参考，必须按实测房间与产品尺寸复核。"
+    },
+    {
+      "key": "lay_flat_balcony",
+      "value": "南向休闲阳台与设备/生活阳台分开；休闲阳台需保留通行与排水。",
+      "unit": "text",
+      "scope": "layout",
+      "assumption": true,
+      "verification": "pending-plan",
+      "confidence": "low",
+      "notes": "从图面双阳台关系归纳；结构降板/排水待专业设计。"
+    }
+  ],
+  "rules": [
+    {
+      "id": "int002_public_private",
+      "severity": "warn",
+      "rule": "公共区与私密区应通过玄关/过厅缓冲，不穿卧室进入私密区。",
+      "evidence": "data.lay_flat_public_private"
+    },
+    {
+      "id": "int002_entry_sequence",
+      "severity": "fail",
+      "rule": "入户必须先到玄关，再进入客餐厅；不得直接进入卧室/卫生间。",
+      "evidence": "data.lay_flat_circulation"
+    },
+    {
+      "id": "int002_service_core",
+      "severity": "warn",
+      "rule": "厨房/卫生/设备阳台/电梯楼梯应形成服务核，避免服务动线穿私密区。",
+      "evidence": "data.lay_flat_service_core"
+    },
+    {
+      "id": "int002_room_program",
+      "severity": "fail",
+      "rule": "房间程序至少覆盖玄关、客餐厅、厨房、老人房、书房、衣帽间、双卫、双阳台。",
+      "evidence": "data.lay_flat_room_program"
+    },
+    {
+      "id": "int002_style_palette",
+      "severity": "info",
+      "rule": "现代轻奢基线：暖灰/米白/浅石材 + 深木/黑钛/黄铜小面积点缀。",
+      "evidence": "data.sty_lux_color_base"
+    },
+    {
+      "id": "int002_layout_check",
+      "severity": "fail",
+      "rule": "交付前必须跑 layout_check.py --strict；门洞 0.75 m keep-out、家具 AABB、支撑、吊柜/烟道均需 0 FAIL。",
+      "evidence": ""
+    }
+  ],
+  "assumptions": [
+    "平面图未标注开间/进深/层高/墙厚/门窗尺寸；所有布局与家具数据为示意假设。",
+    "现代轻奢是视觉基线，不是材料/照明/消防设计。",
+    "不包含结构、MEP、消防、无障碍、能耗合规判定。"
+  ],
+  "unknown_policy": "ask",
+  "requires": [],
+  "conflicts_with": [],
+  "references": [
+    "references/module-int-002.md"
+  ],
+  "tests": [
+    "int002_proceed"
+  ],
+  "changelog": [
+    "0.1.0: initial modern-luxury large-flat variant from user-supplied floor plan; schematic assumptions only."
+  ],
+  "open_questions": [
+    {
+      "id": "OQ-101",
+      "priority": "blocker",
+      "question": "项目所在地（国家/省/市）与实测开间/进深/层高？",
+      "default_if_unanswered": "jurisdiction 保持 pending；只做示意资产，不判合规。"
+    },
+    {
+      "id": "OQ-102",
+      "priority": "high",
+      "question": "是否保留图上的电梯/楼梯核心与双阳台关系？",
+      "default_if_unanswered": "保留为资产级示意，不建结构/管井。"
+    },
+    {
+      "id": "OQ-103",
+      "priority": "high",
+      "question": "老人房/书房/衣帽间的实际用途和门洞位置？",
+      "default_if_unanswered": "按图面程序与 0.9 m 门宽假设建模，标注待实测。"
+    },
+    {
+      "id": "OQ-104",
+      "priority": "medium",
+      "question": "现代轻奢的材质档位（石材/岩板/木饰面/金属）？",
+      "default_if_unanswered": "按岩板 + 木饰面 + 小面积金属的资产级基线。"
+    }
+  ]
+}

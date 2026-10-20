@@ -1,7 +1,7 @@
 {
   "schema": "mentor-module/1",
   "id": "INT-001",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "status": "experimental",
   "kind": "hybrid",
   "domain": [
@@ -32,7 +32,16 @@
       "公寓",
       "interior"
     ],
-    "exclude": []
+    "exclude": [
+      "现代轻奢",
+      "轻奢",
+      "大平层",
+      "平层大宅",
+      "现代大平层",
+      "modern luxury",
+      "large flat",
+      "penthouse"
+    ]
   },
   "coverage": [
     {

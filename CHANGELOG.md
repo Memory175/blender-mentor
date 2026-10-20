@@ -1,5 +1,84 @@
 # Changelog
 
+## V5.16.0 — 2026-10-20
+
+> 验收分项 Profile 入人设；套件升 **V5.16.0**。
+
+### Added
+- `assets/acceptance_profiles.json`：INT-INTERIOR / ARCH-EXTERIOR / PROD-HARD / CHAR-RIG / ANIM-FX / ENV-SCENE / REALTIME-ASSET / GENERIC + LOOKDEV/DELIVERY overlay；
+- `references/acceptance-profiles.md`：触发优先级、报告格式、不适用项、与流程/模型 QA 的接口；
+- `scripts/acceptance_router.py`：显式 profile / preflight 模块映射 / 关键词触发 / 平局 ask / GENERIC；含 `--selftest`；
+- `SKILL.md §0.8`、`main.md §2.12`：验收分项路由硬规则；
+- `load_plan` 增加 acceptance-profiles 按需加载与 router 工具。
+
+### Changed
+- 套件/README/版本锚点 V5.15.0 → **V5.16.0**；
+- `main.md` 文件数 10 → 11；README 参考文件 13 → 14，工具 23 → 24；
+- 室内验收不再要求拔模/重量绘制；产品验收不再要求门洞/家具；角色验收不再要求房间面积。
+
+### Tests
+- `acceptance_router.py --selftest`：建筑内饰/产品/角色/实时资产/GENERIC/冲突 ask/显式覆盖/LOOKDEV overlay；
+- `persona_lint.py`、`selftest.py`、`preflight.py` 回归。
+
+## V5.15.0 — 2026-10-20
+
+> 通用生产流程入人设；套件升 **V5.15.0**。
+
+### Added
+- `references/production-pipeline.md`：G0–G6 阶段/门禁、标准目录、数据契约、摆放 helper、QA L0–L5、冻结/变更、角色、反模式、DoD；
+- `SKILL.md §0.7`：生产流程门禁（先冻结平面、禁止绝对坐标、覆盖率、禁止静默 allowlist、表现层不改几何）；
+- `main.md §2.11`：生产流程协议与 G0–G6 门禁；
+- `model-qa.md §3.1`：L1 AABB → L2 BVH → L3 门扇扫掠 + 覆盖率规则。
+
+### Changed
+- 套件/README/版本锚点 V5.14.0 → **V5.15.0**；
+- `main.md` 文件数 9 → 10；
+- 接触例外表替代静默 allowlist：reason + owner + 过期时间；
+- `load_plan.json` 增加 production-pipeline 按需加载触发词。
+
+### Tests
+- `persona_lint.py`、`selftest.py`、`preflight.py` 回归。
+
+## V5.14.0 — 2026-10-20
+
+> 新增 INT-002 现代轻奢大平层变体；套件升 **V5.14.0**。
+
+### Added
+- `assets/modules/INT-002.json`：现代轻奢大平层/电梯平层变体（styles=`modern`+`luxury`，layouts=`apartment`；experimental）；
+- `references/module-int-002.md`：人读版，含房间程序、分区/动线、风格基线、布局校验与 assumptions；
+- `module_selftest` 增加 `int002_proceed`；
+- README/中文 README 增加 INT-002 说明。
+
+### Changed
+- 人设文件数 8 → 9（模块 4 → 5）；references 11 → 12；
+- 版本锚点 V5.13.0 → **V5.14.0**（SKILL / main / README / toolbox / rubric / curriculum / load_plan / registry）；
+- INT-001 版本 **0.1.2 → 0.1.3**（仅 `intent.exclude` 排除现代轻奢/大平层，避免与 INT-002 同时命中）；INT-002 初始 **0.1.0**；
+- 来源：INT-002 全部数据为 `assumption: true`，jurisdiction pending，不能当当地规范。
+
+### Tests
+- `module_lint.py`、`module_conflict.py`、`module_selftest.py`、`persona_lint.py`、`selftest.py`；
+- 预期 INT-002 命中 `现代轻奢大平层`，INT-001 仍只命中中式两室两厅。
+
+## V5.13.0 — 2026-10-20
+
+> INT 空间布局校验入人设；套件升 **V5.13.0**。
+
+### Added
+- `SKILL.md §0.5`：INT 强制空间布局校验（门洞 keep-out、门洞断面、家具 AABB、支撑、垂直净空、命名）；
+- `SKILL.md §3`：项目侧 `layout_check.py --strict` 验收入口；
+- `references/main.md §2.10`：室内空间布局校验协议；
+- `references/module-int-001.md §7`：INT 布局校验必查项/执行方式/实现约束；
+- `references/model-qa.md §3.1`：通用建模 QA 增加室内空间校验。
+
+### Changed
+- 版本锚点 V5.12.0 → **V5.13.0**（SKILL / main / README / toolbox / rubric / curriculum / load_plan / registry）；
+- INT-001 模块版本保持 **0.1.2**（data 不变，仅人设/工作流文档更新）；
+- `source_audit` 仍为 **warn**，不改变来源状态。
+
+### Tests
+- 重跑 `persona_lint.py` 与套件 `selftest.py`；
+- 校验示例：`layout_report.md` 0 FAIL / 1 WARN（`.001` 命名）。
+
 ## V5.12.0 — 2026-10-20
 
 > 自审查索引 + 发布授权；套件升 **V5.12.0**。

@@ -1,7 +1,7 @@
 {
   "name": "blender-mentor",
-  "version": "5.12.0",
-  "description": "Blender full-stack mentor AI Skill: teaching, 0-3 rubric grading, asset/animation acceptance (ESD/BIO/ENG).",
+  "version": "5.16.0",
+  "description": "Blender full-stack mentor AI Skill: teaching, rubric grading, asset/animation acceptance, production pipeline and domain-specific acceptance profiles.",
   "type": "module",
   "main": "./lib/index.js",
   "exports": {
@@ -17,7 +17,10 @@
     "ai-skill",
     "animation",
     "rigging",
-    "biomechanics"
+    "biomechanics",
+    "acceptance",
+    "interior",
+    "production-pipeline"
   ],
   "repository": {
     "type": "git",

@@ -1,6 +1,6 @@
 {
   "version": "1.2.0",
-  "suite_version": "V5.12.0",
+  "suite_version": "V5.16.0",
   "always": [
     {
       "file": "references/main.md",
@@ -12,6 +12,35 @@
     }
   ],
   "on_demand": [
+    {
+      "file": "references/production-pipeline.md",
+      "reason": "通用生产流程/阶段门禁/返工治理/交付 DoD",
+      "triggers": [
+        "生产流程",
+        "流程优化",
+        "门禁",
+        "返工",
+        "交付",
+        "DoD",
+        "pipeline",
+        "blockout",
+        "阶段"
+      ]
+    },
+    {
+      "file": "references/acceptance-profiles.md",
+      "reason": "验收分项/专用验收/profile 选择",
+      "triggers": [
+        "验收",
+        "验收流程",
+        "建筑内饰验收",
+        "产品验收",
+        "角色验收",
+        "专用验收",
+        "profile",
+        "acceptance"
+      ]
+    },
     {
       "file": "references/toolbox_text.md",
       "reason": "脚本/检查器/130 条误区/修复对话",
@@ -47,23 +76,6 @@
     }
   ],
   "modules": [
-    {
-      "id": "ESD-001",
-      "file": "references/module-esd.md",
-      "reason": "能量驱动的次级动画（形变/抖动/粒子/镜头）",
-      "triggers": [
-        "次级动画",
-        "形变",
-        "包络",
-        "弹跳",
-        "挤压",
-        "拉伸",
-        "镜头震动",
-        "粒子",
-        "ESD",
-        "能量"
-      ]
-    },
     {
       "id": "BIO-001",
       "file": "references/module-biomechanics.md",
@@ -125,6 +137,23 @@
       ]
     },
     {
+      "id": "ESD-001",
+      "file": "references/module-esd.md",
+      "reason": "能量驱动的次级动画（形变/抖动/粒子/镜头）",
+      "triggers": [
+        "次级动画",
+        "形变",
+        "包络",
+        "弹跳",
+        "挤压",
+        "拉伸",
+        "镜头震动",
+        "粒子",
+        "ESD",
+        "能量"
+      ]
+    },
+    {
       "id": "INT-001",
       "file": "references/module-int-001.md",
       "reason": "室内设计/内饰：中式风格两室两厅公寓（experimental）",
@@ -137,6 +166,29 @@
         "新中式",
         "两室两厅",
         "公寓"
+      ]
+    },
+    {
+      "id": "INT-002",
+      "file": "references/module-int-002.md",
+      "reason": "现代轻奢大平层室内设计",
+      "triggers": [
+        "现代轻奢",
+        "轻奢大平层",
+        "现代大平层",
+        "大平层",
+        "平层大宅",
+        "电梯平层",
+        "老人房",
+        "书房",
+        "衣帽间",
+        "双阳台",
+        "modern luxury",
+        "large flat",
+        "penthouse",
+        "modern",
+        "luxury",
+        "apartment"
       ]
     }
   ],
@@ -204,6 +256,10 @@
     {
       "file": "scripts/source_refresh.py",
       "when": "来源过期后查询官方页面/Crossref，只提议不自动替换"
+    },
+    {
+      "file": "scripts/acceptance_router.py",
+      "when": "验收 Profile 路由/分项选择"
     }
   ],
   "policy": [

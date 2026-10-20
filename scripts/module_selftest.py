@@ -104,6 +104,11 @@ def main():
     cases.append(("int001_missing_style_layout", g["action"] == "missing_style_layout"
                   and set(g.get("missing_style_layout", [])) == {"style", "layout"}))
 
+    # INT-002 installed variant: modern luxury large flat
+    r = preflight.evaluate(root, "现代轻奢大平层室内设计，老人房和书房")
+    cases.append(("int002_proceed", r["decision"] == "proceed"
+                  and any(m["id"] == "INT-002" for m in r["selected"])))
+
     # INT style/layout variant must not be blocked by the generic INT-001 force hint
     with tempfile.TemporaryDirectory(prefix="mod_int_variant_") as tmp:
         mod = _fixture("INT-002", ["室内", "内饰"], "variant_layout", "fixture")

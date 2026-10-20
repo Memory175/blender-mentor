@@ -1,6 +1,6 @@
 {
   "schema": "mentor-self-audit/1",
-  "generated_at": "2026-10-20T17:40:43+08:00",
+  "generated_at": "2026-10-20T19:39:51+08:00",
   "root": ".",
   "modules": [
     {
@@ -56,10 +56,10 @@
     },
     {
       "id": "INT-001",
-      "version": "0.1.2",
+      "version": "0.1.3",
       "status": "experimental",
       "json": "assets/modules/INT-001.json",
-      "json_sha256": "7de9af52daa0a132f5fa10fa7bd21a030b4836d236ed66ac26f1045a09d946e4",
+      "json_sha256": "dd88d7549a3ce199eea612a90fe9da0b62a6b940fc07d4e8f892f430dbe07db9",
       "styles": [
         "chinese"
       ],
@@ -68,9 +68,31 @@
       ],
       "reference": "references/module-int-001.md",
       "reference_present": true,
-      "doc_version": "0.1.2",
+      "doc_version": "0.1.3",
       "registry_present": true,
-      "registry_version": "0.1.2",
+      "registry_version": "0.1.3",
+      "registry_hash_match": true,
+      "load_plan_present": true,
+      "main_table_present": true
+    },
+    {
+      "id": "INT-002",
+      "version": "0.1.0",
+      "status": "experimental",
+      "json": "assets/modules/INT-002.json",
+      "json_sha256": "0db04c8274a10af3d9eb95e12cfc5c4bfb003251278cc4678d70d2f173f08941",
+      "styles": [
+        "modern",
+        "luxury"
+      ],
+      "layouts": [
+        "apartment"
+      ],
+      "reference": "references/module-int-002.md",
+      "reference_present": true,
+      "doc_version": "0.1.0",
+      "registry_present": true,
+      "registry_version": "0.1.0",
       "registry_hash_match": true,
       "load_plan_present": true,
       "main_table_present": true
@@ -79,7 +101,7 @@
   "orphan_references": [],
   "issues": [],
   "summary": {
-    "modules": 4,
+    "modules": 5,
     "issues": 0,
     "fail": 0,
     "warn": 0
