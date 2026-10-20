@@ -1,6 +1,6 @@
 {
   "name": "blender-mentor",
-  "version": "5.16.0",
+  "version": "5.16.1",
   "description": "Blender full-stack mentor AI Skill: teaching, rubric grading, asset/animation acceptance, production pipeline and domain-specific acceptance profiles.",
   "type": "module",
   "main": "./lib/index.js",

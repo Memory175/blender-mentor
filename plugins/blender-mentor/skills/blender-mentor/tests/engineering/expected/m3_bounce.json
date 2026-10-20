@@ -1,0 +1,29 @@
+{
+  "draft_by_side": {
+    "+Z": {
+      "checked_faces": 384,
+      "low_area_pct": 0.0,
+      "low_faces": 0,
+      "min_draft_deg": 4.48
+    },
+    "-Z": {
+      "checked_faces": 384,
+      "low_area_pct": 0.0,
+      "low_faces": 0,
+      "min_draft_deg": 4.48
+    }
+  },
+  "draft_low_area_pct": 0.0,
+  "draft_undercut_area_pct": 16.78,
+  "fails": 0,
+  "interference_pairs": [],
+  "margin_mm": null,
+  "overhang_area_mm2": 82520.49,
+  "overhang_bad_faces": 640,
+  "proxy_skipped": [],
+  "stable": null,
+  "status": "warn",
+  "support_volume_mm3_est": 2017786.7,
+  "wall_min_mm": null,
+  "warns": 5
+}

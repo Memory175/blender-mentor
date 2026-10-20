@@ -1,6 +1,6 @@
 {
   "schema": "mentor-registry/1",
-  "suite": "V5.16.0",
+  "suite": "V5.16.1",
   "modules": [
     {
       "id": "BIO-001",

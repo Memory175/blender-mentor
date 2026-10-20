@@ -44,7 +44,7 @@ try {
 
     New-Item -ItemType Directory -Force -Path $Dest | Out-Null
     $items = @("SKILL.md", "references", "scripts", "assets",
-               "README.md", "README.zh-CN.md", "LICENSE", "CHANGELOG.md")
+               "README.md", "README.zh-CN.md", "LICENSE", "CHANGELOG.md", "tests")
     foreach ($item in $items) {
         $src = Join-Path $Source $item
         if (Test-Path -LiteralPath $src) {

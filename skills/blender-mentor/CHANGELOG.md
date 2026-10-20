@@ -1,5 +1,25 @@
 # Changelog
 
+## V5.16.1 — 2026-10-20
+
+> 验收 Profile 适用性修复 + 发布链修复；套件升 **V5.16.1**。
+
+### Fixed
+- `check.applies_if` / `optional` / `missing_context` 与 `--context`：浴室、厨房、楼梯、注塑、3D 打印、人体等条件检查不再无条件误报；必需上下文缺失返回 ask，optional 缺上下文 skip。
+- `CHAR-RIG` 增加 human-only `biomech` 检查。
+- `tools/build_skill.py` 支持当前标准布局，`--source .` 可重建并通过内置 selftest。
+- `layout_check.py` 等外部检查标记 `tool_scope: project`，router 输出 `external_tools`。
+- `persona_lint.py` 增加 acceptance profile schema/重复 ID/工具存在性校验。
+- `selftest.py` 与 GitHub Actions 纳入 acceptance router 自检和标准布局构建。
+- `INT-INTERIOR` 补 `support_contact`、`vertical_clearance`、`naming_duplicates`。
+- `--list` 显示 `GENERIC`；`--context`/`--preflight` 读取失败返回明确错误。
+
+### Tests
+- `acceptance_router.py --selftest`：15/15；
+- `selftest.py`：28/28；
+- `persona_lint.py`：EXIT 0；
+- `tools/build_skill.py --source . --out <tmp> --force`：PASS。
+
 ## V5.16.0 — 2026-10-20
 
 > 验收分项 Profile 入人设；套件升 **V5.16.0**。

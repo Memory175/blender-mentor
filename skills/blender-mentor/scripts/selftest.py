@@ -7,6 +7,8 @@
 
 输出：TOOLS_SELFTEST {json}；exit 0=pass，1=fail。
 """
+import contextlib
+import io
 import json
 import os
 import re
@@ -64,6 +66,18 @@ def main(argv=None):
            os.path.isfile(qa_ref) and "references/model-qa.md" in skill_text,
            {"reference": os.path.isfile(qa_ref),
             "routed_from_skill": "references/model-qa.md" in skill_text})
+
+    # 2.3) acceptance profile router must pass its own conditional/context suite
+    try:
+        ar = _load("acceptance_router", os.path.join(TOOLS, "acceptance_router.py"))
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rc = ar["selftest"]()
+        _check(checks, "acceptance_router_selftest", rc == 0,
+               buf.getvalue().strip().splitlines()[-1][:200] if buf.getvalue().strip() else "")
+    except Exception as exc:  # noqa: BLE001
+        _check(checks, "acceptance_router_selftest", False,
+               type(exc).__name__ + ": " + str(exc))
 
     # 3) expand template -> params + envelope_check pass
     with open(os.path.join(ROOT, "assets", "esd_spec.template.json"), encoding="utf-8") as fh:

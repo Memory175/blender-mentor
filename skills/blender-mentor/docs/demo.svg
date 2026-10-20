@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-label="Blender Mentor example session: prompt, rubric score, P0/P1/P2 fix list and machine acceptance">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#080d18"/>
+      <stop offset="1" stop-color="#101a2e"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#f97316"/>
+      <stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="760" rx="28" fill="url(#bg)"/>
+  <rect x="0" y="0" width="1200" height="76" rx="28" fill="#0d1526"/>
+  <rect x="0" y="56" width="1200" height="20" fill="#0d1526"/>
+
+  <rect x="40" y="26" width="10" height="24" rx="3" fill="url(#accent)"/>
+  <text x="64" y="47" fill="#f8fafc" font-family="Segoe UI, system-ui, -apple-system, sans-serif" font-size="26" font-weight="700">blender-mentor</text>
+  <text x="1160" y="47" fill="#64748b" text-anchor="end" font-family="Segoe UI, system-ui, -apple-system, sans-serif" font-size="18">example session · illustrative</text>
+
+  <text x="40" y="122" fill="#f97316" font-family="Segoe UI, system-ui, -apple-system, sans-serif" font-size="17" font-weight="700" letter-spacing="2">YOU</text>
+  <rect x="40" y="136" width="1120" height="64" rx="12" fill="#111c33" stroke="#1e2f4d"/>
+  <text x="62" y="176" fill="#cbd5e1" font-family="Cascadia Code, Consolas, monospace" font-size="21">Review this walk cycle. Grade it with the rubric and give me a P0/P1/P2 fix list.</text>
+
+  <text x="40" y="250" fill="#22d3ee" font-family="Segoe UI, system-ui, -apple-system, sans-serif" font-size="17" font-weight="700" letter-spacing="2">BLENDER MENTOR · L2 REVIEW</text>
+
+  <text x="40" y="330" fill="#f8fafc" font-family="Segoe UI, system-ui, -apple-system, sans-serif" font-size="84" font-weight="800" letter-spacing="-2">2.1<tspan fill="#64748b" font-size="40" font-weight="600"> / 3</tspan></text>
+  <text x="310" y="300" fill="#94a3b8" font-family="Segoe UI, system-ui, -apple-system, sans-serif" font-size="20">critical item</text>
+  <text x="310" y="332" fill="#f97316" font-family="Segoe UI, system-ui, -apple-system, sans-serif" font-size="28" font-weight="700">foot sliding</text>
+
+  <rect x="40" y="378" width="70" height="38" rx="8" fill="#7c2d12"/>
+  <text x="75" y="404" fill="#fdba74" text-anchor="middle" font-family="Segoe UI, system-ui, -apple-system, sans-serif" font-size="17" font-weight="800">P0</text>
+  <text x="130" y="404" fill="#e2e8f0" font-family="Segoe UI, system-ui, -apple-system, sans-serif" font-size="21">Lock contact frames 1 / 13 / 25; add heel roll.</text>
+
+  <rect x="40" y="432" width="70" height="38" rx="8" fill="#164e63"/>
+  <text x="75" y="458" fill="#67e8f9" text-anchor="middle" font-family="Segoe UI, system-ui, -apple-system, sans-serif" font-size="17" font-weight="800">P1</text>
+  <text x="130" y="458" fill="#e2e8f0" font-family="Segoe UI, system-ui, -apple-system, sans-serif" font-size="21">Reduce hip Y translation 18%; clean shoulder counter-rotation.</text>
+
+  <rect x="40" y="486" width="70" height="38" rx="8" fill="#14532d"/>
+  <text x="75" y="512" fill="#86efac" text-anchor="middle" font-family="Segoe UI, system-ui, -apple-system, sans-serif" font-size="17" font-weight="800">P2</text>
+  <text x="130" y="512" fill="#e2e8f0" font-family="Segoe UI, system-ui, -apple-system, sans-serif" font-size="21">Add toe flex on push-off; re-check the 12-frame cadence.</text>
+
+  <rect x="40" y="556" width="1120" height="58" rx="12" fill="#0d1b2a" stroke="#1e3a5f"/>
+  <circle cx="70" cy="585" r="7" fill="#22c55e"/>
+  <text x="88" y="592" fill="#cbd5e1" font-family="Cascadia Code, Consolas, monospace" font-size="19">asset_gate PASS</text>
+  <text x="330" y="592" fill="#cbd5e1" font-family="Cascadia Code, Consolas, monospace" font-size="19">curve_audit 3 warnings</text>
+  <text x="670" y="592" fill="#cbd5e1" font-family="Cascadia Code, Consolas, monospace" font-size="19">render_probe PASS</text>
+
+  <text x="40" y="668" fill="#94a3b8" font-family="Segoe UI, system-ui, -apple-system, sans-serif" font-size="22" font-style="italic">“Fix P0 first, or should I generate the corrected keyframes?”</text>
+  <text x="40" y="722" fill="#475569" font-family="Segoe UI, system-ui, -apple-system, sans-serif" font-size="19">github.com/Memory175/blender-mentor</text>
+  <text x="1160" y="722" fill="#475569" text-anchor="end" font-family="Segoe UI, system-ui, -apple-system, sans-serif" font-size="19">MIT · Blender 4.2 LTS / 5.x</text>
+</svg>

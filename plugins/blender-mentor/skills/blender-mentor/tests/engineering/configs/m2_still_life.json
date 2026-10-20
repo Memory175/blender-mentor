@@ -1,0 +1,7 @@
+{
+  "ignore": ["Table", "Backdrop"],
+  "proxy_objects": ["Coffee_Surface"],
+  "intentional_contacts": [],
+  "min_wall_mm": 1.5,
+  "draft_min_deg": 1.0
+}

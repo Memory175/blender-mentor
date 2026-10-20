@@ -256,6 +256,75 @@ def _check_deny(texts, deny_path, strict=False):
     return {"pass": not hits, "patterns": len(raw), "hits": hits}
 
 
+def _check_acceptance_profiles(root):
+    """Validate assets/acceptance_profiles.json (profile schema + refs)."""
+    path = os.path.join(root, "assets", "acceptance_profiles.json")
+    if not os.path.isfile(path):
+        return {"pass": False, "error": "assets/acceptance_profiles.json missing"}
+    try:
+        with open(path, encoding="utf-8") as fh:
+            data = json.load(fh)
+    except Exception as exc:  # noqa: BLE001
+        return {"pass": False, "error": "invalid JSON: %s" % exc}
+    problems = []
+    if not str(data.get("schema", "")).startswith("acceptance-profiles/"):
+        problems.append("bad schema: %r" % data.get("schema"))
+    if not data.get("generic"):
+        problems.append("missing generic profile")
+    groups = [("profile", data.get("profiles", [])),
+              ("overlay", data.get("overlay_profiles", [])),
+              ("generic", [data.get("generic", {})])]
+    ids = set()
+    checks_total = 0
+    external = []
+    allowed_severity = {"BLOCKER", "MAJOR", "WARN"}
+    for kind, profiles in groups:
+        for profile in profiles:
+            pid = profile.get("id")
+            if not pid:
+                problems.append("%s without id" % kind)
+                continue
+            if pid in ids:
+                problems.append("duplicate profile id: %s" % pid)
+            ids.add(pid)
+            if not profile.get("name"):
+                problems.append("%s missing name: %s" % (kind, pid))
+            if kind != "generic" and not profile.get("triggers"):
+                problems.append("%s has no triggers: %s" % (kind, pid))
+            seen = set()
+            for check in profile.get("checks", []):
+                checks_total += 1
+                cid = check.get("id")
+                if not cid:
+                    problems.append("%s has check without id" % pid)
+                    continue
+                if cid in seen:
+                    problems.append("%s duplicate check: %s" % (pid, cid))
+                seen.add(cid)
+                for key in ("layer", "severity", "tool", "coverage"):
+                    if not check.get(key):
+                        problems.append("%s/%s missing %s" % (pid, cid, key))
+                if check.get("severity") not in allowed_severity:
+                    problems.append("%s/%s bad severity: %r" % (pid, cid, check.get("severity")))
+                if "optional" in check and not isinstance(check["optional"], bool):
+                    problems.append("%s/%s optional must be bool" % (pid, cid))
+                if "applies_if" in check:
+                    if (not isinstance(check["applies_if"], list)
+                            or not all(isinstance(x, str) and x for x in check["applies_if"])):
+                        problems.append("%s/%s applies_if must be a list of strings" % (pid, cid))
+                tool = check.get("tool")
+                scope = check.get("tool_scope")
+                if scope == "project":
+                    external.append({"profile": pid, "check": cid, "tool": tool, "scope": scope})
+                elif tool != "manual" and not os.path.isfile(os.path.join(root, "scripts", tool)):
+                    problems.append("%s/%s tool missing: %s (mark tool_scope=project or manual)" % (pid, cid, tool))
+    for mid, pid in (data.get("module_profile_map") or {}).items():
+        if pid not in ids:
+            problems.append("module_profile_map %s -> unknown profile %s" % (mid, pid))
+    return {"pass": not problems, "profiles": len(ids), "checks": checks_total,
+            "external_tools": external, "problems": problems}
+
+
 def lint(root=".", deny_path=None, strict=True):
     texts, missing = _read(root)
     checks = [{"check": "files_present", "pass": not missing, "missing": missing}]
@@ -269,6 +338,7 @@ def lint(root=".", deny_path=None, strict=True):
     checks.append(dict({"check": "counts"}, **_check_counts(texts)))
     checks.append(dict({"check": "toolbox_python_blocks"}, **_check_py_blocks(texts)))
     checks.append(dict({"check": "self_audit"}, **_check_self_audit(root)))
+    checks.append(dict({"check": "acceptance_profiles"}, **_check_acceptance_profiles(root)))
     checks.append(dict({"check": "deny_scan"}, **_check_deny(texts, deny_path, strict)))
     return {"status": "pass" if all(c["pass"] for c in checks) else "fail",
             "checks": checks}

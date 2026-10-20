@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""build_skill.py — 把 Blender 导师 V5.4.0 六件套重构为标准 AI Skill 目录。
+"""build_skill.py — 把 Blender 导师标准布局复制/校验为可发布 AI Skill 目录（兼容旧六件套）。
 
 用法（在能访问六件套的机器上）：
     python build_skill.py --source <V5.4.0 套件目录> --out <输出目录> [--force]
@@ -1906,7 +1906,58 @@ def run_built_selfchecks(out_dir):
     return ok, details
 
 
+def is_standard_layout(source):
+    """Current repo layout: SKILL.md + references/ + scripts/ + assets/."""
+    return (os.path.isfile(os.path.join(source, "SKILL.md"))
+            and os.path.isdir(os.path.join(source, "references"))
+            and os.path.isdir(os.path.join(source, "scripts"))
+            and os.path.isdir(os.path.join(source, "assets")))
+
+
+def build_standard(source, out_root, force=False):
+    """Copy a standard-layout skill directly; no legacy six-file parsing."""
+    skill_dir = os.path.join(out_root, "blender-mentor")
+    if os.path.exists(skill_dir):
+        if not force:
+            raise RuntimeError("%s already exists; pass --force to overwrite" % skill_dir)
+        shutil.rmtree(skill_dir)
+    os.makedirs(skill_dir)
+    items = ("SKILL.md", "references", "scripts", "assets",
+             "README.md", "README.zh-CN.md", "LICENSE", "CHANGELOG.md", "docs", "tests")
+    copied = []
+    for item in items:
+        src = os.path.join(source, item)
+        if not os.path.exists(src):
+            continue
+        dst = os.path.join(skill_dir, item)
+        if os.path.isdir(src):
+            shutil.copytree(src, dst, dirs_exist_ok=True,
+                            ignore=shutil.ignore_patterns("__pycache__", "*.pyc", ".git"))
+        else:
+            shutil.copy2(src, dst)
+        copied.append(item)
+
+    ok, details = run_built_selfchecks(skill_dir)
+    for root, dirs, files in os.walk(skill_dir):
+        for d in list(dirs):
+            if d == "__pycache__":
+                shutil.rmtree(os.path.join(root, d), ignore_errors=True)
+                dirs.remove(d)
+    report = {
+        "status": "pass" if ok else "fail",
+        "layout": "standard",
+        "skill_dir": os.path.abspath(skill_dir),
+        "source_dir": os.path.abspath(source),
+        "items": copied,
+        "checks": details,
+    }
+    print("BUILD_SKILL " + json.dumps(report, ensure_ascii=False))
+    return 0 if ok else 1
+
+
 def build(source, out_root, force=False, repo_slug="OWNER/REPO"):
+    if is_standard_layout(source):
+        return build_standard(source, out_root, force)
     suite = find_suite(source)
     if not suite:
         raise RuntimeError("six-file suite not found under %s (need blender-mentor-v5.md)" % source)
@@ -2104,8 +2155,8 @@ def build(source, out_root, force=False, repo_slug="OWNER/REPO"):
 def main(argv=None):
     if argv is None:
         argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else sys.argv[1:]
-    ap = argparse.ArgumentParser(description="Build standard AI skill layout from Blender Mentor V5.4.0")
-    ap.add_argument("--source", default=".", help="directory containing the six .md files (+ persona_tools/)")
+    ap = argparse.ArgumentParser(description="Build standard AI skill layout from Blender Mentor V5.16.1")
+    ap.add_argument("--source", default=".", help="standard skill root (or legacy suite directory)")
     ap.add_argument("--out", default=".", help="output directory (creates ./blender-mentor)")
     ap.add_argument("--force", action="store_true", help="overwrite existing ./blender-mentor")
     ap.add_argument("--repo", default="OWNER/REPO",

@@ -40,7 +40,7 @@ if [ -d "$DEST" ]; then
 fi
 
 mkdir -p "$DEST"
-for item in SKILL.md references scripts assets README.md README.zh-CN.md LICENSE CHANGELOG.md; do
+for item in SKILL.md references scripts assets README.md README.zh-CN.md LICENSE CHANGELOG.md tests; do
     if [ -e "$SRC/$item" ]; then
         cp -R "$SRC/$item" "$DEST/"
     fi

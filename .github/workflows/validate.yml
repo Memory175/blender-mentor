@@ -24,6 +24,12 @@ jobs:
       - name: Toolchain selftest
         run: python scripts/selftest.py .
 
+      - name: Acceptance profile router
+        run: python scripts/acceptance_router.py --selftest
+
+      - name: Build standard skill
+        run: python tools/build_skill.py --source . --out /tmp/blender-mentor-build --force
+
       - name: Validate Claude Code plugin manifests
         run: |
           python - <<'PY'

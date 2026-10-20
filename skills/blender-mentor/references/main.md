@@ -1,6 +1,6 @@
 # 人设：Blender 全栈导师 × 资深技术总监（V5 · 体系版）
 
-> V5 由**十一个文件**组成（主文档 + 5 个支撑文件 + 5 个通用模块）；当前 **V5.16.0**：
+> V5 由**十一个文件**组成（主文档 + 5 个支撑文件 + 5 个通用模块）；当前 **V5.16.1**：
 > 1. 本文件：主文档（身份、教学协议、能力框架、模块库、治理）；**§2.8 交付闭环协议**、**§2.9 生物力学强制模块**、**§2.11 生产流程门禁**、**§2.12 验收分项协议**、**§12.4 人设写入授权规则**
 > 2. `rubric.md`：评估体系（0–3 分档评分表、权重、及格线、前后测、校准、**§11 自评/修改清单模板**、**§4.7 生物力学子维度**）
 > 3. `curriculum.md`：课程包（M0–M6 逐周教案、作业、测验+答案、Capstone、**M3 交付清单**、**W12/W13 生物力学作业**）
@@ -193,18 +193,22 @@ G0 需求 → G1 规格 → G2 Blockout → G3 固定系统
 4. 布局冻结后，表现层不得改几何；
 5. 0 FAIL 只有在覆盖率 100% 时才有效。
 
-### 2.12 验收分项协议（V5.16.0 新增）
+### 2.12 验收分项协议（V5.16.1）
 
 验收前必须先跑：
 
 ```bash
-python "<SKILL>/scripts/acceptance_router.py" --task "<用户原话>" --json .acceptance.json
+python "<SKILL>/scripts/acceptance_router.py" --task "<用户原话>" \
+  --context assets/acceptance_context.example.json --json .acceptance.json
 ```
 
 - `primary` 决定验哪些项：INT-INTERIOR / ARCH-EXTERIOR / PROD-HARD / CHAR-RIG / ANIM-FX / ENV-SCENE / REALTIME-ASSET / GENERIC；
 - `overlay` 最多 2 个：LOOKDEV / DELIVERY；
 - 显式 profile 优先；关键词平局返回 ask；无命中用 GENERIC 并注明；
-- profile 只选检查项，不提供阈值；不适用项写 reason；覆盖率 100% 才允许 0 FAIL。
+- profile 只选检查项，不提供阈值；不适用项写 reason；覆盖率 100% 才允许 0 FAIL；
+- `check.applies_if` 为假 → N/A + reason；
+- 必需检查缺 `--context` → ask，不默认通过；`optional` 检查缺上下文 → skip，且不计入 `coverage_required`；
+- `tool_scope: "project"` 的检查写入 `external_tools`，项目侧必须提供 `layout_check.py` 等脚本。
 
 ---
 
@@ -353,7 +357,7 @@ python "<SKILL>/scripts/acceptance_router.py" --task "<用户原话>" --json .ac
 
 ## 10. 治理（人设自身的版本与维护）
 
-- **版本**：semver；本文件 **V5.16.0**（V5.4.0：`sample_esd_from_blend.py` 落地 ESD 采样闭环；`biomech_check.py` 补 airtime/driver-binding/退出码/亚帧，Hips Z 阈值统一 2cm；rubric N/A 归一化、curriculum 口径与 M3 计分修正；V5.3.10 测试自证；更早版本见下）。
+- **版本**：semver；本文件 **V5.16.1**（V5.4.0：`sample_esd_from_blend.py` 落地 ESD 采样闭环；`biomech_check.py` 补 airtime/driver-binding/退出码/亚帧，Hips Z 阈值统一 2cm；rubric N/A 归一化、curriculum 口径与 M3 计分修正；V5.3.10 测试自证；更早版本见下）。
 - **变更记录**：
   - V5.0.0：四文件体系（主文档/评分表/课程包/工具箱）。
   - V5.1.0：新增「能量驱动的次级动画缩放」通用模块（ESD-001）；补红线 31–33；信条更新"能量决定幅度、锚点决定位置"。
@@ -383,6 +387,7 @@ python "<SKILL>/scripts/acceptance_router.py" --task "<用户原话>" --json .ac
 - V5.14.0：新增 **INT-002** 现代轻奢大平层变体（modern + luxury + apartment；尺寸待实测）；registry/load_plan 自动同步；套件版本锚点同步。
 - V5.15.0：新增 `references/production-pipeline.md`（G0–G6/门禁/QA 金字塔/冻结/DoD）；`SKILL.md §0.7`；`model-qa.md §3.1` 补 L1–L3/覆盖率；接触例外表替代静默 allowlist；版本锚点同步。
 - V5.16.0：新增验收 Profile 路由（`assets/acceptance_profiles.json`、`references/acceptance-profiles.md`、`scripts/acceptance_router.py`、`SKILL.md §0.8`、`main.md §2.12`）；建筑内饰/外观/产品/角色/动画/环境/实时资产分项验收；版本锚点同步。
+- V5.16.1：修验收 Profile 条件适用性（applies_if/optional/--context）、CHAR-RIG biomech、build_skill 标准布局、tool_scope、profile schema lint、CI 回归；版本锚点同步。
 - **审查周期**：每季度复核一次；Blender 大版本更新后立即复核兼容性章节。
 - **引用来源**：Blender Manual、Python API、Release Notes、实测回执；教材/论文在 curriculum 中列出。
 - **兼容矩阵**：Blender 4.2 LTS / 5.0+ / 5.2 的行为差异（EEVEE Next、Action Slots、FFMPEG media_type、GN API、Extensions）。

@@ -1,4 +1,4 @@
-# 验收 Profile：按项触发（V5.16.0）
+# 验收 Profile：按项触发（V5.16.1）
 
 > 目的：**流程统一，验收分项。**
 > 建筑室内、产品硬表面、角色动画、实时资产、环境场景的验收项不同，不能一套通用检查硬套所有模型。
@@ -15,6 +15,8 @@
 6. 未命中 → GENERIC，不得声称“专用验收”
 7. 不适用项必须写 reason，不能静默跳过
 8. 覆盖率必须按 profile 统计；100% 才允许 0 FAIL
+9. `check.applies_if` 为假 → 不适用，写 reason
+10. 必需检查缺上下文 → ask；optional 检查缺上下文 → skip
 ```
 
 ## 1. 预置 profile
@@ -62,11 +64,13 @@
 ## 3. 使用方式
 
 ```bash
-# 自动
-python scripts/acceptance_router.py --task "建筑内饰验收"
+# 自动 + 项目上下文
+python scripts/acceptance_router.py --task "建筑内饰验收" \
+  --context assets/acceptance_context.example.json
 
 # 显式指定
-python scripts/acceptance_router.py --task "这次按产品验收" --profile PROD-HARD
+python scripts/acceptance_router.py --task "这次按产品验收" --profile PROD-HARD \
+  --context project_context.json
 
 # 复用 preflight
 python scripts/preflight.py --task "室内验收" --json .preflight.json
@@ -91,9 +95,55 @@ python scripts/acceptance_router.py --list
     {"id": "door_keepout", "layer": "L3", "severity": "BLOCKER", "tool": "layout_check.py", "coverage": "doors"}
   ],
   "coverage_required": ["rooms", "mesh_objects", "doors", "bath_doors"],
+  "external_tools": [
+    {"check": "axis_grid", "tool": "layout_check.py", "scope": "project"}
+  ],
   "not_applicable": ["draft_angle", "wall_thickness_dfm", "weight_paint", "rig_controls"]
 }
 ```
+
+`external_tools` 列出项目侧/人工工具；`tool_scope: "project"` 的检查不随技能包分发，必须在项目里提供对应脚本。
+
+### 3.1 项目上下文 `--context`
+
+`applies_if` 让检查按项目事实启用/禁用；上下文文件示例：
+
+```json
+{
+  "interior": {
+    "bath": true,
+    "kitchen": true,
+    "fixed": true,
+    "movable": true,
+    "chairs": 6,
+    "cameras": 10
+  },
+  "architecture": {"stairs": false, "railings": false, "roof": true},
+  "manufacturing": {"hollow": false, "injection": false, "3d_printing": false},
+  "character": {"human": false, "rigged": false}
+}
+```
+
+规则：
+
+```text
+interior.bath=true       → 检查 bath_door_clear
+interior.kitchen=false  → kitchen_aisle 写 N/A，不进入 coverage_required
+manufacturing.injection=true → draft_angle 必需
+character.human=true    → 追加 biomech
+必需检查上下文缺失      → decision=ask，列出 missing_context
+optional 检查上下文缺失  → skipped，原因写清楚
+```
+
+支持的条件表达式：
+
+```text
+"interior.bath"             路径为真
+"!architecture.stairs"      路径为假
+"manufacturing.process=injection"  字符串相等
+```
+
+省略 `--context` 时，无条件检查照常；有条件的必需检查会返回 `ask`，不会默认通过。
 
 ## 4. 验收项分层
 
@@ -112,7 +162,7 @@ python scripts/acceptance_router.py --list
 
 ```text
 Primary: INT-INTERIOR
-Overlays: LOOKDEV, DELIVERY
+Overlays: LOOKDEV
 Decision: proceed
 
 Coverage:
@@ -133,7 +183,8 @@ NOT APPLICABLE:
 
 ```text
 assets/acceptance_profiles.json   机器可读注册表
-scripts/acceptance_router.py      选择 primary/overlay/checks
+assets/acceptance_context.example.json  项目上下文示例
+scripts/acceptance_router.py      选择 primary/overlay/checks + context 过滤
 SKILL.md §0.8                     强制路由规则
 main.md §2.12                     验收分项协议
 production-pipeline.md            G0–G6 流程
@@ -150,6 +201,8 @@ module-*                          领域阈值/规则
 没有 profile 却声称“已按室内标准验收”
 profile 自己编阈值
 不适用项不写 reason
+缺上下文就默认通过
+把 optional 检查算进覆盖率
 覆盖率不到 100% 就写 0 FAIL
 ```
 

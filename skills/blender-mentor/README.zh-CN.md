@@ -175,14 +175,14 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 DSH、Claude Code、Claude.ai、Cursor，以及任何支持标准 Agent Skills 布局（`SKILL.md` + 资源目录）的客户端。
 
 **两个版本号是什么意思？**
-人设套件为 **V5.16.0**；打包后的技能发布版本为 **v5.16.0**。
+人设套件为 **V5.16.1**；打包后的技能发布版本为 **v5.16.1**。
 
 ## 开发与验证
 
 ```bash
 python -m compileall -q scripts tools
 python scripts/persona_lint.py . --allow-no-deny   # 结构门
-python scripts/selftest.py .                       # 27 pass + 1 skipped
+python scripts/selftest.py .                       # 28 pass + 1 skipped
 ```
 
 Blender 侧检查：
@@ -195,7 +195,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 重建技能目录：
 
 ```bash
-python tools/build_skill.py --source <V5.16.0 套件目录> --out <仓库父目录> --force
+python tools/build_skill.py --source <V5.16.1 套件目录> --out <仓库父目录> --force
 ```
 
 ## 许可

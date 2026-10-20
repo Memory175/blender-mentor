@@ -1,0 +1,24 @@
+{
+  "interior": {
+    "bath": true,
+    "kitchen": true,
+    "fixed": true,
+    "movable": true,
+    "chairs": 6,
+    "cameras": 10
+  },
+  "architecture": {
+    "stairs": false,
+    "railings": false,
+    "roof": true
+  },
+  "manufacturing": {
+    "hollow": false,
+    "injection": false,
+    "3d_printing": false
+  },
+  "character": {
+    "human": false,
+    "rigged": false
+  }
+}

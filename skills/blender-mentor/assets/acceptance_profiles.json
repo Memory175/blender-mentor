@@ -1,7 +1,7 @@
 {
-  "schema": "acceptance-profiles/1",
-  "version": "1.0.0",
-  "policy": "primary profile decides checks; profile selects checks, never thresholds; coverage must be 100% before 0 FAIL is valid.",
+  "schema": "acceptance-profiles/1.1",
+  "version": "1.1.0",
+  "policy": "primary profile decides checks; check.applies_if decides applicability; profile selects checks, never thresholds; optional checks are excluded from coverage_required; missing required context returns ask, never a silent pass.",
   "profiles": [
     {
       "id": "INT-INTERIOR",
@@ -29,7 +29,8 @@
           "layer": "L0",
           "severity": "BLOCKER",
           "tool": "layout_check.py",
-          "coverage": "rooms"
+          "coverage": "rooms",
+          "tool_scope": "project"
         },
         {
           "id": "topology",
@@ -43,56 +44,112 @@
           "layer": "L3",
           "severity": "BLOCKER",
           "tool": "layout_check.py",
-          "coverage": "doors"
+          "coverage": "doors",
+          "tool_scope": "project"
         },
         {
           "id": "bath_door_clear",
           "layer": "L3",
           "severity": "BLOCKER",
           "tool": "layout_check.py",
-          "coverage": "bath_doors"
+          "coverage": "bath_doors",
+          "applies_if": [
+            "interior.bath"
+          ],
+          "tool_scope": "project"
         },
         {
           "id": "fixed_collision",
           "layer": "L2",
           "severity": "BLOCKER",
           "tool": "layout_check.py",
-          "coverage": "fixed_groups"
+          "coverage": "fixed_groups",
+          "applies_if": [
+            "interior.fixed"
+          ],
+          "tool_scope": "project"
         },
         {
           "id": "movable_collision",
           "layer": "L2",
           "severity": "BLOCKER",
           "tool": "layout_check.py",
-          "coverage": "movable_groups"
+          "coverage": "movable_groups",
+          "applies_if": [
+            "interior.movable"
+          ],
+          "tool_scope": "project"
         },
         {
           "id": "chair_orientation",
           "layer": "L3",
           "severity": "MAJOR",
           "tool": "layout_check.py",
-          "coverage": "chairs"
+          "coverage": "chairs",
+          "applies_if": [
+            "interior.chairs"
+          ],
+          "optional": true,
+          "tool_scope": "project"
         },
         {
           "id": "kitchen_aisle",
           "layer": "L3",
           "severity": "MAJOR",
           "tool": "layout_check.py",
-          "coverage": "kitchen_aisles"
+          "coverage": "kitchen_aisles",
+          "applies_if": [
+            "interior.kitchen"
+          ],
+          "tool_scope": "project"
         },
         {
           "id": "camera_clip",
           "layer": "L4",
           "severity": "MAJOR",
           "tool": "render_probe.py",
-          "coverage": "cameras"
+          "coverage": "cameras",
+          "applies_if": [
+            "interior.cameras"
+          ],
+          "optional": true
         },
         {
           "id": "material_missing",
           "layer": "L4",
           "severity": "WARN",
           "tool": "asset_gate.py",
-          "coverage": "materials"
+          "coverage": "materials",
+          "optional": true
+        },
+        {
+          "id": "support_contact",
+          "layer": "L2",
+          "severity": "MAJOR",
+          "tool": "layout_check.py",
+          "tool_scope": "project",
+          "coverage": "supports",
+          "optional": true
+        },
+        {
+          "id": "vertical_clearance",
+          "layer": "L2",
+          "severity": "MAJOR",
+          "tool": "layout_check.py",
+          "tool_scope": "project",
+          "coverage": "vertical_clearances",
+          "applies_if": [
+            "interior.kitchen"
+          ],
+          "optional": true
+        },
+        {
+          "id": "naming_duplicates",
+          "layer": "L1",
+          "severity": "WARN",
+          "tool": "asset_gate.py",
+          "coverage": "names",
+          "optional": true
         }
       ],
       "not_applicable": [
@@ -145,21 +202,30 @@
           "layer": "L3",
           "severity": "MAJOR",
           "tool": "asset_gate.py",
-          "coverage": "stairs"
+          "coverage": "stairs",
+          "applies_if": [
+            "architecture.stairs"
+          ]
         },
         {
           "id": "railings",
           "layer": "L3",
           "severity": "MAJOR",
           "tool": "asset_gate.py",
-          "coverage": "railings"
+          "coverage": "railings",
+          "applies_if": [
+            "architecture.railings"
+          ]
         },
         {
           "id": "roof",
           "layer": "L2",
           "severity": "MAJOR",
           "tool": "asset_gate.py",
-          "coverage": "roof"
+          "coverage": "roof",
+          "applies_if": [
+            "architecture.roof"
+          ]
         },
         {
           "id": "topology",
@@ -173,7 +239,8 @@
           "layer": "L4",
           "severity": "MAJOR",
           "tool": "render_probe.py",
-          "coverage": "cameras"
+          "coverage": "cameras",
+          "optional": true
         }
       ],
       "not_applicable": [
@@ -224,21 +291,31 @@
           "layer": "L2",
           "severity": "BLOCKER",
           "tool": "engineering_check.py",
-          "coverage": "shells"
+          "coverage": "shells",
+          "applies_if": [
+            "manufacturing.hollow"
+          ]
         },
         {
           "id": "draft_angle",
           "layer": "L2",
           "severity": "BLOCKER",
           "tool": "engineering_check.py",
-          "coverage": "molded_faces"
+          "coverage": "molded_faces",
+          "applies_if": [
+            "manufacturing.injection"
+          ]
         },
         {
           "id": "overhang_support",
           "layer": "L2",
           "severity": "MAJOR",
           "tool": "engineering_check.py",
-          "coverage": "overhangs"
+          "coverage": "overhangs",
+          "applies_if": [
+            "manufacturing.3d_printing"
+          ],
+          "optional": true
         },
         {
           "id": "interference",
@@ -252,14 +329,16 @@
           "layer": "L3",
           "severity": "MAJOR",
           "tool": "engineering_check.py",
-          "coverage": "assembly"
+          "coverage": "assembly",
+          "optional": true
         },
         {
           "id": "material_missing",
           "layer": "L4",
           "severity": "WARN",
           "tool": "asset_gate.py",
-          "coverage": "materials"
+          "coverage": "materials",
+          "optional": true
         }
       ],
       "not_applicable": [
@@ -321,6 +400,16 @@
           "severity": "BLOCKER",
           "tool": "curve_audit.py",
           "coverage": "cycles"
+        },
+        {
+          "id": "biomech",
+          "layer": "L3",
+          "severity": "BLOCKER",
+          "tool": "biomech_check.py",
+          "coverage": "biomech",
+          "applies_if": [
+            "character.human"
+          ]
         },
         {
           "id": "deformation",
@@ -679,5 +768,29 @@
       }
     ],
     "not_applicable": []
+  },
+  "context_schema": {
+    "interior": {
+      "bath": "bool",
+      "kitchen": "bool",
+      "fixed": "bool",
+      "movable": "bool",
+      "chairs": "int",
+      "cameras": "int"
+    },
+    "architecture": {
+      "stairs": "bool",
+      "railings": "bool",
+      "roof": "bool"
+    },
+    "manufacturing": {
+      "hollow": "bool",
+      "injection": "bool",
+      "3d_printing": "bool"
+    },
+    "character": {
+      "human": "bool",
+      "rigged": "bool"
+    }
   }
 }

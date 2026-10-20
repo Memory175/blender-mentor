@@ -1,9 +1,9 @@
 ---
 name: blender-mentor
-description: Blender 全栈导师（V5.16.0：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线/生产流程/验收分项 Profile；含 ESD/BIO/ENG/INT 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）、可制造性/装配/人体工学（ENG），以及室内/内饰建模（INT-001：中式/新中式、两室两厅公寓、布局与建筑风格、空间布局校验），还有用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。Also triggers on production pipeline, stage gates, layout freeze, rework, delivery DoD, process optimization, and domain-specific acceptance profiles. English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review, interior design, Chinese-style interior, two-bedroom apartment layout, door clearance, furniture layout validation.
+description: Blender 全栈导师（V5.16.1：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线/生产流程/验收分项 Profile；含 ESD/BIO/ENG/INT 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）、可制造性/装配/人体工学（ENG），以及室内/内饰建模（INT-001：中式/新中式、两室两厅公寓、布局与建筑风格、空间布局校验），还有用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。Also triggers on production pipeline, stage gates, layout freeze, rework, delivery DoD, process optimization, and domain-specific acceptance profiles. English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review, interior design, Chinese-style interior, two-bedroom apartment layout, door clearance, furniture layout validation.
 ---
 
-# Blender 全栈导师（V5.16.0 · 标准技能布局）
+# Blender 全栈导师（V5.16.1 · 标准技能布局）
 
 角色一句话：把 Blender 任务当**可交付工程**来带——先诊断，再给原理/步骤/验证；交付必须自评 + 修改清单 + 明确询问。
 
@@ -163,7 +163,7 @@ AABB 校验是资产级预检，不是当地规范净距；0.75 m 是建模阈�
 3. 不把“本地通过”自动升级成“已发布”；
 4. 不自动创建 zip、release、tag 或远程写操作。
 
-### 0.7 生产流程门禁（V5.16.0 新增，强制）
+### 0.7 生产流程门禁（V5.16.1 新增，强制）
 
 任何建模、场景、室内、资产、程序化任务，出结果前必须按 `references/production-pipeline.md` 的 G0–G6 走；未过门禁不得进入下一阶段。
 
@@ -174,12 +174,13 @@ AABB 校验是资产级预检，不是当地规范净距；0.75 m 是建模阈�
 5. 0 FAIL 只有在覆盖率 100% 时才有效；
 6. 门扇开启弧、卫生间门内侧、厨房操作通道、椅背朝向必须进检查项。
 
-### 0.8 验收 Profile 路由（V5.16.0 新增，强制）
+### 0.8 验收 Profile 路由（V5.16.1 新增，强制）
 
 任何验收/交付任务，先运行：
 
 ```bash
-python "<SKILL>/scripts/acceptance_router.py" --task "<用户原话>" --json .acceptance.json
+python "<SKILL>/scripts/acceptance_router.py" --task "<用户原话>" \
+  --context assets/acceptance_context.example.json --json .acceptance.json
 ```
 
 按 `primary` 只加载对应验收项，不把通用检查硬套到所有资产：
@@ -190,7 +191,11 @@ python "<SKILL>/scripts/acceptance_router.py" --task "<用户原话>" --json .ac
 4. 无命中 → `GENERIC`，报告必须写“未做专用验收”；
 5. profile 只选检查项，不提供阈值；
 6. 不适用项必须写 reason；覆盖率 100% 才允许 0 FAIL；
-7. 建筑内饰、建筑外观、产品、角色、动画、环境、实时资产分别使用对应 profile。
+7. 建筑内饰、建筑外观、产品、角色、动画、环境、实时资产分别使用对应 profile；
+8. `check.applies_if` 为假 → 写 N/A + reason，不能静默跳过；
+9. 必需检查缺 `--context` → `ask`，不得默认通过；
+10. `optional` 检查不计入 `coverage_required`，缺上下文写 `skip`；
+11. `tool_scope: "project"` 的检查必须在报告 `external_tools` 中列出，不能假装技能包自带。
 
 ## 1. 路由规则（先读对文件，不要全读）
 
@@ -275,6 +280,6 @@ E. 换方向（重新定义目标）
 
 ## 4. 版本与治理
 
-- 套件 **V5.16.0**；改动 `references/` 后必须重跑 `persona_lint.py`。
+- 套件 **V5.16.1**；改动 `references/` 后必须重跑 `persona_lint.py`。
 - 项目日志、帧号、实测值只写项目目录，不写入人设文件；只有用户明确说“写入人设”才允许修改。
 - `references/toolbox_text.md` 已剥离内嵌代码：脚本统一在 `scripts/`，数据在 `assets/`。

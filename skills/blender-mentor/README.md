@@ -175,14 +175,14 @@ New modules, or modules that declare a `source_id`, reference `assets/source_reg
 DSH, Claude Code, Claude.ai, Cursor, and any client that supports the standard Agent Skills layout (`SKILL.md` + resources).
 
 **What do the two version numbers mean?**
-The persona suite is **V5.16.0**; the packaged skill release is **v5.16.0**.
+The persona suite is **V5.16.1**; the packaged skill release is **v5.16.1**.
 
 ## Development
 
 ```bash
 python -m compileall -q scripts tools
 python scripts/persona_lint.py . --allow-no-deny   # structure gate
-python scripts/selftest.py .                       # 27 pass + 1 skipped
+python scripts/selftest.py .                       # 28 pass + 1 skipped
 ```
 
 Blender-side checks:
@@ -195,7 +195,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 Rebuild the skill directory:
 
 ```bash
-python tools/build_skill.py --source <V5.16.0 suite> --out <repo parent> --force
+python tools/build_skill.py --source <V5.16.1 suite> --out <repo parent> --force
 ```
 
 ## License
