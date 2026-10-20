@@ -60,9 +60,8 @@ scripts/module_conflict.py         # 冲突巡查
 }
 ```
 
-> 现有 ENG-001 / BIO-001 / ESD-001 仍用 `source: "references/..."` 的旧写法，属
-> **legacy**：`source_audit` 只报 legacy warning，不强制；新模块应使用
-> `source_id` + `assets/source_registry.json`。
+> v5.9.0 起 ENG-001 / BIO-001 / ESD-001 的 data 已全部使用 `source_id` + 内置
+> `assets/source_registry.json`；`source` 字段仅保留为人类可读兼容。新模块同样必须用 `source_id`。
 
 无来源时必须显式：
 

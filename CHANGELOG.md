@@ -1,5 +1,19 @@
 # Changelog
 
+## V5.9.0 — 2026-10-20
+
+> 模块来源治理落地；人设套件升 **V5.9.0**。
+
+### Added
+- `assets/source_registry.json`：15 条内部模块参考来源（internal / metadata-only）；
+- ENG-001 / BIO-001 / ESD-001 每个 data 增加 `source_id`；
+- 三个模块文档增加“来源注册”附录。
+
+### Changed
+- 模块版本：ENG-001 **1.1.0**、BIO-001 **1.1.0**、ESD-001 **1.1.9**；
+- README/SKILL/module-format 改为“所有内置模块已接 source_id”，不再称现有模块为 legacy；
+- `persona_lint` / `source_audit` 覆盖内置 registry：`source_audit` 状态为 `warn`（internal/metadata-only，外部标准未核）。
+
 ## V5.8.2 — 2026-10-20
 
 > 来源治理 fail-closed 修复；人设套件升 **V5.8.2**。

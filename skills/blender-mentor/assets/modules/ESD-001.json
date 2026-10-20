@@ -1,7 +1,7 @@
 {
   "schema": "mentor-module/1",
   "id": "ESD-001",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "status": "stable",
   "kind": "hybrid",
   "domain": [
@@ -87,7 +87,8 @@
       "unit": "ratio",
       "scope": "bounce",
       "source": "references/module-esd.md §3.1",
-      "confidence": "medium"
+      "confidence": "medium",
+      "source_id": "ESD-REF-3.1"
     },
     {
       "key": "squash_depth_pct",
@@ -98,7 +99,8 @@
       "unit": "percent",
       "scope": "deform",
       "source": "references/module-esd.md §3.2",
-      "confidence": "medium"
+      "confidence": "medium",
+      "source_id": "ESD-REF-3.2"
     },
     {
       "key": "hold_frames",
@@ -109,7 +111,8 @@
       "unit": "frames",
       "scope": "secondary",
       "source": "references/module-esd.md §3.3",
-      "confidence": "low"
+      "confidence": "low",
+      "source_id": "ESD-REF-3.3"
     }
   ],
   "rules": [
@@ -134,5 +137,7 @@
     "references/module-esd.md"
   ],
   "tests": [],
-  "changelog": []
+  "changelog": [
+    "1.1.9: 每个 data 增加 source_id；内置 source_registry.json（内部参考，metadata-only）；version bump。"
+  ]
 }

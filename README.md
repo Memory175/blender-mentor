@@ -165,13 +165,13 @@ No. It writes and runs bpy/headless scripts and reviews the artifacts you provid
 No. Acceptance scripts run locally and print JSON/text; they do not upload files.
 
 **How do you keep standards/books current?**
-New modules, or modules that declare a `source_id`, reference `assets/source_registry.json`. `source_audit.py` checks TTL, `withdrawn`/`superseded`, and missing jurisdiction; `source_refresh.py` queries official catalogs/Crossref but only proposes changes. The shipped ENG/BIO/ESD modules still use `source: "references/..."` (legacy) and are reported as legacy, not hard-failed. “Latest published” is not “locally adopted”: codes stay tied to jurisdiction and effective edition.
+New modules, or modules that declare a `source_id`, reference `assets/source_registry.json`. `source_audit.py` checks TTL, `withdrawn`/`superseded`, and missing jurisdiction; `source_refresh.py` queries official catalogs/Crossref but only proposes changes. All shipped module data now use `source_id`; the built-in registry maps them to module reference sections as `internal / metadata-only`, so external standards/books still need page-checking. “Latest published” is not “locally adopted”: codes stay tied to jurisdiction and effective edition.
 
 **Which clients are supported?**
 DSH, Claude Code, Claude.ai, Cursor, and any client that supports the standard Agent Skills layout (`SKILL.md` + resources).
 
 **What do the two version numbers mean?**
-The persona suite is **V5.8.2**; the packaged skill release is **v5.8.2**.
+The persona suite is **V5.9.0**; the packaged skill release is **v5.9.0**.
 
 ## Development
 
@@ -191,7 +191,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 Rebuild the skill directory:
 
 ```bash
-python tools/build_skill.py --source <V5.8.2 suite> --out <repo parent> --force
+python tools/build_skill.py --source <V5.9.0 suite> --out <repo parent> --force
 ```
 
 ## License

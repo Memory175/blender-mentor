@@ -1,7 +1,7 @@
 {
   "schema": "mentor-module/1",
   "id": "ENG-001",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "status": "stable",
   "kind": "hybrid",
   "domain": [
@@ -151,7 +151,8 @@
       "unit": "mm",
       "scope": "injection",
       "source": "references/module-engineering.md §3.1",
-      "confidence": "high"
+      "confidence": "high",
+      "source_id": "ENG-REF-3.1"
     },
     {
       "key": "draft_min_deg",
@@ -159,7 +160,8 @@
       "unit": "deg",
       "scope": "injection/casting",
       "source": "references/module-engineering.md §3.2",
-      "confidence": "high"
+      "confidence": "high",
+      "source_id": "ENG-REF-3.2"
     },
     {
       "key": "overhang_max_deg",
@@ -167,7 +169,8 @@
       "unit": "deg",
       "scope": "FDM",
       "source": "references/module-engineering.md §3.5",
-      "confidence": "high"
+      "confidence": "high",
+      "source_id": "ENG-REF-3.5"
     },
     {
       "key": "stability_margin_pct",
@@ -175,7 +178,8 @@
       "unit": "percent",
       "scope": "rigid-body",
       "source": "references/module-engineering.md §1.2",
-      "confidence": "medium"
+      "confidence": "medium",
+      "source_id": "ENG-REF-1.2"
     },
     {
       "key": "finger_clearance_mm",
@@ -183,7 +187,8 @@
       "unit": "mm",
       "scope": "ergonomics",
       "source": "references/module-engineering.md §4.1",
-      "confidence": "medium"
+      "confidence": "medium",
+      "source_id": "ENG-REF-4.1"
     },
     {
       "key": "snap_undercut_mm",
@@ -191,7 +196,8 @@
       "unit": "mm",
       "scope": "snap-fit",
       "source": "references/module-engineering.md §5.1",
-      "confidence": "medium"
+      "confidence": "medium",
+      "source_id": "ENG-REF-5.1"
     },
     {
       "key": "assembly_clearance_mm",
@@ -199,7 +205,8 @@
       "unit": "mm",
       "scope": "assembly",
       "source": "references/module-engineering.md §5.1",
-      "confidence": "medium"
+      "confidence": "medium",
+      "source_id": "ENG-REF-5.1"
     },
     {
       "key": "ceramic_shrink_pct",
@@ -210,7 +217,8 @@
       "unit": "percent",
       "scope": "ceramic",
       "source": "references/module-engineering.md §3.4",
-      "confidence": "medium"
+      "confidence": "medium",
+      "source_id": "ENG-REF-3.4"
     }
   ],
   "rules": [
@@ -249,5 +257,7 @@
   "tests": [
     "tests/engineering"
   ],
-  "changelog": []
+  "changelog": [
+    "1.1.0: 每个 data 增加 source_id；内置 source_registry.json（内部参考，metadata-only）；version bump。"
+  ]
 }

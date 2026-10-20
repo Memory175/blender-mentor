@@ -165,13 +165,13 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 不会。验收脚本在本机运行，输出 JSON/文本，不上传文件。
 
 **怎么保证标准/书籍是最新的？**
-新模块，或声明了 `source_id` 的模块，通过 `source_id` 引用 `assets/source_registry.json`。`source_audit.py` 检查 TTL、`withdrawn`/`superseded`、缺 jurisdiction；`source_refresh.py` 查官方目录/Crossref，但只提议、不自动替换。现有 ENG/BIO/ESD 仍用 `source: "references/..."`（legacy），只报 legacy warning，不强制失败。“最新出版版”不等于“当地 adopted edition”：规范必须绑定 jurisdiction 和生效版次。
+新模块，或声明了 `source_id` 的模块，通过 `source_id` 引用 `assets/source_registry.json`。`source_audit.py` 检查 TTL、`withdrawn`/`superseded`、缺 jurisdiction；`source_refresh.py` 查官方目录/Crossref，但只提议、不自动替换。现有模块的 data 已全部使用 `source_id`；内置 registry 将其登记为 `internal / metadata-only`，外部标准/书页码仍需另行核验。“最新出版版”不等于“当地 adopted edition”：规范必须绑定 jurisdiction 和生效版次。
 
 **支持哪些客户端？**
 DSH、Claude Code、Claude.ai、Cursor，以及任何支持标准 Agent Skills 布局（`SKILL.md` + 资源目录）的客户端。
 
 **两个版本号是什么意思？**
-人设套件为 **V5.8.2**；打包后的技能发布版本为 **v5.8.2**。
+人设套件为 **V5.9.0**；打包后的技能发布版本为 **v5.9.0**。
 
 ## 开发与验证
 
@@ -191,7 +191,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 重建技能目录：
 
 ```bash
-python tools/build_skill.py --source <V5.8.2 套件目录> --out <仓库父目录> --force
+python tools/build_skill.py --source <V5.9.0 套件目录> --out <仓库父目录> --force
 ```
 
 ## 许可

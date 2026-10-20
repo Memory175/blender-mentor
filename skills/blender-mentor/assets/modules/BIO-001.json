@@ -1,7 +1,7 @@
 {
   "schema": "mentor-module/1",
   "id": "BIO-001",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "status": "stable",
   "kind": "hybrid",
   "domain": [
@@ -88,7 +88,8 @@
       "unit": "body_weight",
       "scope": "running",
       "source": "references/module-biomechanics.md §2.3",
-      "confidence": "medium"
+      "confidence": "medium",
+      "source_id": "BIO-REF-2.3"
     },
     {
       "key": "com_support_margin_pct",
@@ -96,7 +97,8 @@
       "unit": "percent",
       "scope": "gait",
       "source": "references/module-biomechanics.md §2.1",
-      "confidence": "medium"
+      "confidence": "medium",
+      "source_id": "BIO-REF-2.1"
     },
     {
       "key": "airtime_s",
@@ -107,7 +109,8 @@
       "unit": "s",
       "scope": "jump",
       "source": "references/module-biomechanics.md §2.5",
-      "confidence": "low"
+      "confidence": "low",
+      "source_id": "BIO-REF-2.5"
     },
     {
       "key": "landing_flexion_deg",
@@ -115,7 +118,8 @@
       "unit": "deg",
       "scope": "landing",
       "source": "references/module-biomechanics.md §2.6",
-      "confidence": "medium"
+      "confidence": "medium",
+      "source_id": "BIO-REF-2.6"
     },
     {
       "key": "muscle_volume_delta_pct",
@@ -123,7 +127,8 @@
       "unit": "percent",
       "scope": "muscle-drive",
       "source": "references/module-biomechanics.md §3.2",
-      "confidence": "medium"
+      "confidence": "medium",
+      "source_id": "BIO-REF-3.2"
     }
   ],
   "rules": [
@@ -148,5 +153,7 @@
     "references/module-biomechanics.md"
   ],
   "tests": [],
-  "changelog": []
+  "changelog": [
+    "1.1.0: 每个 data 增加 source_id；内置 source_registry.json（内部参考，metadata-only）；version bump。"
+  ]
 }

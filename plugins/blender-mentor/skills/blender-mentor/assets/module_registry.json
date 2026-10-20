@@ -1,26 +1,26 @@
 {
   "schema": "mentor-registry/1",
-  "suite": "V5.8.2",
+  "suite": "V5.9.0",
   "modules": [
     {
       "id": "ENG-001",
       "file": "assets/modules/ENG-001.json",
-      "version": "1.0.1",
-      "hash": "sha256:693fe872458d17d7851e0570fea4839a136c0f8b25f1c75bcc808b374bdd1ca9",
+      "version": "1.1.0",
+      "hash": "sha256:5d06b7ae1d839736769b130a9583c3af6aebfbcd09fd2cdcba416efac1a14b0c",
       "status": "stable"
     },
     {
       "id": "BIO-001",
       "file": "assets/modules/BIO-001.json",
-      "version": "1.0.4",
-      "hash": "sha256:17a0a134036a090f57f5f7a035853bc7990a6ada77c51b3cccef252ae076825c",
+      "version": "1.1.0",
+      "hash": "sha256:b169e9a12f26422636d227bd8a599537360e68b36aab75658c3855bab4eacb1d",
       "status": "stable"
     },
     {
       "id": "ESD-001",
       "file": "assets/modules/ESD-001.json",
-      "version": "1.1.8",
-      "hash": "sha256:862fccf9f588a5030ce98e302e64c42ae40ba5a203049dd08da6c20d557693ad",
+      "version": "1.1.9",
+      "hash": "sha256:efddb299e18c2a242bf3abc1bd05657dec68dcbf424f9b251e457e16b7431cab",
       "status": "stable"
     }
   ],

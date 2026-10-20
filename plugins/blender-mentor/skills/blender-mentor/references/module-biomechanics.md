@@ -1,7 +1,7 @@
 # BIO-001 · 生物力学与运动解剖模块（V5.3.0）
 
 - **ID**：`BIO-001`
-- **版本**：v1.0.4
+- **版本**：v1.1.0
 - **状态**：stable
 - **适用域**：人体/类人生物动画（行走、跑跳、受击、格斗、舞蹈、生物角色）
 - **依赖**：无（可独立使用）；与 `ESD-001` 正交
@@ -185,3 +185,9 @@ assert abs(T_measured - T_theory) <= 1.0 / fps
 - toolbox `§3.13`：误区表；`§6`：`biomech_check.py` 伪代码；
 - curriculum `M3-W12/W13`：肌肉体积与动力链作业；
 - 项目复盘只保留通用结论，不写具体项目数据。
+
+---
+
+## 附录：来源注册
+
+本模块 `data.source_id` 指向 `assets/source_registry.json` 的 `BIO-REF-*`。当前登记为 `internal / metadata-only`，外部书/论文页码仍未核验。
