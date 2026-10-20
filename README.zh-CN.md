@@ -77,7 +77,7 @@ bash dsh/install.sh
 | **0–3 评分表** | 关键项、评分锚点、自评模板 |
 | **工程预检（ENG-001）** | 稳定性、壁厚、拔模、悬垂/支撑、干涉、配合间隙 |
 | **M0–M6 课程包** | 建模与拓扑 → UV/材质/灯光/渲染 → 动画/绑定 → 物理/几何节点/管线 |
-| **22 个可执行工具** | 10 个验收脚本 + 工程预检 + 模块治理（预审/lint/冲突/引用审计）+ 回归测试 |
+| **22 个可执行工具** | 10 个验收脚本 + 工程预检 + 模块治理（预审/lint/冲突/引用审计）+ 来源治理（审计/查询）+ 回归测试 |
 | **知识库** | 130 条常见误区 + 40 条红线 |
 
 ## 环境要求
@@ -94,14 +94,15 @@ bash dsh/install.sh
 SKILL.md       路由 + D1–D4 交付闭环 + 机器验收命令
 references/    9 个参考文件（7 份人设文档 + 模块格式 + 写作说明），按需加载
 scripts/       22 个可执行工具
-assets/        ESD 模板、加载清单、拒绝词示例
+assets/        ESD 模板、加载清单、拒绝词示例、来源注册表模板
 ```
 
 1. `SKILL.md` 负责路由，并设定交付闭环。
 2. `preflight.py` 先分类：`proceed`（模块支撑）、`proceed_core`（教学/操作，无需模块）、`ask`、`block`（需要参考数据但无模块覆盖）。
 3. `load_router.py` 生成该任务的加载清单，只加载预审选中的模块；`proceed_core` 只加载核心文档，不加载模块。
-4. 验收脚本通过无头 Blender 操作你本地的 `.blend`。
-5. 文件不出本机；验收工具不会上传任何内容。
+4. `source_audit.py` 在模块交付前检查标准/书籍/论文：TTL、withdrawn/superseded、缺 jurisdiction 会阻断。
+5. 验收脚本通过无头 Blender 操作你本地的 `.blend`。
+6. 文件不出本机；验收工具不会上传任何内容。
 
 <details>
 <summary><strong>高级安装方式</strong></summary>
@@ -163,18 +164,21 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 **我的 `.blend` 会被上传吗？**
 不会。验收脚本在本机运行，输出 JSON/文本，不上传文件。
 
+**怎么保证标准/书籍是最新的？**
+模块数据通过 `source_id` 引用 `assets/source_registry.json`。`source_audit.py` 检查 TTL、`withdrawn`/`superseded`、缺 jurisdiction；`source_refresh.py` 查官方目录/Crossref，但只提议、不自动替换。“最新出版版”不等于“当地 adopted edition”：规范必须绑定 jurisdiction 和生效版次。
+
 **支持哪些客户端？**
 DSH、Claude Code、Claude.ai、Cursor，以及任何支持标准 Agent Skills 布局（`SKILL.md` + 资源目录）的客户端。
 
 **两个版本号是什么意思？**
-人设套件为 **V5.8.0**；打包后的技能发布版本为 **v5.6.1**。
+人设套件为 **V5.8.1**；打包后的技能发布版本为 **v5.8.1**。
 
 ## 开发与验证
 
 ```bash
 python -m compileall -q scripts tools
 python scripts/persona_lint.py . --allow-no-deny   # 结构门
-python scripts/selftest.py .                       # 24 pass + 1 skipped
+python scripts/selftest.py .                       # 26 pass + 1 skipped
 ```
 
 Blender 侧检查：
@@ -187,7 +191,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 重建技能目录：
 
 ```bash
-python tools/build_skill.py --source <V5.8.0 套件目录> --out <仓库父目录> --force
+python tools/build_skill.py --source <V5.8.1 套件目录> --out <仓库父目录> --force
 ```
 
 ## 许可

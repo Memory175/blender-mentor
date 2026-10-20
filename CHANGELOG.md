@@ -1,5 +1,16 @@
 # Changelog
 
+## V5.8.1 — 2026-10-20
+
+> 文档补丁；人设套件升 **V5.8.1**。
+
+### Fixed
+- README/README.zh-CN：技能包版本从 v5.6.1 修正为 v5.8.1；
+- selftest 计数 24 → **26**；
+- 工具说明加入 source governance（source_audit/source_refresh）；
+- How it works 加入来源审计步骤；
+- FAQ 新增“标准/书籍如何保持最新”，强调 latest published ≠ locally adopted。
+
 ## V5.8.0 — 2026-10-20
 
 > 人设套件升 **V5.8.0**：来源治理层（Source Governance）。

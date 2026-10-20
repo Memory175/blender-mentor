@@ -1,6 +1,6 @@
 # 人设：Blender 全栈导师 × 资深技术总监（V5 · 体系版）
 
-> V5 由**七个文件**组成（主文档 + 3 个支撑文件 + 3 个通用模块）；当前 **V5.8.0**：
+> V5 由**七个文件**组成（主文档 + 3 个支撑文件 + 3 个通用模块）；当前 **V5.8.1**：
 > 1. 本文件：主文档（身份、教学协议、能力框架、模块库、治理）；**§2.8 交付闭环协议**、**§2.9 生物力学强制模块**、**§12.4 人设写入授权规则**
 > 2. `rubric.md`：评估体系（0–3 分档评分表、权重、及格线、前后测、校准、**§11 自评/修改清单模板**、**§4.7 生物力学子维度**）
 > 3. `curriculum.md`：课程包（M0–M6 逐周教案、作业、测验+答案、Capstone、**M3 交付清单**、**W12/W13 生物力学作业**）
@@ -294,7 +294,7 @@ E. 换方向（重新定义目标）
 
 ## 10. 治理（人设自身的版本与维护）
 
-- **版本**：semver；本文件 **V5.8.0**（V5.4.0：`sample_esd_from_blend.py` 落地 ESD 采样闭环；`biomech_check.py` 补 airtime/driver-binding/退出码/亚帧，Hips Z 阈值统一 2cm；rubric N/A 归一化、curriculum 口径与 M3 计分修正；V5.3.10 测试自证；更早版本见下）。
+- **版本**：semver；本文件 **V5.8.1**（V5.4.0：`sample_esd_from_blend.py` 落地 ESD 采样闭环；`biomech_check.py` 补 airtime/driver-binding/退出码/亚帧，Hips Z 阈值统一 2cm；rubric N/A 归一化、curriculum 口径与 M3 计分修正；V5.3.10 测试自证；更早版本见下）。
 - **变更记录**：
   - V5.0.0：四文件体系（主文档/评分表/课程包/工具箱）。
   - V5.1.0：新增「能量驱动的次级动画缩放」通用模块（ESD-001）；补红线 31–33；信条更新"能量决定幅度、锚点决定位置"。
@@ -317,6 +317,7 @@ E. 换方向（重新定义目标）
 - V5.6.2：新增 `references/module-authoring.md`（模块写作说明 / 单层小房子案例 / 可复制给任意 AI 的 Prompt）；SKILL 路由与 module-format 增加入口；重打包为 v5.6.2。
 - V5.7.0：新增 `module_gap.py` 与 `assets/module_gap_hints.json`；一句话任务缺模块时返回缺口说明 + 可复制 Prompt + 并入步骤；SKILL 增加 §0.2；load_plan 补齐治理工具；重打包为 v5.7.0。
 - V5.8.0：新增来源治理层 `source_audit.py` / `source_refresh.py` / `source_selftest.py`；模块数据通过 `source_id` 引用 `source_registry.json`；preflight 对 withdrawn/缺 jurisdiction 返回 ask；来源查询只提议不自动替换；重打包为 v5.8.0。
+- V5.8.1：README 修正（版本号/selftest 26/来源治理说明/FAQ）；重打包为 v5.8.1。
 - **审查周期**：每季度复核一次；Blender 大版本更新后立即复核兼容性章节。
 - **引用来源**：Blender Manual、Python API、Release Notes、实测回执；教材/论文在 curriculum 中列出。
 - **兼容矩阵**：Blender 4.2 LTS / 5.0+ / 5.2 的行为差异（EEVEE Next、Action Slots、FFMPEG media_type、GN API、Extensions）。

@@ -77,7 +77,7 @@ Use blender-mentor to walk me through M1 modeling and topology.
 | **0–3 rubric** | critical items, scoring anchors, and a self-review template |
 | **Engineering precheck (ENG-001)** | stability, wall thickness, draft, overhang/support, interference, clearance |
 | **M0–M6 curriculum** | modeling & topology → UV/materials/lighting/render → animation/rigging → physics/geometry nodes/pipeline |
-| **22 executable tools** | 10 acceptance scripts + engineering precheck + module governance (preflight/lint/conflict/claim audit) + regression runner |
+| **22 executable tools** | 10 acceptance scripts + engineering precheck + module governance (preflight/lint/conflict/claim audit) + source governance (audit/refresh) + regression runner |
 | **Knowledge base** | 130 common misconceptions + 40 red lines |
 
 ## Requirements
@@ -94,14 +94,15 @@ Use blender-mentor to walk me through M1 modeling and topology.
 SKILL.md       routing + D1–D4 delivery loop + machine-acceptance commands
 references/    9 reference files (7 persona docs + module format + authoring guide), loaded on demand
 scripts/       22 executable tools
-assets/        ESD templates, load plans, deny-word example
+assets/        ESD templates, load plans, deny-word example, source registry template
 ```
 
 1. `SKILL.md` routes the request and sets the delivery loop.
 2. `preflight.py` classifies it: `proceed` (module-backed), `proceed_core` (teaching/operations, no module needed), `ask`, or `block` (reference data required but not covered).
 3. `load_router.py` builds a per-task load plan and only loads modules selected by preflight; `proceed_core` tasks get core docs, never modules.
-4. Acceptance scripts run against your local `.blend` through headless Blender.
-5. Your files stay local; the acceptance tools do not upload anything.
+4. `source_audit.py` checks standards/books/papers before module-backed delivery: TTL, withdrawn/superseded, and missing jurisdiction block.
+5. Acceptance scripts run against your local `.blend` through headless Blender.
+6. Your files stay local; the acceptance tools do not upload anything.
 
 <details>
 <summary><strong>Advanced installation</strong></summary>
@@ -163,18 +164,21 @@ No. It writes and runs bpy/headless scripts and reviews the artifacts you provid
 **Is my `.blend` uploaded?**
 No. Acceptance scripts run locally and print JSON/text; they do not upload files.
 
+**How do you keep standards/books current?**
+Modules cite a `source_id` in `assets/source_registry.json`. `source_audit.py` checks TTL, `withdrawn`/`superseded`, and missing jurisdiction; `source_refresh.py` queries official catalogs/Crossref but only proposes changes. “Latest published” is not “locally adopted”: codes stay tied to jurisdiction and effective edition.
+
 **Which clients are supported?**
 DSH, Claude Code, Claude.ai, Cursor, and any client that supports the standard Agent Skills layout (`SKILL.md` + resources).
 
 **What do the two version numbers mean?**
-The persona suite is **V5.8.0**; the packaged skill release is **v5.6.1**.
+The persona suite is **V5.8.1**; the packaged skill release is **v5.8.1**.
 
 ## Development
 
 ```bash
 python -m compileall -q scripts tools
 python scripts/persona_lint.py . --allow-no-deny   # structure gate
-python scripts/selftest.py .                       # 24 pass + 1 skipped
+python scripts/selftest.py .                       # 26 pass + 1 skipped
 ```
 
 Blender-side checks:
@@ -187,7 +191,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 Rebuild the skill directory:
 
 ```bash
-python tools/build_skill.py --source <V5.8.0 suite> --out <repo parent> --force
+python tools/build_skill.py --source <V5.8.1 suite> --out <repo parent> --force
 ```
 
 ## License
