@@ -20,6 +20,10 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import module_governance as mg  # noqa: E402
+try:
+    import source_audit as _source_audit  # noqa: E402
+except Exception:  # noqa: BLE001
+    _source_audit = None
 
 
 def _load_gap_hints(root):
@@ -40,12 +44,18 @@ def evaluate(root, task, modules_dir=None, registry_path=None, max_modules=2):
     core_triggers = (registry or {}).get("core_triggers", [])
     gap_hints = _load_gap_hints(root) if not modules_dir else []
     selected = mg.select_modules(modules, task, max_modules=max_modules)
+    sel_ids = {m.get("id") for m in selected}
+    source_result = None
+    if selected and _source_audit is not None:
+        try:
+            source_result = _source_audit.audit(root, modules_dir=modules_dir, only_ids=sel_ids)
+        except Exception as exc:  # noqa: BLE001
+            source_result = {"status": "error", "problems": [str(exc)], "warnings": [], "legacy": []}
     matched, required, available = mg.coverage_for(selected, task)
     missing = sorted(k for k in required if k not in available)
     unmapped = bool(selected) and not matched
     conflicts = mg.scan_conflicts(modules, all_problems)
     # 只把与本次选中模块相关的冲突算进来；注册表/全局问题始终算
-    sel_ids = {m.get("id") for m in selected}
     relevant = []
     for c in conflicts:
         detail = str(c.get("detail", ""))
@@ -85,6 +95,9 @@ def evaluate(root, task, modules_dir=None, registry_path=None, max_modules=2):
     elif relevant:
         decision = "ask"
         questions.append("检测到模块冲突。请选择：修改哪个模块 / 新增 override 模块 / 以哪个为准 / 放弃该项检查。")
+    elif source_result and source_result.get("status") == "fail":
+        decision = "ask"
+        questions.append("模块来源审计失败（withdrawn/superseded 或法规缺 jurisdiction）。请先更新来源注册表与模块数据，再执行。")
     elif missing or unmapped:
         policies = [m.get("unknown_policy", "ask") for m in selected]
         decision = "block" if "block" in policies else "ask"
@@ -105,6 +118,7 @@ def evaluate(root, task, modules_dir=None, registry_path=None, max_modules=2):
         "questions": questions,
         "core_triggers_hit": core_hits,
         "gap_hints": hint_hits,
+        "source_audit": source_result,
         "data": {k: available[k] for k in sorted(required) if k in available},
         "modules_considered": len(modules),
     }

@@ -1,5 +1,22 @@
 # Changelog
 
+## V5.8.0 — 2026-10-20
+
+> 人设套件升 **V5.8.0**：来源治理层（Source Governance）。
+
+### Added
+- `scripts/source_audit.py`：TTL / withdrawn / superseded / pending / 法规缺 jurisdiction 检查；
+- `scripts/source_refresh.py`：官方域名 + Crossref 查询，只输出 proposals，不自动替换；
+- `scripts/source_selftest.py`：5 个来源审计回归；
+- `assets/source_registry.template.json`：来源注册表模板；
+- `SKILL.md §0.3`、`references/module-authoring.md §6.5`：来源时效规则；
+- `preflight` 接入来源审计：fail → ask；
+- `load_plan` 增加 source_audit/source_refresh。
+
+### Changed
+- 模块数据通过 `source_id` 引用来源注册表；`withdrawn/superseded` 或缺 jurisdiction 不得继续；
+- `selftest` 扩展到 **26 项**；`source_selftest` 5 个场景。
+
 ## V5.7.0 — 2026-10-20
 
 > 文档补丁；人设套件升 **V5.7.0**。

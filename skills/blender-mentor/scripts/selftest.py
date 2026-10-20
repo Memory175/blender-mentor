@@ -190,6 +190,10 @@ def main(argv=None):
                    and "ARC-001" in house["prompt"] and len(house["merge_steps"]) >= 5,
                    {"action": house["action"], "gap": house.get("gap", {}).get("id"),
                     "steps": len(house.get("merge_steps", []))})
+            ss = _load("source_selftest", os.path.join(TOOLS, "source_selftest.py"))
+            src = ss["run"]()
+            _check(checks, "source_governance", src["status"] == "pass",
+                   {"passed": src["passed"], "total": src["total"]})
             ac = _load("audit_claims", os.path.join(TOOLS, "audit_claims.py"))
             claim_dir = os.path.join(root, "tests", "module_governance", "claims")
             if not os.path.isdir(claim_dir):

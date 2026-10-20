@@ -411,6 +411,71 @@ python scripts/selftest.py .
 
 ---
 
+## 6.5 来源时效：最新版 / 失效 / 自动查询
+
+### 数据字段
+
+每个 `data` 项加 `source_id`，并到 `assets/source_registry.json` 登记：
+
+```json
+{
+  "key": "ceiling_height_m",
+  "source_id": "NEUFERT-5E",
+  "verification": "pending"
+}
+```
+
+来源记录至少包含：
+
+```json
+{
+  "id": "NEUFERT-5E",
+  "type": "book | code | standard | paper | web",
+  "edition": "5th",
+  "year": 2019,
+  "status": "current | adopted | superseded | withdrawn | unknown | pending",
+  "verification": "page-checked | metadata-only | pending",
+  "jurisdiction": null,
+  "checked_at": "2026-10-20",
+  "next_check_due": "2027-10-20",
+  "check_url": "官方目录/出版社/DOI 页面"
+}
+```
+
+### 审计
+
+```bash
+python scripts/source_audit.py --json .source_audit.json
+```
+
+- `withdrawn/superseded` → fail，停止；
+- 法规缺 `jurisdiction` → fail；
+- `pending/metadata-only` / 过期 → warn，不能支撑 fail 级结论。
+
+TTL 建议：code/standard 90 天，book/paper 365 天。
+
+### 过期查询
+
+```bash
+python scripts/source_refresh.py --offline
+python scripts/source_refresh.py --json .source_refresh.json
+```
+
+它只访问官方域名/Crossref，输出 `proposals`，**不自动改写 registry**。
+“最新出版版”≠“当地 adopted edition”：规范必须确认 jurisdiction + 生效日期 + amendments。
+
+### 可靠来源优先级
+
+1. 官方标准机构（ISO/IEC/ITU、国家标准化机构、ICC、ASHRAE、ASTM、NFPA、CEN）；
+2. 政府法规/规划部门官网；
+3. 出版社页面 + ISBN；
+4. 同行评审论文（Crossref/DOI、期刊官网、撤稿检查）；
+5. 图书馆/WorldCat/Google Books 只做书目交叉核对。
+
+不要用随机 PDF 站、二手“最新规范汇总”、AI 摘要页作为来源。
+
+---
+
 ## 7. 一句话总结
 
 > **模块 = 机器可读的数据与规则 + 人读的文档 + 可核对的来源。**

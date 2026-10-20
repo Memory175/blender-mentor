@@ -77,7 +77,7 @@ Use blender-mentor to walk me through M1 modeling and topology.
 | **0–3 rubric** | critical items, scoring anchors, and a self-review template |
 | **Engineering precheck (ENG-001)** | stability, wall thickness, draft, overhang/support, interference, clearance |
 | **M0–M6 curriculum** | modeling & topology → UV/materials/lighting/render → animation/rigging → physics/geometry nodes/pipeline |
-| **18 executable tools** | 10 acceptance scripts + engineering precheck + module governance (preflight/lint/conflict/claim audit) + regression runner |
+| **22 executable tools** | 10 acceptance scripts + engineering precheck + module governance (preflight/lint/conflict/claim audit) + regression runner |
 | **Knowledge base** | 130 common misconceptions + 40 red lines |
 
 ## Requirements
@@ -93,7 +93,7 @@ Use blender-mentor to walk me through M1 modeling and topology.
 ```text
 SKILL.md       routing + D1–D4 delivery loop + machine-acceptance commands
 references/    9 reference files (7 persona docs + module format + authoring guide), loaded on demand
-scripts/       18 executable tools
+scripts/       22 executable tools
 assets/        ESD templates, load plans, deny-word example
 ```
 
@@ -141,7 +141,7 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 ├── plugins/blender-mentor/      # Claude Code plugin wrapper (generated)
 ├── dsh/install.ps1 / install.sh # DSH one-line installers
 ├── references/                  # 9 reference files (7 persona docs + module format + authoring guide)
-├── scripts/                     # 18 executable tools
+├── scripts/                     # 22 executable tools
 ├── assets/                      # ESD templates, load plans, deny example
 ├── docs/                        # banner + example session image
 └── tools/build_skill.py         # maintainer build tool
@@ -167,7 +167,7 @@ No. Acceptance scripts run locally and print JSON/text; they do not upload files
 DSH, Claude Code, Claude.ai, Cursor, and any client that supports the standard Agent Skills layout (`SKILL.md` + resources).
 
 **What do the two version numbers mean?**
-The persona suite is **V5.7.0**; the packaged skill release is **v5.6.1**.
+The persona suite is **V5.8.0**; the packaged skill release is **v5.6.1**.
 
 ## Development
 
@@ -187,7 +187,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 Rebuild the skill directory:
 
 ```bash
-python tools/build_skill.py --source <V5.7.0 suite> --out <repo parent> --force
+python tools/build_skill.py --source <V5.8.0 suite> --out <repo parent> --force
 ```
 
 ## License

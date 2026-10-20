@@ -1,6 +1,6 @@
 {
   "version": "1.2.0",
-  "suite_version": "V5.7.0",
+  "suite_version": "V5.8.0",
   "always": [
     {
       "file": "references/main.md",
@@ -181,6 +181,14 @@
     {
       "file": "scripts/module_gap.py",
       "when": "缺模块时生成缺口说明 + 可复制 Prompt + 并入步骤"
+    },
+    {
+      "file": "scripts/source_audit.py",
+      "when": "来源注册表审计（TTL/失效/withdrawn/缺 jurisdiction）"
+    },
+    {
+      "file": "scripts/source_refresh.py",
+      "when": "来源过期后查询官方页面/Crossref，只提议不自动替换"
     }
   ],
   "policy": [

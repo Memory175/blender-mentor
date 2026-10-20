@@ -1,0 +1,54 @@
+{
+  "schema": "mentor-source-registry/1",
+  "updated_at": "YYYY-MM-DD",
+  "policy": {
+    "description": "所有模块 data 通过 source_id 引用本表；未核对条目标 unknown/pending。",
+    "ttl_days": {
+      "code": 90,
+      "standard": 90,
+      "book": 365,
+      "paper": 365,
+      "web": 30
+    },
+    "status_enum": ["current", "adopted", "superseded", "withdrawn", "unknown", "pending"],
+    "verification_enum": ["page-checked", "metadata-only", "pending"],
+    "allowed_domains": ["wiley.com", "iso.org", "iccsafe.org", "ashrae.org", "asce.org", "crossref.org"],
+    "rule": "status=superseded/withdrawn 或 verification=pending 的来源，不能支撑 fail 级规则。"
+  },
+  "sources": [
+    {
+      "id": "EXAMPLE-BOOK-1E",
+      "type": "book",
+      "title": "Replace with authoritative title",
+      "author": "Replace",
+      "edition": "1st",
+      "year": 2020,
+      "publisher": "Replace",
+      "isbn": null,
+      "authority": "publisher",
+      "official_url": null,
+      "check_url": null,
+      "status": "unknown",
+      "verification": "pending",
+      "checked_at": "YYYY-MM-DD",
+      "next_check_due": "YYYY-MM-DD",
+      "note": "metadata-only; page/ISBN pending"
+    },
+    {
+      "id": "EXAMPLE-CODE",
+      "type": "code",
+      "title": "Replace with local adopted code",
+      "jurisdiction": null,
+      "edition": null,
+      "year": null,
+      "authority": "government",
+      "official_url": null,
+      "check_url": null,
+      "status": "pending",
+      "verification": "pending",
+      "checked_at": "YYYY-MM-DD",
+      "next_check_due": null,
+      "note": "must name jurisdiction + adopted edition + effective date"
+    }
+  ]
+}
