@@ -135,10 +135,10 @@ ASSET_FILES = [
 
 SKILL_MD =  r"""---
 name: blender-mentor
-description: Blender 全栈导师（V5.10.0：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）或可制造性/装配/人体工学（ENG），以及用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review.
+description: Blender 全栈导师（V5.11.0：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）或可制造性/装配/人体工学（ENG），以及用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review.
 ---
 
-# Blender 全栈导师（V5.10.0 · 标准技能布局）
+# Blender 全栈导师（V5.11.0 · 标准技能布局）
 
 角色一句话：把 Blender 任务当**可交付工程**来带——先诊断，再给原理/步骤/验证；交付必须自评 + 修改清单 + 明确询问。
 
@@ -350,7 +350,7 @@ E. 换方向（重新定义目标）
 
 ## 4. 版本与治理
 
-- 套件 **V5.10.0**；改动 `references/` 后必须重跑 `persona_lint.py`。
+- 套件 **V5.11.0**；改动 `references/` 后必须重跑 `persona_lint.py`。
 - 项目日志、帧号、实测值只写项目目录，不写入人设文件；只有用户明确说“写入人设”才允许修改。
 - `references/toolbox_text.md` 已剥离内嵌代码：脚本统一在 `scripts/`，数据在 `assets/`。
 """
@@ -437,6 +437,7 @@ Use blender-mentor to walk me through M1 modeling and topology.
 | **M0–M6 curriculum** | modeling & topology → UV/materials/lighting/render → animation/rigging → physics/geometry nodes/pipeline |
 | **22 executable tools** | 6 `.blend` acceptance scripts + engineering precheck + module governance (preflight/lint/conflict/claim audit) + source governance (audit/refresh) + regression/routing tools |
 | **Delivery QA gate** | floors/coordinates, mesh/UV, camera/export, professional-boundary checks |
+| **INT-001 (experimental)** | Chinese-style two-bedroom apartment interior; declares `styles`/`layouts`; sources pending |
 | **Interior rule** | interior modeling requires a dedicated `INT-*` module with `styles`/`layouts`; style/layout mismatches are surfaced |
 | **Knowledge base** | 130 common misconceptions + 40 red lines |
 
@@ -452,7 +453,7 @@ Use blender-mentor to walk me through M1 modeling and topology.
 
 ```text
 SKILL.md       routing + D1–D4 delivery loop + machine-acceptance commands
-references/    10 reference files (7 persona docs + module format + authoring guide + model QA), loaded on demand
+references/    11 reference files (7 persona docs + module format + authoring guide + model QA + INT module), loaded on demand
 scripts/       22 executable tools
 assets/        ESD templates, load plans, deny-word example, source registry template
 ```
@@ -501,7 +502,7 @@ dsh plugin --profile web add github:OWNER/REPO
 ├── .claude-plugin/marketplace.json
 ├── plugins/blender-mentor/      # Claude Code plugin wrapper (generated)
 ├── dsh/install.ps1 / install.sh # DSH one-line installers
-├── references/                  # 10 reference files (7 persona docs + module format + authoring guide + model QA)
+├── references/                  # 11 reference files (7 persona docs + module format + authoring guide + model QA + INT module)
 ├── scripts/                     # 22 executable tools
 ├── assets/                      # ESD templates, load plans, deny example
 ├── docs/                        # banner + example session image
@@ -531,7 +532,7 @@ New modules, or modules that declare a `source_id`, reference `assets/source_reg
 DSH, Claude Code, Claude.ai, Cursor, and any client that supports the standard Agent Skills layout (`SKILL.md` + resources).
 
 **What do the two version numbers mean?**
-The persona suite is **V5.10.0**; the packaged skill release is **v5.10.0**.
+The persona suite is **V5.11.0**; the packaged skill release is **v5.11.0**.
 
 ## Development
 
@@ -551,7 +552,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 Rebuild the skill directory:
 
 ```bash
-python tools/build_skill.py --source <V5.10.0 suite> --out <repo parent> --force
+python tools/build_skill.py --source <V5.11.0 suite> --out <repo parent> --force
 ```
 
 ## License
@@ -645,6 +646,7 @@ bash dsh/install.sh
 | **M0–M6 课程包** | 建模与拓扑 → UV/材质/灯光/渲染 → 动画/绑定 → 物理/几何节点/管线 |
 | **22 个可执行工具** | 6 个 `.blend` 验收脚本 + 工程预检 + 模块治理（预审/lint/冲突/引用审计）+ 来源治理（审计/查询）+ 回归/路由工具 |
 | **交付质量门** | 楼层/坐标、mesh/UV、相机/导出、专业边界检查 |
+| **INT-001（experimental）** | 中式两室两厅公寓内饰；声明 `styles`/`layouts`；来源 pending |
 | **内饰规则** | 室内建模必须独立 `INT-*` 模块并声明 `styles`/`layouts`；风格/布局不匹配会提示 |
 | **知识库** | 130 条常见误区 + 40 条红线 |
 
@@ -660,7 +662,7 @@ bash dsh/install.sh
 
 ```text
 SKILL.md       路由 + D1–D4 交付闭环 + 机器验收命令
-references/    10 个参考文件（7 份人设文档 + 模块格式 + 写作说明 + 建模质量门），按需加载
+references/    11 个参考文件（7 份人设文档 + 模块格式 + 写作说明 + 建模质量门 + INT 模块），按需加载
 scripts/       22 个可执行工具
 assets/        ESD 模板、加载清单、拒绝词示例、来源注册表模板
 ```
@@ -709,7 +711,7 @@ dsh plugin --profile web add github:OWNER/REPO
 ├── .claude-plugin/marketplace.json
 ├── plugins/blender-mentor/      # Claude Code 插件包装（自动生成）
 ├── dsh/install.ps1 / install.sh # DSH 一键安装脚本
-├── references/                  # 10 个参考文件（7 份人设文档 + 模块格式 + 写作说明 + 建模质量门）
+├── references/                  # 11 个参考文件（7 份人设文档 + 模块格式 + 写作说明 + 建模质量门 + INT 模块）
 ├── scripts/                     # 22 个可执行工具
 ├── assets/                      # ESD 模板、加载清单、拒绝词示例
 ├── docs/                        # banner + 示例会话图
@@ -739,7 +741,7 @@ dsh plugin --profile web add github:OWNER/REPO
 DSH、Claude Code、Claude.ai、Cursor，以及任何支持标准 Agent Skills 布局（`SKILL.md` + 资源目录）的客户端。
 
 **两个版本号是什么意思？**
-人设套件为 **V5.10.0**；打包后的技能发布版本为 **v5.10.0**。
+人设套件为 **V5.11.0**；打包后的技能发布版本为 **v5.11.0**。
 
 ## 开发与验证
 
@@ -759,7 +761,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 重建技能目录：
 
 ```bash
-python tools/build_skill.py --source <V5.10.0 套件目录> --out <仓库父目录> --force
+python tools/build_skill.py --source <V5.11.0 套件目录> --out <仓库父目录> --force
 ```
 
 ## 许可
@@ -773,6 +775,23 @@ MIT，见 [LICENSE](LICENSE)。课程文档中的第三方参考书目仅作引�
 
 
 CHANGELOG_MD =  r"""# Changelog
+
+## V5.11.0 — 2026-10-20
+
+> 新增 INT-001 内饰模块；人设套件升 **V5.11.0**。
+
+### Added
+- `assets/modules/INT-001.json`：中式风格两室两厅公寓内饰模块（experimental，styles=`chinese`，layouts=`apartment`，13 个 data key）；
+- `references/module-int-001.md`：人读版，含风格/布局数据、硬规则、来源状态；
+- 13 条 `SRC-*` 来源登记（全部 pending / 未提供 URL、版次、条款，来源审计预期 warn）；
+- `load_plan` / `module_registry` 注册 INT-001；
+- `module_lint` 校验 INT-* 的 styles/layouts 与 confidence；
+- `module_selftest` 扩到 22 项（INT-001 proceed / style mismatch / layout mismatch / gap prompt）。
+
+### Changed
+- 人设文件数 7 → 8；references 10 → 11；
+- 模块自检 22 项；全局 selftest 仍 27 项；
+- 版本 V5.11.0；现有模块版本不变。
 
 ## V5.10.0 — 2026-10-20
 
@@ -1641,7 +1660,7 @@ def write_claude_plugin(skill_dir, repo_slug):
         "name": "blender-mentor",
         "displayName": "Blender Mentor",
         "description": desc,
-        "version": "5.10.0",
+        "version": "5.11.0",
         "author": {"name": owner},
         "homepage": repo_url,
         "repository": repo_url,
@@ -1678,7 +1697,7 @@ def write_claude_plugin(skill_dir, repo_slug):
             "name": "blender-mentor",
             "source": "./plugins/blender-mentor",
             "description": desc,
-            "version": "5.10.0",
+            "version": "5.11.0",
         }],
     }
     write_text(os.path.join(skill_dir, ".claude-plugin", "marketplace.json"),
@@ -1696,7 +1715,7 @@ def write_dsh_plugin(skill_dir, repo_slug):
     owner = repo_slug.split("/")[0]
     repo_url = "https://github.com/%s" % repo_slug
     pkg_name = "blender-mentor"
-    version = "5.10.0"
+    version = "5.11.0"
     desc = ("Blender full-stack mentor AI Skill: teaching, 0-3 rubric grading, "
             "asset/animation acceptance (ESD/BIO/ENG).")
 
@@ -1893,7 +1912,7 @@ def build(source, out_root, force=False, repo_slug="OWNER/REPO"):
                    rewrite_layout_refs(rewrite_doc_names(texts[key])))
 
     # 5.1) 通用模块 ENG-001 + 治理规范
-    for extra_ref in ("module-engineering.md", "module-format.md", "module-authoring.md", "model-qa.md"):
+    for extra_ref in ("module-engineering.md", "module-format.md", "module-authoring.md", "model-qa.md", "module-int-001.md"):
         module_src = os.path.join(suite, extra_ref)
         if not os.path.isfile(module_src):
             raise RuntimeError("missing module reference: %s" % module_src)

@@ -1,5 +1,22 @@
 # Changelog
 
+## V5.11.0 — 2026-10-20
+
+> 新增 INT-001 内饰模块；人设套件升 **V5.11.0**。
+
+### Added
+- `assets/modules/INT-001.json`：中式风格两室两厅公寓内饰模块（experimental，styles=`chinese`，layouts=`apartment`，13 个 data key）；
+- `references/module-int-001.md`：人读版，含风格/布局数据、硬规则、来源状态；
+- 13 条 `SRC-*` 来源登记（全部 pending / 未提供 URL、版次、条款，来源审计预期 warn）；
+- `load_plan` / `module_registry` 注册 INT-001；
+- `module_lint` 校验 INT-* 的 styles/layouts 与 confidence；
+- `module_selftest` 扩到 22 项（INT-001 proceed / style mismatch / layout mismatch / gap prompt）。
+
+### Changed
+- 人设文件数 7 → 8；references 10 → 11；
+- 模块自检 22 项；全局 selftest 仍 27 项；
+- 版本 V5.11.0；现有模块版本不变。
+
 ## V5.10.0 — 2026-10-20
 
 > 内饰/室内建模硬规则；人设套件升 **V5.10.0**。

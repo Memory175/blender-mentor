@@ -1,6 +1,6 @@
 {
   "version": "1.2.0",
-  "suite_version": "V5.10.0",
+  "suite_version": "V5.11.0",
   "always": [
     {
       "file": "references/main.md",
@@ -122,6 +122,21 @@
         "CNC",
         "钣金",
         "可装配"
+      ]
+    },
+    {
+      "id": "INT-001",
+      "file": "references/module-int-001.md",
+      "reason": "室内设计/内饰：中式风格两室两厅公寓（experimental）",
+      "triggers": [
+        "室内",
+        "内饰",
+        "室内设计",
+        "室内建模",
+        "中式",
+        "新中式",
+        "两室两厅",
+        "公寓"
       ]
     }
   ],

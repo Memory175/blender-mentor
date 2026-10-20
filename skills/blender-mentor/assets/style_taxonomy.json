@@ -20,7 +20,7 @@
     {"id": "studio", "name": "单间/开间", "keywords": ["单间", "开间", "studio"]},
     {"id": "office", "name": "办公", "keywords": ["办公", "办公室", "office"]},
     {"id": "retail", "name": "商业/零售", "keywords": ["商业", "零售", "店铺", "retail", "shop"]},
-    {"id": "restaurant", "name": "餐饮", "keywords": ["餐厅", "餐饮", "restaurant", "cafe"]},
+    {"id": "restaurant", "name": "餐饮", "keywords": ["餐饮", "餐馆", "restaurant", "cafe"]},
     {"id": "hotel", "name": "酒店/民宿", "keywords": ["酒店", "民宿", "hotel", "bnb"]}
   ]
 }

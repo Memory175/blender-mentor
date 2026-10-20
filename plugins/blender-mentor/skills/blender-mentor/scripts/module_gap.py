@@ -118,8 +118,8 @@ def merge_steps(hint):
     ]
 
 
-def evaluate(root, task):
-    pf = preflight.evaluate(root, task)
+def evaluate(root, task, modules_dir=None):
+    pf = preflight.evaluate(root, task, modules_dir=modules_dir)
     decision = pf.get("decision")
     if decision in ("proceed", "proceed_core"):
         return {"action": "none", "decision": decision, "task": task,

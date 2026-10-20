@@ -140,12 +140,13 @@ def validate_module(mod, root=None):
         if not d.get("source") and not d.get("source_id") and not d.get("assumption"):
             problems.append("%s.%s: needs source/source_id or assumption=true" % (mid, k))
     if mid.startswith("INT-"):
-        if not isinstance(m.get("styles"), list) or not m.get("styles"):
+        if not isinstance(mod.get("styles"), list) or not mod.get("styles"):
             problems.append("%s: INT module needs non-empty styles[]" % mid)
-        if not isinstance(m.get("layouts"), list) or not m.get("layouts"):
+        if not isinstance(mod.get("layouts"), list) or not mod.get("layouts"):
             problems.append("%s: INT module needs non-empty layouts[]" % mid)
-        if d.get("confidence") not in (None, "high", "medium", "low"):
-            problems.append("%s.%s: bad confidence" % (mid, k))
+        for d in mod.get("data", []):
+            if d.get("confidence") not in (None, "high", "medium", "low"):
+                problems.append("%s.%s: bad confidence" % (mid, d.get("key")))
     if len(data_keys) != len(mod.get("data", [])):
         problems.append("%s: duplicate data key" % mid)
     for cap in mod.get("coverage", []):

@@ -1,6 +1,6 @@
 {
   "schema": "mentor-registry/1",
-  "suite": "V5.10.0",
+  "suite": "V5.11.0",
   "modules": [
     {
       "id": "ENG-001",
@@ -22,6 +22,13 @@
       "version": "1.1.9",
       "hash": "sha256:efddb299e18c2a242bf3abc1bd05657dec68dcbf424f9b251e457e16b7431cab",
       "status": "stable"
+    },
+    {
+      "id": "INT-001",
+      "file": "assets/modules/INT-001.json",
+      "version": "0.1.0",
+      "hash": "sha256:ec8f743e9cdeb21fc24c3e8025d39f06481f26df15e87f5b2116d1f3018edc97",
+      "status": "experimental"
     }
   ],
   "core_triggers": [

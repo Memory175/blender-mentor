@@ -74,18 +74,32 @@ def main():
     r = preflight.evaluate(root, "今天天气怎么样")
     cases.append(("no_module_block", r["decision"] == "block" and not r["selected"]))
 
-    # interior modeling: dedicated INT module, layout + style
-    r = preflight.evaluate(root, "室内建模：现代风格公寓，客厅卧室布局")
-    cases.append(("interior_gap_block", r["decision"] == "block"
-                  and "INT-001" in r.get("forced_gap_hints", [])
-                  and any(x["id"] == "modern" for x in r.get("styles", []))
-                  and any(x["id"] == "apartment" for x in r.get("layouts", []))))
+    # interior modeling: no module in a temp modules dir -> force block + prompt
+    with tempfile.TemporaryDirectory(prefix="mod_int_empty_") as empty:
+        r = preflight.evaluate(root, "室内建模：现代风格公寓，客厅卧室布局", modules_dir=empty)
+        cases.append(("interior_gap_block", r["decision"] == "block"
+                      and "INT-001" in r.get("forced_gap_hints", [])
+                      and any(x["id"] == "modern" for x in r.get("styles", []))
+                      and any(x["id"] == "apartment" for x in r.get("layouts", []))))
+        g = module_gap.evaluate(root, "室内建模：现代风格公寓，客厅卧室布局", modules_dir=empty)
+        cases.append(("interior_gap_prompt", g["action"] == "fill_module"
+                      and g["gap"]["id"] == "INT-001"
+                      and "INT-001" in g["prompt"]
+                      and "styles" in g["prompt"] and "layouts" in g["prompt"]))
 
-    g = module_gap.evaluate(root, "室内建模：现代风格公寓，客厅卧室布局")
-    cases.append(("interior_gap_prompt", g["action"] == "fill_module"
-                  and g["gap"]["id"] == "INT-001"
-                  and "INT-001" in g["prompt"]
-                  and "styles" in g["prompt"] and "layouts" in g["prompt"]))
+    # installed INT-001: style/layout coverage
+    r = preflight.evaluate(root, "中式风格两室两厅公寓室内设计，客餐厅和主卧")
+    cases.append(("int001_proceed", r["decision"] == "proceed"
+                  and any(m["id"] == "INT-001" for m in r["selected"])))
+    r = preflight.evaluate(root, "现代风格两室两厅公寓室内设计")
+    cases.append(("int001_style_mismatch_ask", r["decision"] == "ask"
+                  and any(x["requested"] == "modern" for x in r.get("style_mismatch", []))))
+    r = preflight.evaluate(root, "中式风格别墅室内设计")
+    cases.append(("int001_layout_mismatch_ask", r["decision"] == "ask"
+                  and any(x["requested"] == "villa" for x in r.get("layout_mismatch", []))))
+    g = module_gap.evaluate(root, "现代风格两室两厅公寓室内设计")
+    cases.append(("int001_style_gap_prompt", g["action"] == "style_mismatch"
+                  and any(x["requested"] == "modern" for x in g.get("style_mismatch", []))))
 
     with tempfile.TemporaryDirectory(prefix="mod_int_") as tmp:
         mod = _fixture("INT-001", ["室内", "内饰"], "living_layout", "fixture")

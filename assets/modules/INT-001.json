@@ -1,0 +1,461 @@
+{
+  "schema": "mentor-module/1",
+  "id": "INT-001",
+  "version": "0.1.0",
+  "status": "experimental",
+  "kind": "hybrid",
+  "domain": [
+    "interior",
+    "architecture",
+    "furniture",
+    "finishes"
+  ],
+  "jurisdiction": "pending",
+  "jurisdiction_note": "用户未提供项目所在地；所有规范数值仅为全国通用下限参考或地方文件摘录，不构成当地合规判定。结构、消防、无障碍、能耗均需当地专业复核。",
+  "styles": [
+    "chinese"
+  ],
+  "layouts": [
+    "apartment"
+  ],
+  "delivery_depth": "Blender asset-level modeling",
+  "intent": {
+    "include": [
+      "中式",
+      "新中式",
+      "室内",
+      "内饰",
+      "室内建模",
+      "室内设计",
+      "两室两厅",
+      "两居",
+      "公寓",
+      "interior"
+    ],
+    "exclude": []
+  },
+  "coverage": [
+    {
+      "keywords": [
+        "中式",
+        "新中式",
+        "chinese"
+      ],
+      "data_keys": [
+        "sty_chn_color_base",
+        "sty_chn_color_accent",
+        "sty_chn_material_pref",
+        "sty_chn_light_cct",
+        "sty_chn_form_language"
+      ]
+    },
+    {
+      "keywords": [
+        "两室两厅",
+        "两居",
+        "两室",
+        "2室2厅",
+        "公寓",
+        "apartment"
+      ],
+      "data_keys": [
+        "lay_apt_living_short_axis",
+        "lay_apt_bedroom_short_axis",
+        "lay_apt_clear_height",
+        "lay_apt_corridor_width",
+        "lay_apt_door_width",
+        "lay_apt_dining_aisle",
+        "lay_apt_furniture_core",
+        "lay_apt_room_program"
+      ]
+    },
+    {
+      "keywords": [
+        "室内",
+        "内饰",
+        "室内建模",
+        "室内设计",
+        "interior"
+      ],
+      "data_keys": [
+        "sty_chn_color_base",
+        "sty_chn_color_accent",
+        "sty_chn_material_pref",
+        "sty_chn_light_cct",
+        "sty_chn_form_language",
+        "lay_apt_living_short_axis",
+        "lay_apt_bedroom_short_axis",
+        "lay_apt_clear_height",
+        "lay_apt_corridor_width",
+        "lay_apt_door_width",
+        "lay_apt_dining_aisle",
+        "lay_apt_furniture_core",
+        "lay_apt_room_program"
+      ]
+    }
+  ],
+  "data": [
+    {
+      "key": "sty_chn_color_base",
+      "legacy_id": "STY-CHN-COLOR-BASE",
+      "domain": "style",
+      "style": "chinese",
+      "label": "中式风格基调色",
+      "value": [
+        "黑",
+        "白",
+        "灰",
+        "米白",
+        "浅棕"
+      ],
+      "unit": "category",
+      "source_id": "SRC-STYLE-CHINESE-COLOR",
+      "confidence": "medium",
+      "notes": "行业文章常见表述：黑白灰为基调，或米白/浅棕为基底；传统中式更偏深色木色，新中式更偏米白/浅棕 + 深木点缀。"
+    },
+    {
+      "key": "sty_chn_color_accent",
+      "legacy_id": "STY-CHN-COLOR-ACCENT",
+      "domain": "style",
+      "style": "chinese",
+      "label": "中式风格局部点缀色",
+      "value": [
+        "暗红",
+        "琉璃黄",
+        "玉脂白",
+        "水墨黑",
+        "木原色"
+      ],
+      "unit": "category",
+      "source_id": "SRC-STYLE-CHINESE-COLOR",
+      "confidence": "medium",
+      "notes": "点缀色面积宜小，行业文章建议以局部色彩出现，不宜满铺。"
+    },
+    {
+      "key": "sty_chn_material_pref",
+      "legacy_id": "STY-CHN-MATERIAL-PREF",
+      "domain": "style",
+      "style": "chinese",
+      "label": "中式风格材料倾向",
+      "value": {
+        "primary": [
+          "实木",
+          "石材",
+          "竹",
+          "藤"
+        ],
+        "secondary": [
+          "玻璃",
+          "不锈钢"
+        ],
+        "avoid_default": [
+          "大面积亮面金属",
+          "冷色工业涂料"
+        ]
+      },
+      "unit": "category",
+      "source_id": "SRC-STYLE-CHINESE-MATERIAL",
+      "confidence": "medium",
+      "notes": "传统中式以木、石为主；新中式可融合玻璃、不锈钢。材料选择仍需项目具体预算与防火/环保要求复核。"
+    },
+    {
+      "key": "sty_chn_light_cct",
+      "legacy_id": "STY-CHN-LIGHT-CCT",
+      "domain": "style",
+      "style": "chinese",
+      "label": "中式空间色温建议",
+      "value": {
+        "main_cct_k": [
+          3000,
+          3500
+        ],
+        "auxiliary_cct_k": [
+          2700,
+          3000
+        ],
+        "accent_cct_k": [
+          2700,
+          3200
+        ],
+        "design_note": "忌冷白光；卧室整体照度 100–150 lux，床头阅读局部可达 300 lux；茶室/禅意空间可统一在 2700 K 附近，三层光比例约 40/40/20。"
+      },
+      "unit": "K/lux",
+      "source_id": "SRC-STYLE-CHINESE-LIGHT",
+      "confidence": "medium",
+      "notes": "照明数据不可与 minimal/industrial 共用；具体照度与眩光值需按项目功能复核。"
+    },
+    {
+      "key": "sty_chn_form_language",
+      "legacy_id": "STY-CHN-FORM-LANGUAGE",
+      "domain": "style",
+      "style": "chinese",
+      "label": "中式造型语言",
+      "value": [
+        "对称/均衡轴线",
+        "格栅/月洞/屏风隔断（隔而不断）",
+        "留白与视觉焦点",
+        "明式简洁线条或清式雕饰简化",
+        "木作收口与榫卯意向"
+      ],
+      "unit": "category",
+      "source_id": "SRC-STYLE-CHINESE-FORM",
+      "confidence": "medium",
+      "notes": "传统中式偏对称、深色、雕饰；新中式偏简化、留白、格栅与隐藏光。造型语言需与具体子风格（明式/清式/新中式）进一步锁定。"
+    },
+    {
+      "key": "lay_apt_living_short_axis",
+      "legacy_id": "LAY-APT-LIVING-SHORT-AXIS",
+      "domain": "layout",
+      "layout": "apartment",
+      "label": "起居室短边轴线宽度下限参考",
+      "value": 3.6,
+      "unit": "m",
+      "source_id": "SRC-CODE-XJ-LIVING",
+      "confidence": "medium",
+      "notes": "双人卧室短边轴线宽度不宜小于 3.30 m；起居室短边轴线宽度不宜小于 3.60 m。轴线尺寸含墙体厚度与预留装修厚度，具体项目需按净尺寸复核。"
+    },
+    {
+      "key": "lay_apt_bedroom_short_axis",
+      "legacy_id": "LAY-APT-BEDROOM-SHORT-AXIS",
+      "domain": "layout",
+      "layout": "apartment",
+      "label": "双人卧室短边轴线宽度下限参考",
+      "value": 3.3,
+      "unit": "m",
+      "source_id": "SRC-CODE-XJ-BEDROOM",
+      "confidence": "medium",
+      "notes": "双人卧室短边轴线宽度不宜小于 3.30 m；单人卧室不宜小于 2.40 m（另一地方文件为 2.20 m）。两室两厅中次卧若为单人卧室，可参照 2.40 m 下限，但需结合家具布置复核。"
+    },
+    {
+      "key": "lay_apt_clear_height",
+      "legacy_id": "LAY-APT-CLEAR-HEIGHT",
+      "domain": "layout",
+      "layout": "apartment",
+      "label": "层高与净高参考",
+      "value": {
+        "floor_height_min_m": 3.0,
+        "living_bedroom_clear_min_m": 2.6,
+        "local_clear_min_m": 2.2,
+        "kitchen_bath_clear_min_m": 2.2
+      },
+      "unit": "m",
+      "source_id": "SRC-CODE-HQ-HEIGHT",
+      "confidence": "medium",
+      "notes": "新建住宅层高不应低于 3.00 m；卧室/起居室净高不应低于 2.60 m，局部净高不应低于 2.20 m 且低净高面积不超过室内使用面积的 1/3。Blender 建模若按常见 2.7–2.8 m 净高，属于示意尺度，不能替代当地报建层高。"
+    },
+    {
+      "key": "lay_apt_corridor_width",
+      "legacy_id": "LAY-APT-CORRIDOR-WIDTH",
+      "domain": "layout",
+      "layout": "apartment",
+      "label": "套内过道净宽参考",
+      "value": {
+        "entry_corridor_min_m": 1.1,
+        "to_bedroom_living_min_m": 1.0,
+        "to_kitchen_bath_storage_min_m": 0.9
+      },
+      "unit": "m",
+      "source_id": "SRC-CODE-HQ-CORRIDOR",
+      "confidence": "medium",
+      "notes": "入口过道净宽不应小于 1.10 m；通往卧室/起居室过道不应小于 1.00 m；通往厨房/卫生间/贮藏室不应小于 0.90 m。这些是净宽，Blender 建模需扣除墙面完成面与踢脚线厚度。"
+    },
+    {
+      "key": "lay_apt_door_width",
+      "legacy_id": "LAY-APT-DOOR-WIDTH",
+      "domain": "layout",
+      "layout": "apartment",
+      "label": "门洞通行净宽参考",
+      "value": {
+        "entry_door_min_m": 0.9,
+        "bedroom_door_min_m": 0.8,
+        "kitchen_bath_door_min_m": 0.7
+      },
+      "unit": "m",
+      "source_id": "SRC-CODE-HQ-DOOR",
+      "confidence": "medium",
+      "notes": "户门通行净宽不应小于 0.90 m；卧室门不应小于 0.80 m；厨房/卫生间门不应小于 0.70 m。Blender 资产中门洞与门扇需分开建模，通行净宽按门扇开启后的最小净距控制。"
+    },
+    {
+      "key": "lay_apt_dining_aisle",
+      "legacy_id": "LAY-APT-DINING-AISLE",
+      "domain": "layout",
+      "layout": "apartment",
+      "label": "餐厅就餐空间通道参考",
+      "value": {
+        "main_aisle_min_m": 0.9,
+        "comfort_main_aisle_m": [
+          1.2,
+          1.3
+        ],
+        "chair_pullout_compact_m": 0.6,
+        "chair_pullout_comfort_m": 0.8,
+        "chair_back_walkway_m": 1.0,
+        "adult_frontal_pass_m": 0.52,
+        "turn_with_small_item_min_m": 0.9
+      },
+      "unit": "m",
+      "source_id": "SRC-ERG-DINING",
+      "confidence": "medium",
+      "notes": "餐厅至少一侧宜设净宽不小于 900 mm 的通道；人体工学参考：正面通行 520 mm，持小件物品通行或转身 900 mm 以上；舒适主通道 1200–1300 mm。两室两厅餐厅若与起居室合并，需保证餐桌拉椅后仍不阻塞主要动线。"
+    },
+    {
+      "key": "lay_apt_furniture_core",
+      "legacy_id": "LAY-APT-FURNITURE-CORE",
+      "domain": "layout",
+      "layout": "apartment",
+      "label": "两室两厅核心家具尺度参考（Blender 实尺基准）",
+      "value": {
+        "double_bed": {
+          "l_m": 2.0,
+          "w_min_m": 1.5,
+          "h_m": 0.45
+        },
+        "nightstand": {
+          "l_m_range": [
+            0.45,
+            0.6
+          ],
+          "w_m": 0.4,
+          "h_m": 0.45
+        },
+        "wardrobe": {
+          "l_m_range": [
+            0.9,
+            2.1
+          ],
+          "d_min_m": 0.55,
+          "h_min_m": 1.8
+        },
+        "desk": {
+          "l_m_range": [
+            0.9,
+            1.2
+          ],
+          "d_m_range": [
+            0.5,
+            0.6
+          ],
+          "h_m_range": [
+            0.7,
+            0.8
+          ]
+        },
+        "dining_table_height_m": [
+          0.75,
+          0.79
+        ],
+        "dining_chair_seat_height_m": 0.45,
+        "sofa_seat_height_m_range": [
+          0.38,
+          0.45
+        ],
+        "coffee_table_height_m_range": [
+          0.35,
+          0.45
+        ]
+      },
+      "unit": "m",
+      "source_id": "SRC-FURN-CORE",
+      "confidence": "medium",
+      "notes": "床、床头柜、衣柜、书桌尺寸引用自地方文件附表；餐桌高度、餐椅坐高来自人体工学行业资料。Blender 资产需按 1 BU = 1 m 建摸，并在导入后检查 Scale 为 (1,1,1)。"
+    },
+    {
+      "key": "lay_apt_room_program",
+      "legacy_id": "LAY-APT-ROOM-PROGRAM",
+      "domain": "layout",
+      "layout": "apartment",
+      "label": "两室两厅功能分区与动线原则",
+      "value": {
+        "zones": [
+          "玄关",
+          "起居室/客厅",
+          "餐厅",
+          "厨房",
+          "主卧",
+          "次卧",
+          "卫生间",
+          "阳台/晾晒"
+        ],
+        "principles": [
+          "动静分区：卧室区与起居/餐厅区宜分离",
+          "洁污分区：厨房、卫生间宜靠近服务入口",
+          "避免过多房门直接开向起居室",
+          "主要交通流线不应穿行卧室",
+          "餐厅与厨房流线宜紧凑"
+        ],
+        "circulation_warning": "两室两厅的动线核心是“玄关 → 起居/餐厅 → 卧室私区”的层级；若次卧门直接开向客厅电视墙或餐厅主通道，需调整门位或增加缓冲。"
+      },
+      "unit": "category",
+      "source_id": "SRC-LAYOUT-PRINCIPLE",
+      "confidence": "medium",
+      "notes": "两室两厅的动线原则不可直接套用于 studio 或三室两厅；房间数量与家庭结构变化时需新建变体。"
+    }
+  ],
+  "rules": [
+    {
+      "id": "INT-STYLE-SCOPE",
+      "severity": "warn",
+      "message": "本模块只覆盖 chinese 风格；现代/极简/北欧/日式/工业/美式/法式/奶油/轻奢等必须新建风格变体，不得复用 STY-CHN-* 数据。",
+      "evidence": "data.sty_chn_color_base"
+    },
+    {
+      "id": "INT-LAYOUT-SCOPE",
+      "severity": "warn",
+      "message": "本模块的 LAY-APT-* 数据基于两室两厅公寓；studio/villa/office/retail/restaurant/hotel 或一室/三室必须新建布局变体。",
+      "evidence": "data.lay_apt_room_program"
+    },
+    {
+      "id": "INT-SOURCE-PENDING",
+      "severity": "warn",
+      "message": "来源元数据仍为 pending；不得把本模块写成当地规范核验或施工图依据。"
+    },
+    {
+      "id": "INT-NO-COMPLIANCE-PASS",
+      "severity": "info",
+      "message": "结构/消防/无障碍/能耗只能提示专业复核；本模块不判定 pass。"
+    }
+  ],
+  "assumptions": [
+    "风格锁定为 chinese；子风格（明式/清式/新中式）未细分，建模前需进一步确认。",
+    "布局锁定为两室两厅公寓；房间数量或空间类型变化时新建变体。",
+    "来源未提供 URL/版次/条款，全部按 pending 登记，只能做参考数据，不能冒充当地合规依据。"
+  ],
+  "unknown_policy": "ask",
+  "requires": [],
+  "conflicts_with": [],
+  "references": [
+    "references/module-int-001.md"
+  ],
+  "tests": [],
+  "changelog": [
+    {
+      "version": "0.1.0",
+      "date": "2026-10-20",
+      "note": "Initial draft converted from user-provided INT-001 JSON; source metadata pending."
+    }
+  ],
+  "style_layout_independence": {
+    "rule": "不同建筑风格不能共用同一套造型/材料/色彩/照明数据；不同布局不能共用同一套动线/家具尺度数据。",
+    "chinese_only": "本模块仅声明 chinese 风格。若项目转向 modern/minimal/nordic/japanese/industrial/american/french/mediterranean/rustic/cream/luxury，必须新建风格变体，不得复用 STY-CHN-* 数据。",
+    "apartment_two_bed_only": "本模块的 LAY-APT-* 数据基于“两室两厅公寓”情境。若布局为 studio/villa/office/retail/restaurant/hotel，或公寓变为一室/三室，必须新建布局变体，不得直接复用本模块动线与家具尺度。",
+    "out_of_scope_notice": "若所选风格不在 styles[] 内，或布局不在 layouts[] 内，系统必须提示“扩展模块或新建变体”，不得在本模块内静默适配。"
+  },
+  "professional_review_required": [
+    {
+      "domain": "structure",
+      "notice": "承重墙、剪力墙、梁柱改动需结构专业复核；本模块不判定 pass。"
+    },
+    {
+      "domain": "fire",
+      "notice": "消防疏散、装修材料燃烧性能等级、电气消防需当地消防专业复核；本模块不判定 pass。"
+    },
+    {
+      "domain": "accessibility",
+      "notice": "无障碍通道、门宽、卫生间扶助空间需按当地无障碍规范复核；本模块不判定 pass。用户已声明不需要无障碍覆盖，但仍需在交付说明中保留提示。"
+    },
+    {
+      "domain": "energy",
+      "notice": "能耗、保温、气密性、暖通负荷需当地专业复核；本模块不判定 pass。"
+    }
+  ]
+}

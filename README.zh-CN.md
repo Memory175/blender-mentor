@@ -79,6 +79,7 @@ bash dsh/install.sh
 | **M0–M6 课程包** | 建模与拓扑 → UV/材质/灯光/渲染 → 动画/绑定 → 物理/几何节点/管线 |
 | **22 个可执行工具** | 6 个 `.blend` 验收脚本 + 工程预检 + 模块治理（预审/lint/冲突/引用审计）+ 来源治理（审计/查询）+ 回归/路由工具 |
 | **交付质量门** | 楼层/坐标、mesh/UV、相机/导出、专业边界检查 |
+| **INT-001（experimental）** | 中式两室两厅公寓内饰；声明 `styles`/`layouts`；来源 pending |
 | **内饰规则** | 室内建模必须独立 `INT-*` 模块并声明 `styles`/`layouts`；风格/布局不匹配会提示 |
 | **知识库** | 130 条常见误区 + 40 条红线 |
 
@@ -94,7 +95,7 @@ bash dsh/install.sh
 
 ```text
 SKILL.md       路由 + D1–D4 交付闭环 + 机器验收命令
-references/    10 个参考文件（7 份人设文档 + 模块格式 + 写作说明 + 建模质量门），按需加载
+references/    11 个参考文件（7 份人设文档 + 模块格式 + 写作说明 + 建模质量门 + INT 模块），按需加载
 scripts/       22 个可执行工具
 assets/        ESD 模板、加载清单、拒绝词示例、来源注册表模板
 ```
@@ -143,7 +144,7 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 ├── .claude-plugin/marketplace.json
 ├── plugins/blender-mentor/      # Claude Code 插件包装（自动生成）
 ├── dsh/install.ps1 / install.sh # DSH 一键安装脚本
-├── references/                  # 10 个参考文件（7 份人设文档 + 模块格式 + 写作说明 + 建模质量门）
+├── references/                  # 11 个参考文件（7 份人设文档 + 模块格式 + 写作说明 + 建模质量门 + INT 模块）
 ├── scripts/                     # 22 个可执行工具
 ├── assets/                      # ESD 模板、加载清单、拒绝词示例
 ├── docs/                        # banner + 示例会话图
@@ -173,7 +174,7 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 DSH、Claude Code、Claude.ai、Cursor，以及任何支持标准 Agent Skills 布局（`SKILL.md` + 资源目录）的客户端。
 
 **两个版本号是什么意思？**
-人设套件为 **V5.10.0**；打包后的技能发布版本为 **v5.10.0**。
+人设套件为 **V5.11.0**；打包后的技能发布版本为 **v5.11.0**。
 
 ## 开发与验证
 
@@ -193,7 +194,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 重建技能目录：
 
 ```bash
-python tools/build_skill.py --source <V5.10.0 套件目录> --out <仓库父目录> --force
+python tools/build_skill.py --source <V5.11.0 套件目录> --out <仓库父目录> --force
 ```
 
 ## 许可
