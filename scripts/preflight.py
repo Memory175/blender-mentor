@@ -22,11 +22,23 @@ sys.path.insert(0, HERE)
 import module_governance as mg  # noqa: E402
 
 
+def _load_gap_hints(root):
+    path = os.path.join(root, "assets", "module_gap_hints.json")
+    if not os.path.isfile(path):
+        return []
+    try:
+        with open(path, encoding="utf-8") as fh:
+            return json.load(fh).get("hints", [])
+    except Exception:  # noqa: BLE001
+        return []
+
+
 def evaluate(root, task, modules_dir=None, registry_path=None, max_modules=2):
     registry, reg_problems = mg.load_registry(root, registry_path) if not modules_dir else (None, [])
     modules, problems = mg.load_modules(root, modules_dir, registry)
     all_problems = list(reg_problems) + list(problems)
     core_triggers = (registry or {}).get("core_triggers", [])
+    gap_hints = _load_gap_hints(root) if not modules_dir else []
     selected = mg.select_modules(modules, task, max_modules=max_modules)
     matched, required, available = mg.coverage_for(selected, task)
     missing = sorted(k for k in required if k not in available)
@@ -50,9 +62,22 @@ def evaluate(root, task, modules_dir=None, registry_path=None, max_modules=2):
     decision = "proceed"
     questions = []
     core_hits = []
+    hint_hits = []
     if not selected:
         core_hits = [kw for kw in core_triggers if mg.keyword_hit(kw, task)]
-        if core_hits:
+        for h in gap_hints:
+            hits = [kw for kw in h.get("keywords", []) if mg.keyword_hit(kw, task)]
+            if hits:
+                hint_hits.append({"id": h.get("id"), "name": h.get("name"),
+                                  "hits": hits, "why": h.get("why", "")})
+        hint_hits.sort(key=lambda x: len(x["hits"]), reverse=True)
+        if hint_hits:
+            decision = "block"
+            top = hint_hits[0]
+            questions.append("任务命中未覆盖领域：%s。建议先新增模块 %s（%s），再执行；"
+                             "运行 module_gap.py 获取可复制写作 Prompt。" % (
+                                 ", ".join(top["hits"]), top["id"], top["name"]))
+        elif core_hits:
             decision = "proceed_core"
         else:
             decision = "block"
@@ -79,6 +104,7 @@ def evaluate(root, task, modules_dir=None, registry_path=None, max_modules=2):
         "conflicts": relevant,
         "questions": questions,
         "core_triggers_hit": core_hits,
+        "gap_hints": hint_hits,
         "data": {k: available[k] for k in sorted(required) if k in available},
         "modules_considered": len(modules),
     }

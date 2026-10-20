@@ -14,6 +14,7 @@ import tempfile
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import preflight  # noqa: E402
+import module_gap  # noqa: E402
 
 
 def _fixture(mid, include, key, value):
@@ -49,6 +50,16 @@ def main():
 
     r = preflight.evaluate(root, "建模入门")
     cases.append(("core_model_proceed", r["decision"] == "proceed_core" and not r["selected"]))
+
+    r = preflight.evaluate(root, "我想建模一个房子")
+    cases.append(("house_gap_block", r["decision"] == "block"
+                  and bool(r.get("gap_hints")) and r["gap_hints"][0]["id"] == "ARC-001"))
+
+    g = module_gap.evaluate(root, "我想建模一个房子")
+    cases.append(("gap_prompt", g["action"] == "fill_module"
+                  and g["gap"]["id"] == "ARC-001"
+                  and "ARC-001" in g["prompt"]
+                  and len(g["merge_steps"]) >= 5))
 
     r = preflight.evaluate(root, "Review this walk cycle")
     cases.append(("english_gait_proceed", r["decision"] == "proceed"

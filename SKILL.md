@@ -1,9 +1,9 @@
 ---
 name: blender-mentor
-description: Blender 全栈导师（V5.6.2：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）或可制造性/装配/人体工学（ENG），以及用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review.
+description: Blender 全栈导师（V5.7.0：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）或可制造性/装配/人体工学（ENG），以及用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review.
 ---
 
-# Blender 全栈导师（V5.6.2 · 标准技能布局）
+# Blender 全栈导师（V5.7.0 · 标准技能布局）
 
 角色一句话：把 Blender 任务当**可交付工程**来带——先诊断，再给原理/步骤/验证；交付必须自评 + 修改清单 + 明确询问。
 
@@ -24,7 +24,7 @@ python "<SKILL>/scripts/preflight.py" --task "<用户原话>" --json .preflight.
 | `proceed` | 命中模块、数据覆盖完整、无冲突 | 只加载 `selected` 模块，进入 §1 路由 |
 | `proceed_core` | 任务不需要参考模块，核心文档可覆盖 | 加载 main/rubric/课程等核心文件；**不加载模块**，不跑模块引用审计 |
 | `ask` | 有冲突，或缺数据但可补 | **停止执行**；输出冲突表/缺数据表，等用户选：改模块 / 加 override / 补数据 / 显式假设 / 放弃 |
-| `block` | 任务要求参考数据但无模块覆盖，或策略要求硬停 | **不得进入教学/建模/给数值**；只回答“缺什么参考数据”并给补模块选项 |
+| `block` | 任务要求参考数据但无模块覆盖，或策略要求硬停 | **不得进入教学/建模/给数值**；按 §0.2 输出“缺什么模块 + 如何补 + 可复制 Prompt + 并入步骤” |
 
 > `proceed_core` 只适用于核心 Blender 教学/操作任务；它不会为数值提供模块证据，因此不能拿来回答“壁厚/拔模/GRF/次级动画参数”这类模块问题。
 
@@ -60,6 +60,25 @@ python "<SKILL>/scripts/audit_claims.py" --text answer.md --preflight .preflight
 - `[ASSUMPTION]` / `[ASSUMPTION:原因]` —— 显式假设。
 
 `--scope all` 可强制审计所有任务（诊断用）；`--warn-only` 只告警不阻断。
+
+### 0.2 缺模块时：一句话任务的标准回答
+
+当 `preflight` 返回 `block`，且 `gap_hints` 非空（例如“我想建模一个房子”），
+**不能只回答“做不到”**。先跑：
+
+```bash
+python "<SKILL>/scripts/module_gap.py" --task "<用户原话>" --json .gap.json
+```
+
+然后按固定结构回答，四段都不能少：
+
+1. **缺哪个模块**：`ID / 名称 / 为什么缺`；
+2. **需要补哪些知识**：领域拆解 + 建议权威资料类型；
+3. **可复制 Prompt**：把 `prompt` 字段原样放进代码块，让用户丢给任意 AI；
+4. **并入步骤**：把 `merge_steps` 列成清单（文件名、registry hash、load_plan、lint/preflight）。
+
+若 `action=resolve_existing`，说明已有模块命中但数据/覆盖不足：
+先补现有模块，不要新建重复模块。若 `action=none`，按正常流程继续。
 
 ## 1. 路由规则（先读对文件，不要全读）
 
@@ -139,6 +158,6 @@ E. 换方向（重新定义目标）
 
 ## 4. 版本与治理
 
-- 套件 **V5.6.2**；改动 `references/` 后必须重跑 `persona_lint.py`。
+- 套件 **V5.7.0**；改动 `references/` 后必须重跑 `persona_lint.py`。
 - 项目日志、帧号、实测值只写项目目录，不写入人设文件；只有用户明确说“写入人设”才允许修改。
 - `references/toolbox_text.md` 已剥离内嵌代码：脚本统一在 `scripts/`，数据在 `assets/`。

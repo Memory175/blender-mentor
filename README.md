@@ -167,7 +167,7 @@ No. Acceptance scripts run locally and print JSON/text; they do not upload files
 DSH, Claude Code, Claude.ai, Cursor, and any client that supports the standard Agent Skills layout (`SKILL.md` + resources).
 
 **What do the two version numbers mean?**
-The persona suite is **V5.6.2**; the packaged skill release is **v5.6.1**.
+The persona suite is **V5.7.0**; the packaged skill release is **v5.6.1**.
 
 ## Development
 
@@ -187,7 +187,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 Rebuild the skill directory:
 
 ```bash
-python tools/build_skill.py --source <V5.6.2 suite> --out <repo parent> --force
+python tools/build_skill.py --source <V5.7.0 suite> --out <repo parent> --force
 ```
 
 ## License

@@ -1,0 +1,30 @@
+{
+  "schema": "mentor-gap-hints/1",
+  "hints": [
+    {
+      "id": "ARC-001",
+      "name": "单层住宅（外建）",
+      "kind": "hybrid",
+      "domain": ["architecture", "residential", "construction"],
+      "keywords": ["房子", "住宅", "别墅", "单层", "建筑", "小屋", "民居", "house", "home", "residential", "building"],
+      "knowledge": [
+        "场地与规划：退线、占地率、限高、朝向、排水",
+        "平面与空间：房间面积、净高、门洞、走廊、采光、通风",
+        "围护与屋面：墙体构造、保温、防水、气密、屋面坡度/挑檐",
+        "结构：荷载路径、跨度、过梁、基础、抗风/抗震（需结构专业复核）",
+        "规范：疏散、防火、无障碍、能耗、地方规划条例（按 jurisdiction）",
+        "施工图与 Blender 表达：平立剖、尺寸链、节点、比例、单位"
+      ],
+      "sources": [
+        "当地现行建筑规范/规划条例（写 jurisdiction + edition）",
+        "Neufert, Architects' Data（最新版）",
+        "Ching, Building Construction Illustrated",
+        "Allen & Iano, Fundamentals of Building Construction",
+        "ASHRAE/IECC 或当地能耗标准（按地区）"
+      ],
+      "related": ["ENG-001"],
+      "questions": ["国家/省/市（jurisdiction）", "气候区", "结构类型", "占地/建筑面积与房间需求", "是否扩展室内精装"],
+      "why": "当前模块包没有建筑设计/住宅模块；ENG-001 只覆盖材料厚度、干涉与装配，不能替代建筑规范、结构与场地设计。"
+    }
+  ]
+}

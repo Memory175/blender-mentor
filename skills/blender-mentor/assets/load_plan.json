@@ -1,6 +1,6 @@
 {
   "version": "1.2.0",
-  "suite_version": "V5.6.2",
+  "suite_version": "V5.7.0",
   "always": [
     {
       "file": "references/main.md",
@@ -157,6 +157,30 @@
     {
       "file": "scripts/engineering_check.py",
       "when": "工程预检（稳定性/壁厚/拔模/悬垂/干涉）"
+    },
+    {
+      "file": "scripts/preflight.py",
+      "when": "模块预审闸门（proceed/proceed_core/ask/block）"
+    },
+    {
+      "file": "scripts/module_lint.py",
+      "when": "模块格式/证据/注册表检查"
+    },
+    {
+      "file": "scripts/module_conflict.py",
+      "when": "模块间冲突巡查"
+    },
+    {
+      "file": "scripts/module_selftest.py",
+      "when": "预审闸门回归"
+    },
+    {
+      "file": "scripts/audit_claims.py",
+      "when": "输出引用审计（数字必须可追溯）"
+    },
+    {
+      "file": "scripts/module_gap.py",
+      "when": "缺模块时生成缺口说明 + 可复制 Prompt + 并入步骤"
     }
   ],
   "policy": [

@@ -8,6 +8,28 @@
 
 ---
 
+## 0.0 一句话触发：skill 内怎么用
+
+当用户只说一句 **“我想建模一个房子”** 时，skill 不会直接开做，也不会只说“缺模块”：
+
+```bash
+python scripts/preflight.py --task "我想建模一个房子" --json .preflight.json
+# decision=block，gap_hints 命中 ARC-001
+
+python scripts/module_gap.py --task "我想建模一个房子" --json .gap.json
+```
+
+`module_gap.py` 会返回四段固定内容：
+
+1. **缺哪个模块**：`ARC-001 / 单层住宅（外建） / 为什么缺`；
+2. **需要补哪些知识**：场地、平面、围护、结构边界、规范、施工图；
+3. **可复制 Prompt**：`prompt` 字段，原样贴给任意 AI；
+4. **并入步骤**：`merge_steps`，含 registry hash、load_plan、lint/preflight。
+
+> 如果 `action=resolve_existing`，表示已有模块命中但数据不足，先补现有模块，不新建重复模块。
+
+---
+
 ## 0. 先看结论：单层小房子需要什么
 
 一栋**单层小房子（外建，暂不含内饰）**不是一个模块能覆盖的，它至少涉及：

@@ -183,6 +183,13 @@ def main(argv=None):
             _check(checks, "module_preflight_gate",
                    decisions["eng"] == "proceed" and decisions["weld"] == "block" and decisions["none"] == "block",
                    decisions)
+            mg_gap = _load("module_gap", os.path.join(TOOLS, "module_gap.py"))
+            house = mg_gap["evaluate"](root, "我想建模一个房子")
+            _check(checks, "module_gap_response",
+                   house["action"] == "fill_module" and house["gap"]["id"] == "ARC-001"
+                   and "ARC-001" in house["prompt"] and len(house["merge_steps"]) >= 5,
+                   {"action": house["action"], "gap": house.get("gap", {}).get("id"),
+                    "steps": len(house.get("merge_steps", []))})
             ac = _load("audit_claims", os.path.join(TOOLS, "audit_claims.py"))
             claim_dir = os.path.join(root, "tests", "module_governance", "claims")
             if not os.path.isdir(claim_dir):
