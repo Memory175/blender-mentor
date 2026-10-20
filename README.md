@@ -92,7 +92,7 @@ Use blender-mentor to walk me through M1 modeling and topology.
 
 ```text
 SKILL.md       routing + D1–D4 delivery loop + machine-acceptance commands
-references/    8 reference files (7 persona docs + module format), loaded on demand
+references/    9 reference files (7 persona docs + module format + authoring guide), loaded on demand
 scripts/       18 executable tools
 assets/        ESD templates, load plans, deny-word example
 ```
@@ -140,7 +140,7 @@ dsh plugin --profile web add github:Memory175/blender-mentor
 ├── .claude-plugin/marketplace.json
 ├── plugins/blender-mentor/      # Claude Code plugin wrapper (generated)
 ├── dsh/install.ps1 / install.sh # DSH one-line installers
-├── references/                  # 8 reference files (7 persona docs + module format)
+├── references/                  # 9 reference files (7 persona docs + module format + authoring guide)
 ├── scripts/                     # 18 executable tools
 ├── assets/                      # ESD templates, load plans, deny example
 ├── docs/                        # banner + example session image
@@ -167,7 +167,7 @@ No. Acceptance scripts run locally and print JSON/text; they do not upload files
 DSH, Claude Code, Claude.ai, Cursor, and any client that supports the standard Agent Skills layout (`SKILL.md` + resources).
 
 **What do the two version numbers mean?**
-The persona suite is **V5.6.1**; the packaged skill release is **v5.6.1**.
+The persona suite is **V5.6.2**; the packaged skill release is **v5.6.1**.
 
 ## Development
 
@@ -187,7 +187,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 Rebuild the skill directory:
 
 ```bash
-python tools/build_skill.py --source <V5.6.1 suite> --out <repo parent> --force
+python tools/build_skill.py --source <V5.6.2 suite> --out <repo parent> --force
 ```
 
 ## License

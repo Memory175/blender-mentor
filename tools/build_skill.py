@@ -127,10 +127,10 @@ ASSET_FILES = [
 
 SKILL_MD =  r"""---
 name: blender-mentor
-description: Blender 全栈导师（V5.6.1：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）或可制造性/装配/人体工学（ENG），以及用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review.
+description: Blender 全栈导师（V5.6.2：建模/拓扑/UV/材质/灯光/渲染/动画/绑定/物理/几何节点/bpy/管线；含 ESD/BIO/ENG 模块）。凡是 Blender 教学、作业批改、工程评审、资产验收、次级动画（ESD）、生物力学（BIO）或可制造性/装配/人体工学（ENG），以及用户要求「像导师一样带我 / 审我的工程 / 给我打分」时必须使用本技能。English triggers include teach me Blender, review my .blend, grade my animation, Blender mentor, critique my render or rig, design for manufacturing, draft angle, wall thickness, assembly review.
 ---
 
-# Blender 全栈导师（V5.6.1 · 标准技能布局）
+# Blender 全栈导师（V5.6.2 · 标准技能布局）
 
 角色一句话：把 Blender 任务当**可交付工程**来带——先诊断，再给原理/步骤/验证；交付必须自评 + 修改清单 + 明确询问。
 
@@ -200,6 +200,7 @@ python "<SKILL>/scripts/audit_claims.py" --text answer.md --preflight .preflight
 | 人体/类人/走路/跑跳/受击/动力链/肌肉体积 | `references/module-biomechanics.md` |
 | 可制造性/壁厚/拔模/悬垂/装配/人体工学/重心/干涉 | `references/module-engineering.md`（ENG-001） |
 | 模块格式/预审/冲突/新增模块 | `references/module-format.md` + `assets/module_registry.json` |
+| 写新模块 / 让 AI 查资料填表 / 单层小房子模块 | `references/module-authoring.md` |
 
 加载规则：模块最多同时 2 个；`main.md` 与 `rubric.md` 不裁剪；超预算裁剪顺序
 curriculum → toolbox_text → 非当前任务模块。
@@ -265,7 +266,7 @@ E. 换方向（重新定义目标）
 
 ## 4. 版本与治理
 
-- 套件 **V5.6.1**；改动 `references/` 后必须重跑 `persona_lint.py`。
+- 套件 **V5.6.2**；改动 `references/` 后必须重跑 `persona_lint.py`。
 - 项目日志、帧号、实测值只写项目目录，不写入人设文件；只有用户明确说“写入人设”才允许修改。
 - `references/toolbox_text.md` 已剥离内嵌代码：脚本统一在 `scripts/`，数据在 `assets/`。
 """
@@ -365,7 +366,7 @@ Use blender-mentor to walk me through M1 modeling and topology.
 
 ```text
 SKILL.md       routing + D1–D4 delivery loop + machine-acceptance commands
-references/    8 reference files (7 persona docs + module format), loaded on demand
+references/    9 reference files (7 persona docs + module format + authoring guide), loaded on demand
 scripts/       18 executable tools
 assets/        ESD templates, load plans, deny-word example
 ```
@@ -413,7 +414,7 @@ dsh plugin --profile web add github:OWNER/REPO
 ├── .claude-plugin/marketplace.json
 ├── plugins/blender-mentor/      # Claude Code plugin wrapper (generated)
 ├── dsh/install.ps1 / install.sh # DSH one-line installers
-├── references/                  # 8 reference files (7 persona docs + module format)
+├── references/                  # 9 reference files (7 persona docs + module format + authoring guide)
 ├── scripts/                     # 18 executable tools
 ├── assets/                      # ESD templates, load plans, deny example
 ├── docs/                        # banner + example session image
@@ -440,7 +441,7 @@ No. Acceptance scripts run locally and print JSON/text; they do not upload files
 DSH, Claude Code, Claude.ai, Cursor, and any client that supports the standard Agent Skills layout (`SKILL.md` + resources).
 
 **What do the two version numbers mean?**
-The persona suite is **V5.6.1**; the packaged skill release is **v5.6.1**.
+The persona suite is **V5.6.2**; the packaged skill release is **v5.6.1**.
 
 ## Development
 
@@ -460,7 +461,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 Rebuild the skill directory:
 
 ```bash
-python tools/build_skill.py --source <V5.6.1 suite> --out <repo parent> --force
+python tools/build_skill.py --source <V5.6.2 suite> --out <repo parent> --force
 ```
 
 ## License
@@ -567,7 +568,7 @@ bash dsh/install.sh
 
 ```text
 SKILL.md       路由 + D1–D4 交付闭环 + 机器验收命令
-references/    8 个参考文件（7 份人设文档 + 模块格式），按需加载
+references/    9 个参考文件（7 份人设文档 + 模块格式 + 写作说明），按需加载
 scripts/       18 个可执行工具
 assets/        ESD 模板、加载清单、拒绝词示例
 ```
@@ -615,7 +616,7 @@ dsh plugin --profile web add github:OWNER/REPO
 ├── .claude-plugin/marketplace.json
 ├── plugins/blender-mentor/      # Claude Code 插件包装（自动生成）
 ├── dsh/install.ps1 / install.sh # DSH 一键安装脚本
-├── references/                  # 8 个参考文件（7 份人设文档 + 模块格式）
+├── references/                  # 9 个参考文件（7 份人设文档 + 模块格式 + 写作说明）
 ├── scripts/                     # 18 个可执行工具
 ├── assets/                      # ESD 模板、加载清单、拒绝词示例
 ├── docs/                        # banner + 示例会话图
@@ -642,7 +643,7 @@ dsh plugin --profile web add github:OWNER/REPO
 DSH、Claude Code、Claude.ai、Cursor，以及任何支持标准 Agent Skills 布局（`SKILL.md` + 资源目录）的客户端。
 
 **两个版本号是什么意思？**
-人设套件为 **V5.6.1**；打包后的技能发布版本为 **v5.6.1**。
+人设套件为 **V5.6.2**；打包后的技能发布版本为 **v5.6.1**。
 
 ## 开发与验证
 
@@ -662,7 +663,7 @@ blender -b scene.blend --python scripts/biomech_check.py -- --eccentric 1,4 --su
 重建技能目录：
 
 ```bash
-python tools/build_skill.py --source <V5.6.1 套件目录> --out <仓库父目录> --force
+python tools/build_skill.py --source <V5.6.2 套件目录> --out <仓库父目录> --force
 ```
 
 ## 许可
@@ -676,6 +677,20 @@ MIT，见 [LICENSE](LICENSE)。课程文档中的第三方参考书目仅作引�
 
 
 CHANGELOG_MD =  r"""# Changelog
+
+## V5.6.2 — 2026-10-20
+
+> 文档补丁；人设套件升 **V5.6.2**。
+
+### Added
+- `references/module-authoring.md`：模块写作格式、单层住宅知识拆解、
+  可复制给任意 AI 的查资料/填表 Prompt、插入与验收流程；
+- `SKILL.md` 路由新增“写新模块 / 让 AI 查资料填表 / 单层小房子模块”；
+- `references/module-format.md` 增加写作说明入口。
+
+### Changed
+- 参考文件数 8 → 9；版本锚点升 V5.6.2。
+- 无代码/模块数据变更，无需升模块版本。
 
 ## V5.6.1 — 2026-10-20
 
@@ -1433,7 +1448,7 @@ def write_claude_plugin(skill_dir, repo_slug):
         "name": "blender-mentor",
         "displayName": "Blender Mentor",
         "description": desc,
-        "version": "5.6.1",
+        "version": "5.6.2",
         "author": {"name": owner},
         "homepage": repo_url,
         "repository": repo_url,
@@ -1470,7 +1485,7 @@ def write_claude_plugin(skill_dir, repo_slug):
             "name": "blender-mentor",
             "source": "./plugins/blender-mentor",
             "description": desc,
-            "version": "5.6.1",
+            "version": "5.6.2",
         }],
     }
     write_text(os.path.join(skill_dir, ".claude-plugin", "marketplace.json"),
@@ -1488,7 +1503,7 @@ def write_dsh_plugin(skill_dir, repo_slug):
     owner = repo_slug.split("/")[0]
     repo_url = "https://github.com/%s" % repo_slug
     pkg_name = "blender-mentor"
-    version = "5.6.1"
+    version = "5.6.2"
     desc = ("Blender full-stack mentor AI Skill: teaching, 0-3 rubric grading, "
             "asset/animation acceptance (ESD/BIO/ENG).")
 
@@ -1685,7 +1700,7 @@ def build(source, out_root, force=False, repo_slug="OWNER/REPO"):
                    rewrite_layout_refs(rewrite_doc_names(texts[key])))
 
     # 5.1) 通用模块 ENG-001 + 治理规范
-    for extra_ref in ("module-engineering.md", "module-format.md"):
+    for extra_ref in ("module-engineering.md", "module-format.md", "module-authoring.md"):
         module_src = os.path.join(suite, extra_ref)
         if not os.path.isfile(module_src):
             raise RuntimeError("missing module reference: %s" % module_src)
